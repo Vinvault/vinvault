@@ -28,15 +28,16 @@ const carData: Record<string, any> = {
   },
 };
 
-export default function CarPage({ params }: { params: { chassis: string } }) {
-  const car = carData[params.chassis.toLowerCase()];
+export default async function CarPage({ params }: { params: Promise<{ chassis: string }> }) {
+  const { chassis } = await params;
+  const car = carData[chassis?.toLowerCase() ?? ""];
 
   if (!car) {
     return (
       <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         <div style={{textAlign: 'center'}}>
           <p style={{color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px'}}>CHASSIS NOT FOUND</p>
-          <h1 style={{fontSize: '32px', marginBottom: '24px', fontFamily: 'monospace'}}>{params.chassis.toUpperCase()}</h1>
+          <h1 style={{fontSize: '32px', marginBottom: '24px', fontFamily: 'monospace'}}>{chassis?.toUpperCase()}</h1>
           <p style={{color: '#8BA5B8', marginBottom: '32px'}}>This chassis has not been documented yet.</p>
           <Link href="/submit" style={{background: '#4A90B8', color: '#fff', padding: '12px 28px', textDecoration: 'none'}}>Submit This Car</Link>
         </div>
