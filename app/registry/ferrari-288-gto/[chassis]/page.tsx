@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const carData: Record<string, any> = {
-  "ZFFPA16B000040001": {
+  "zffpa16b000040001": {
     chassis: "ZFFPA16B000040001",
     engine_number: "F114A000040001",
     gearbox_number: "G288000040001",
@@ -29,14 +29,14 @@ const carData: Record<string, any> = {
 };
 
 export default function CarPage({ params }: { params: { chassis: string } }) {
-  const car = carData[params.chassis];
+  const car = carData[params.chassis.toLowerCase()];
 
   if (!car) {
     return (
       <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         <div style={{textAlign: 'center'}}>
           <p style={{color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px'}}>CHASSIS NOT FOUND</p>
-          <h1 style={{fontSize: '32px', marginBottom: '24px'}}>{params.chassis}</h1>
+          <h1 style={{fontSize: '32px', marginBottom: '24px', fontFamily: 'monospace'}}>{params.chassis.toUpperCase()}</h1>
           <p style={{color: '#8BA5B8', marginBottom: '32px'}}>This chassis has not been documented yet.</p>
           <Link href="/submit" style={{background: '#4A90B8', color: '#fff', padding: '12px 28px', textDecoration: 'none'}}>Submit This Car</Link>
         </div>
@@ -47,7 +47,6 @@ export default function CarPage({ params }: { params: { chassis: string } }) {
   return (
     <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh'}}>
 
-      {/* Header */}
       <header style={{background: '#0A1828', borderBottom: '1px solid #1E3A5A', padding: '20px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <Link href="/" style={{textDecoration: 'none'}}>
           <span style={{fontSize: '24px', fontWeight: 'bold'}}>
@@ -62,7 +61,6 @@ export default function CarPage({ params }: { params: { chassis: string } }) {
         </div>
       </header>
 
-      {/* Car header */}
       <section style={{padding: '60px 40px 40px', borderBottom: '1px solid #1E3A5A'}}>
         <p style={{color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px'}}>FERRARI 288 GTO · CHASSIS RECORD</p>
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
@@ -70,22 +68,13 @@ export default function CarPage({ params }: { params: { chassis: string } }) {
             <h1 style={{fontSize: '36px', fontWeight: 'bold', marginBottom: '8px', fontFamily: 'monospace', letterSpacing: '2px'}}>{car.chassis}</h1>
             <p style={{color: '#8BA5B8'}}>Produced {car.production_date} · Original market: {car.original_market}</p>
           </div>
-          <span style={{
-            background: '#0D2A1A',
-            color: '#4AB87A',
-            padding: '8px 20px',
-            fontSize: '12px',
-            letterSpacing: '2px'
-          }}>DOCUMENTED</span>
+          <span style={{background: '#0D2A1A', color: '#4AB87A', padding: '8px 20px', fontSize: '12px', letterSpacing: '2px'}}>DOCUMENTED</span>
         </div>
       </section>
 
       <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0', maxWidth: '1200px', margin: '0 auto', padding: '40px'}}>
-
-        {/* Left column */}
         <div style={{paddingRight: '40px', borderRight: '1px solid #1E3A5A'}}>
 
-          {/* Identity */}
           <div style={{marginBottom: '40px'}}>
             <h2 style={{color: '#4A90B8', fontSize: '11px', letterSpacing: '3px', marginBottom: '20px'}}>IDENTITY</h2>
             {[
@@ -101,7 +90,6 @@ export default function CarPage({ params }: { params: { chassis: string } }) {
             ))}
           </div>
 
-          {/* Appearance */}
           <div style={{marginBottom: '40px'}}>
             <h2 style={{color: '#4A90B8', fontSize: '11px', letterSpacing: '3px', marginBottom: '20px'}}>APPEARANCE</h2>
             {[
@@ -115,7 +103,6 @@ export default function CarPage({ params }: { params: { chassis: string } }) {
             ))}
           </div>
 
-          {/* Scores */}
           <div style={{marginBottom: '40px'}}>
             <h2 style={{color: '#4A90B8', fontSize: '11px', letterSpacing: '3px', marginBottom: '20px'}}>CONDITION & ORIGINALITY</h2>
             {[
@@ -134,10 +121,7 @@ export default function CarPage({ params }: { params: { chassis: string } }) {
           </div>
         </div>
 
-        {/* Right column */}
         <div style={{paddingLeft: '40px'}}>
-
-          {/* Market value */}
           <div style={{background: '#0A1828', border: '1px solid #1E3A5A', padding: '28px', marginBottom: '32px'}}>
             <h2 style={{color: '#4A90B8', fontSize: '11px', letterSpacing: '3px', marginBottom: '20px'}}>MARKET VALUE</h2>
             <div style={{fontSize: '36px', fontWeight: 'bold', color: '#E2EEF7', marginBottom: '8px'}}>
@@ -152,7 +136,6 @@ export default function CarPage({ params }: { params: { chassis: string } }) {
             </div>
           </div>
 
-          {/* Provenance */}
           <div>
             <h2 style={{color: '#4A90B8', fontSize: '11px', letterSpacing: '3px', marginBottom: '20px'}}>PROVENANCE</h2>
             {car.provenance.map((p: any, i: number) => (
@@ -162,11 +145,9 @@ export default function CarPage({ params }: { params: { chassis: string } }) {
               </div>
             ))}
           </div>
-
         </div>
       </div>
 
-      {/* Footer */}
       <footer style={{borderTop: '1px solid #1E3A5A', padding: '32px 40px', textAlign: 'center', color: '#4A6A8A', fontSize: '13px'}}>
         <span style={{color: '#4A90B8'}}>Vin</span>Vault Registry © 2026 · vinvault.net
       </footer>
