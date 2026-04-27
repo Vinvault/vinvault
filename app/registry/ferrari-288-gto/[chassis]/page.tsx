@@ -46,7 +46,6 @@ export default function CarPage({ params }: { params: { chassis: string } }) {
 
   return (
     <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh'}}>
-
       <header style={{background: '#0A1828', borderBottom: '1px solid #1E3A5A', padding: '20px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <Link href="/" style={{textDecoration: 'none'}}>
           <span style={{fontSize: '24px', fontWeight: 'bold'}}>
@@ -74,7 +73,6 @@ export default function CarPage({ params }: { params: { chassis: string } }) {
 
       <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0', maxWidth: '1200px', margin: '0 auto', padding: '40px'}}>
         <div style={{paddingRight: '40px', borderRight: '1px solid #1E3A5A'}}>
-
           <div style={{marginBottom: '40px'}}>
             <h2 style={{color: '#4A90B8', fontSize: '11px', letterSpacing: '3px', marginBottom: '20px'}}>IDENTITY</h2>
             {[
@@ -151,7 +149,6 @@ export default function CarPage({ params }: { params: { chassis: string } }) {
       <footer style={{borderTop: '1px solid #1E3A5A', padding: '32px 40px', textAlign: 'center', color: '#4A6A8A', fontSize: '13px'}}>
         <span style={{color: '#4A90B8'}}>Vin</span>Vault Registry © 2026 · vinvault.net
       </footer>
-
     </main>
   );
 }
