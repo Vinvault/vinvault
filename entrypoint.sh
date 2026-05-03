@@ -1,8 +1,13 @@
 #!/bin/sh
 set -e
 
-# If the internal Supabase URL is unreachable (container not on Supabase network),
-# fall back to the public URL so the app works on any Docker network.
+# Connect to the internal Supabase network before anything else so the
+# TCP reachability check below sees the internal URL as available.
+if [ -S /var/run/docker.sock ] && [ -n "$SUPABASE_NETWORK" ]; then
+    docker network connect "$SUPABASE_NETWORK" "$HOSTNAME" 2>/dev/null || true
+fi
+
+# If the internal Supabase URL is still unreachable, fall back to the public URL.
 if [ -n "$SUPABASE_URL" ] && [ -n "$NEXT_PUBLIC_SUPABASE_URL" ] && [ "$SUPABASE_URL" != "$NEXT_PUBLIC_SUPABASE_URL" ]; then
     REACHABLE=$(node -e "
 const net = require('net');
