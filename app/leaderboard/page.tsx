@@ -1,6 +1,7 @@
 export const revalidate = 120;
 import Link from "next/link";
 import type { Metadata } from "next";
+import Breadcrumb from "@/app/components/Breadcrumb";
 
 export const metadata: Metadata = {
   title: "Leaderboard — VinVault",
@@ -82,6 +83,8 @@ export default async function LeaderboardPage() {
           <Link href="/submit" style={{ color: "#4A90B8", textDecoration: "none", border: "1px solid #4A90B8", padding: "6px 16px" }}>Submit</Link>
         </nav>
       </header>
+
+      <Breadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "Leaderboard" }]} />
 
       <div className="vv-page-container" style={{ maxWidth: "800px" }}>
         <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>COMMUNITY</p>
