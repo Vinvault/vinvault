@@ -1,7 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async redirects() {
+    return [
+      {
+        source: '/registry/ferrari-288-gto',
+        destination: '/ferrari/288-gto',
+        permanent: true,
+      },
+      {
+        source: '/registry/ferrari-288-gto/:chassis',
+        destination: '/ferrari/288-gto/:chassis',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
