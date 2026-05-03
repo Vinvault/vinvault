@@ -28,7 +28,8 @@ export function proxy(request: NextRequest) {
     if (pathname.startsWith('/api/')) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    const login = new URL('/admin/login', request.url);
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || `https://${request.headers.get('host')}`;
+    const login = new URL('/admin/login', siteUrl);
     login.searchParams.set('next', pathname);
     return NextResponse.redirect(login);
   }
