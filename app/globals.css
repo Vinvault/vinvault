@@ -11,6 +11,37 @@ body {
   font-family: Georgia, serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Skeleton loading animation ── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.vv-skeleton {
+  background: linear-gradient(90deg, #0D1E36 25%, #1E3A5A 50%, #0D1E36 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 2px;
+}
+
+/* ── Print styles ── */
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+  header, footer, nav { display: none !important; }
+  a { color: #000 !important; }
+  .vv-header, .vv-footer { display: none !important; }
+}
+
+/* ── FAQ details/summary ── */
+details > summary::-webkit-details-marker { display: none; }
+details[open] summary span:last-child { content: "−"; }
+details[open] > summary span:last-child::before { content: "−"; }
+
 /* ── Responsive layout utilities ── */
 
 .vv-header {
@@ -20,6 +51,10 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(8px);
 }
 
 .vv-nav {

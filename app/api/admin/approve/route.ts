@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.vinvault.net';
+
 export async function POST(request: NextRequest) {
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
@@ -8,12 +11,8 @@ export async function POST(request: NextRequest) {
   const id = formData.get('id');
   await fetch(`${supabaseUrl}/rest/v1/submissions?id=eq.${id}`, {
     method: 'PATCH',
-    headers: {
-      'apikey': supabaseKey,
-      'Authorization': `Bearer ${supabaseKey}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ status: 'approved' })
+    headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status: 'approved' }),
   });
-  return NextResponse.redirect(new URL('/admin', request.url));
+  return NextResponse.redirect(new URL('/admin', SITE_URL), { status: 303 });
 }

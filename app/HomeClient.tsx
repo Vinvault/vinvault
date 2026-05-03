@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useState, useMemo } from "react";
+import CountUp from "./components/CountUp";
+import NewsletterForm from "./components/NewsletterForm";
 
 interface Registry {
   make: string;
@@ -115,12 +117,14 @@ export default function HomeClient({
       {/* ── Stats bar ── */}
       <section className="vv-stats-bar">
         {[
-          { n: String(recentCount), l: "Cars in Registry" },
-          { n: String(modelCount), l: "Models Tracked" },
-          { n: String(verifiedCount), l: "Verified Entries" },
+          { n: recentCount, l: "Cars in Registry" },
+          { n: modelCount, l: "Models Tracked" },
+          { n: verifiedCount, l: "Verified Entries" },
         ].map((s) => (
           <div key={s.l} style={{ textAlign: "center" }}>
-            <div style={{ fontSize: "32px", fontWeight: "bold", color: "#4A90B8" }}>{s.n}</div>
+            <div style={{ fontSize: "32px", fontWeight: "bold", color: "#4A90B8" }}>
+              <CountUp target={s.n} />
+            </div>
             <div style={{ color: "#8BA5B8", fontSize: "11px", letterSpacing: "2px", marginTop: "6px" }}>{s.l}</div>
           </div>
         ))}
@@ -242,6 +246,28 @@ export default function HomeClient({
         </div>
       </section>
 
+      {/* ── How It Works ── */}
+      <section className="vv-section-full">
+        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+          <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "8px" }}>PROCESS</p>
+          <h2 style={{ fontSize: "28px", fontWeight: "bold", marginBottom: "40px" }}>How It Works</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "0", position: "relative" }}>
+            {[
+              { step: "01", title: "Submit", desc: "Fill in the chassis details you know — number, color, market, history. Partial info is welcome." },
+              { step: "02", title: "Review", desc: "Our validators cross-reference your submission against factory records, auction catalogs, and known documentation." },
+              { step: "03", title: "Verify", desc: "If the information checks out, the record is approved and added to the permanent registry." },
+              { step: "04", title: "Publish", desc: "The chassis gets its own permanent page, publicly accessible and searchable forever." },
+            ].map((item, i) => (
+              <div key={item.step} style={{ padding: "24px 28px", borderLeft: i > 0 ? "1px solid #1E3A5A" : "none", borderTop: "3px solid #4A90B8" }}>
+                <p style={{ color: "#4A90B8", fontSize: "28px", fontWeight: "bold", marginBottom: "12px", lineHeight: 1 }}>{item.step}</p>
+                <h3 style={{ fontSize: "17px", fontWeight: "bold", marginBottom: "10px" }}>{item.title}</h3>
+                <p style={{ color: "#8BA5B8", fontSize: "14px", lineHeight: "1.7" }}>{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA ── */}
       <section style={{ borderTop: "1px solid #1E3A5A", padding: "72px 40px", textAlign: "center" }}>
         <h2 style={{ fontSize: "32px", fontWeight: "bold", marginBottom: "16px" }}>Know a car that's not listed?</h2>
@@ -251,6 +277,18 @@ export default function HomeClient({
         <Link href="/submit" style={{ background: "#4A90B8", color: "#fff", padding: "14px 36px", textDecoration: "none", fontSize: "14px", letterSpacing: "2px" }}>
           SUBMIT A CAR
         </Link>
+      </section>
+
+      {/* ── Newsletter ── */}
+      <section style={{ borderTop: "1px solid #1E3A5A", padding: "64px 40px", background: "#0A1828" }}>
+        <div style={{ maxWidth: "560px", margin: "0 auto", textAlign: "center" }}>
+          <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "12px" }}>STAY UPDATED</p>
+          <h2 style={{ fontSize: "26px", fontWeight: "bold", marginBottom: "12px" }}>Registry Updates</h2>
+          <p style={{ color: "#8BA5B8", fontSize: "15px", lineHeight: "1.7", marginBottom: "28px" }}>
+            Get notified when new chassis records are added and when new registries launch.
+          </p>
+          <NewsletterForm />
+        </div>
       </section>
 
       {/* ── Footer ── */}

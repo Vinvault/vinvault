@@ -23,6 +23,19 @@ export default function ProfilePage() {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
 
+  function computePoints(subs: Submission[]) {
+    const approved = subs.filter(s => s.status === "approved").length;
+    const rejected = subs.filter(s => s.status === "rejected").length;
+    return subs.length * 10 + approved * 50 - rejected * 5;
+  }
+
+  function getBadge(pts: number) {
+    if (pts >= 1000) return { label: "Expert", color: "#F0C040", bg: "#2A1F00" };
+    if (pts >= 500) return { label: "Gold", color: "#C8A000", bg: "#1A1400" };
+    if (pts >= 100) return { label: "Silver", color: "#A0B0C0", bg: "#141820" };
+    return { label: "Bronze", color: "#C87840", bg: "#1A1000" };
+  }
+
   const supabase = createSupabaseBrowserClient();
 
   useEffect(() => {
@@ -86,10 +99,26 @@ export default function ProfilePage() {
           </div>
         ) : (
           <>
-            <div style={{ marginBottom: '48px' }}>
-              <p style={{ color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px' }}>YOUR ACCOUNT</p>
-              <h1 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '8px' }}>Profile</h1>
-              <p style={{ color: '#8BA5B8', fontSize: '14px' }}>{user.email}</p>
+            <div style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
+              <div>
+                <p style={{ color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px' }}>YOUR ACCOUNT</p>
+                <h1 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '8px' }}>Profile</h1>
+                <p style={{ color: '#8BA5B8', fontSize: '14px' }}>{user.email}</p>
+              </div>
+              {(() => {
+                const pts = computePoints(submissions);
+                const b = getBadge(pts);
+                return (
+                  <div style={{ textAlign: 'right' }}>
+                    <span style={{ background: b.bg, color: b.color, padding: '4px 14px', fontSize: '12px', letterSpacing: '2px', border: `1px solid ${b.color}40`, display: 'inline-block', marginBottom: '8px' }}>
+                      {b.label.toUpperCase()}
+                    </span>
+                    <p style={{ fontSize: '28px', fontWeight: 'bold', color: '#4A90B8', lineHeight: 1 }}>{pts}</p>
+                    <p style={{ color: '#4A6A8A', fontSize: '11px', letterSpacing: '1px', marginTop: '4px' }}>POINTS</p>
+                    <Link href="/leaderboard" style={{ color: '#4A90B8', fontSize: '12px', textDecoration: 'none' }}>View leaderboard →</Link>
+                  </div>
+                );
+              })()}
             </div>
 
             {/* Summary stats */}

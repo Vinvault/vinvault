@@ -63,7 +63,8 @@ export default function RegistryClient({ cars }: { cars: Submission[] }) {
         <p style={{ color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px' }}>WORLD REGISTRY</p>
         <h1 style={{ fontSize: '42px', fontWeight: 'bold', marginBottom: '16px' }}>Ferrari 288 GTO</h1>
         <p style={{ color: '#8BA5B8', fontSize: '16px', maxWidth: '600px', lineHeight: '1.7' }}>
-          {TOTAL_PRODUCED} cars were produced between 1984 and 1985. This registry aims to document every single chassis — its history, ownership, and current status.
+          {TOTAL_PRODUCED} cars were produced between 1984 and 1985. This registry aims to document every single chassis — its history, ownership, and current status.{' '}
+          <Link href="/ferrari/288-gto/info" style={{ color: '#4A90B8', textDecoration: 'none' }}>Full specifications →</Link>
         </p>
 
         {/* Stats row */}
