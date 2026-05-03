@@ -35,7 +35,7 @@ async function getLeaderboard(): Promise<LeaderEntry[]> {
   try {
     const res = await fetch(
       `${url}/rest/v1/submissions?submitter_email=not.is.null&select=submitter_email,status`,
-      { headers: { apikey: key, Authorization: `Bearer ${key}` }, cache: "no-store" }
+      { headers: { apikey: key, Authorization: `Bearer ${key}` }, next: { revalidate: 120 } }
     );
     if (!res.ok) return [];
     const data: { submitter_email: string; status: string }[] = await res.json();
