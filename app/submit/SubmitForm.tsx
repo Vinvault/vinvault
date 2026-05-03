@@ -94,10 +94,17 @@ export default function SubmitForm({ prefillChassis }: { prefillChassis?: string
           <span style={{fontSize: '24px', fontWeight: 'bold'}}><span style={{color: '#4A90B8'}}>Vin</span><span style={{color: '#E2EEF7'}}>Vault</span></span>
           <span style={{color: '#4A90B8', fontSize: '10px', letterSpacing: '4px'}}>REGISTRY</span>
         </Link>
-        <div style={{color: '#8BA5B8', fontSize: '13px'}}>
-          <Link href="/ferrari/288-gto" style={{color: '#4A90B8', textDecoration: 'none'}}>Ferrari 288 GTO</Link>{' → '}Submit a Car
-        </div>
+        <nav className="vv-nav" style={{fontSize: '13px'}}>
+          <Link href="/ferrari/288-gto" style={{color: '#8BA5B8', textDecoration: 'none', padding: '6px 12px'}}>Registry</Link>
+        </nav>
       </header>
+      <nav style={{padding: '14px 40px', background: '#0A1828', borderBottom: '1px solid #1E3A5A', fontSize: '12px', color: '#4A6A8A', display: 'flex', gap: '6px', flexWrap: 'wrap'}}>
+        <Link href="/" style={{color: '#4A6A8A', textDecoration: 'none'}}>Home</Link>
+        <span style={{color: '#1E3A5A'}}>/</span>
+        <Link href="/ferrari/288-gto" style={{color: '#4A6A8A', textDecoration: 'none'}}>Ferrari 288 GTO</Link>
+        <span style={{color: '#1E3A5A'}}>/</span>
+        <span style={{color: '#8BA5B8'}}>Submit a Car</span>
+      </nav>
       <div className="vv-form-container">
         <p style={{color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px'}}>FERRARI 288 GTO · WORLD REGISTRY</p>
         <h1 style={{fontSize: '36px', fontWeight: 'bold', marginBottom: '16px'}}>Submit a Car</h1>

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { verifyCsrf } from "@/lib/csrf";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +34,11 @@ export async function POST(request: NextRequest) {
 
   if (!supabaseUrl || !supabaseKey) {
     return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+  }
+
+  // CSRF check
+  if (!verifyCsrf(request)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   // Rate limiting

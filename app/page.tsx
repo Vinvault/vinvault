@@ -1,4 +1,4 @@
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 import HomeClient from "./HomeClient";
 import type { Metadata } from "next";
 
@@ -29,10 +29,10 @@ async function getHomeData() {
   try {
     const [recentRes, countRes] = await Promise.all([
       fetch(`${url}/rest/v1/submissions?status=eq.approved&order=created_at.desc&limit=3`, {
-        headers, cache: "no-store",
+        headers, next: { revalidate: 60 },
       }),
       fetch(`${url}/rest/v1/submissions?status=eq.approved&select=id`, {
-        headers: { ...headers, Prefer: "count=exact" }, cache: "no-store",
+        headers: { ...headers, Prefer: "count=exact" }, next: { revalidate: 60 },
       }),
     ]);
 

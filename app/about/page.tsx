@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Breadcrumb from "@/app/components/Breadcrumb";
 
 export const metadata = {
   title: "About — VinVault Classic Car Registry",
@@ -21,6 +22,8 @@ export default function AboutPage() {
           <Link href="/submit" style={{ color: '#4A90B8', textDecoration: 'none', border: '1px solid #4A90B8', padding: '6px 16px' }}>Submit</Link>
         </nav>
       </header>
+
+      <Breadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "About" }]} />
 
       <div className="vv-page-container">
         <p style={{ color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px' }}>ABOUT</p>

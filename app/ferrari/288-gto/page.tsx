@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 import RegistryClient from './RegistryClient';
 import type { Metadata } from 'next';
 
@@ -22,7 +22,7 @@ async function getApprovedSubmissions() {
       `${supabaseUrl}/rest/v1/submissions?status=eq.approved&order=created_at.desc`,
       {
         headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` },
-        cache: 'no-store',
+        next: { revalidate: 60 },
       }
     );
     if (!res.ok) return [];

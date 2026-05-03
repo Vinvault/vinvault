@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import Breadcrumb from "@/app/components/Breadcrumb";
 
 export const metadata: Metadata = {
   title: "Terms of Service — VinVault",
@@ -31,6 +32,7 @@ export default function TermsPage() {
         </nav>
       </header>
 
+      <Breadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "Terms of Service" }]} />
       <div className="vv-page-container">
         <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>LEGAL</p>
         <h1 style={{ fontSize: "36px", fontWeight: "bold", marginBottom: "8px" }}>Terms of Service</h1>

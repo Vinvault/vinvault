@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Breadcrumb from "@/app/components/Breadcrumb";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -31,6 +32,7 @@ export default function PrivacyPage() {
         </nav>
       </header>
 
+      <Breadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "Privacy Policy" }]} />
       <div className="vv-page-container">
         <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>LEGAL</p>
         <h1 style={{ fontSize: "36px", fontWeight: "bold", marginBottom: "8px" }}>Privacy Policy</h1>
