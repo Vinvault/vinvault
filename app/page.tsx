@@ -1,5 +1,23 @@
 export const dynamic = "force-dynamic";
 import HomeClient from "./HomeClient";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "VinVault — The World's Most Complete Classic Car Registry",
+  description: "Community-verified chassis records for the rarest cars ever built. Every VIN documented, every history preserved. Starting with the Ferrari 288 GTO.",
+  openGraph: {
+    title: "VinVault — The World's Most Complete Classic Car Registry",
+    description: "Community-verified chassis records for the rarest classic cars. Ferrari 288 GTO registry live now.",
+    siteName: "VinVault Registry",
+    type: "website",
+    url: "https://www.vinvault.net",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "VinVault — Classic Car Registry",
+    description: "Community-verified chassis records for the rarest cars ever built.",
+  },
+};
 
 async function getHomeData() {
   const url = process.env.SUPABASE_URL;
@@ -10,7 +28,7 @@ async function getHomeData() {
 
   try {
     const [recentRes, countRes] = await Promise.all([
-      fetch(`${url}/rest/v1/submissions?status=eq.approved&order=created_at.desc&limit=5`, {
+      fetch(`${url}/rest/v1/submissions?status=eq.approved&order=created_at.desc&limit=3`, {
         headers, cache: "no-store",
       }),
       fetch(`${url}/rest/v1/submissions?status=eq.approved&select=id`, {

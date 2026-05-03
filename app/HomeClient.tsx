@@ -67,10 +67,11 @@ export default function HomeClient({
           <span style={{ color: "#4A90B8", fontSize: "10px", letterSpacing: "4px" }}>REGISTRY</span>
         </Link>
         <nav className="vv-nav">
-          <Link href="/ferrari/288-gto" style={{ color: "#8BA5B8", textDecoration: "none", padding: "8px 16px", fontSize: "13px" }}>Registry</Link>
-          <Link href="/about" style={{ color: "#8BA5B8", textDecoration: "none", padding: "8px 16px", fontSize: "13px" }}>About</Link>
-          <Link href="/submit" style={{ color: "#8BA5B8", textDecoration: "none", padding: "8px 16px", fontSize: "13px" }}>Submit</Link>
-          <Link href="/login" style={{ color: "#4A90B8", textDecoration: "none", border: "1px solid #4A90B8", padding: "7px 18px", fontSize: "13px", marginLeft: "8px" }}>Sign In</Link>
+          <Link href="/ferrari/288-gto" style={{ color: "#8BA5B8", textDecoration: "none", padding: "8px 12px", fontSize: "13px" }}>Registry</Link>
+          <Link href="/about" style={{ color: "#8BA5B8", textDecoration: "none", padding: "8px 12px", fontSize: "13px" }}>About</Link>
+          <Link href="/faq" style={{ color: "#8BA5B8", textDecoration: "none", padding: "8px 12px", fontSize: "13px" }}>FAQ</Link>
+          <Link href="/submit" style={{ color: "#fff", textDecoration: "none", background: "#4A90B8", padding: "7px 18px", fontSize: "13px", marginLeft: "4px" }}>Submit a Car</Link>
+          <Link href="/login" style={{ color: "#4A90B8", textDecoration: "none", border: "1px solid #4A90B8", padding: "7px 18px", fontSize: "13px" }}>Sign In</Link>
         </nav>
       </header>
 
@@ -297,8 +298,11 @@ export default function HomeClient({
         <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
           <Link href="/ferrari/288-gto" style={{ color: "#4A6A8A", textDecoration: "none" }}>Registry</Link>
           <Link href="/about" style={{ color: "#4A6A8A", textDecoration: "none" }}>About</Link>
+          <Link href="/faq" style={{ color: "#4A6A8A", textDecoration: "none" }}>FAQ</Link>
+          <Link href="/leaderboard" style={{ color: "#4A6A8A", textDecoration: "none" }}>Leaderboard</Link>
           <Link href="/submit" style={{ color: "#4A6A8A", textDecoration: "none" }}>Submit</Link>
-          <Link href="/login" style={{ color: "#4A6A8A", textDecoration: "none" }}>Sign In</Link>
+          <Link href="/privacy" style={{ color: "#4A6A8A", textDecoration: "none" }}>Privacy</Link>
+          <Link href="/terms" style={{ color: "#4A6A8A", textDecoration: "none" }}>Terms</Link>
         </div>
       </footer>
     </main>
