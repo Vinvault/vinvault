@@ -19,6 +19,10 @@ FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
+# docker-cli lets the post-deployment command run `docker network connect`
+# from inside the container via the mounted Docker socket.
+RUN apk add --no-cache docker-cli
+
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
