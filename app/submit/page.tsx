@@ -89,16 +89,16 @@ export default function SubmitCar() {
 
   return (
     <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh'}}>
-      <header style={{background: '#0A1828', borderBottom: '1px solid #1E3A5A', padding: '20px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-        <Link href="/" style={{textDecoration: 'none'}}>
+      <header className="vv-header">
+        <Link href="/" style={{textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: '10px'}}>
           <span style={{fontSize: '24px', fontWeight: 'bold'}}><span style={{color: '#4A90B8'}}>Vin</span><span style={{color: '#E2EEF7'}}>Vault</span></span>
-          <span style={{color: '#4A90B8', fontSize: '10px', letterSpacing: '4px', marginLeft: '10px'}}>REGISTRY</span>
+          <span style={{color: '#4A90B8', fontSize: '10px', letterSpacing: '4px'}}>REGISTRY</span>
         </Link>
         <div style={{color: '#8BA5B8', fontSize: '13px'}}>
-          <Link href="/registry/ferrari-288-gto" style={{color: '#4A90B8', textDecoration: 'none'}}>Ferrari 288 GTO</Link>{' → '}Submit a Car
+          <Link href="/ferrari/288-gto" style={{color: '#4A90B8', textDecoration: 'none'}}>Ferrari 288 GTO</Link>{' → '}Submit a Car
         </div>
       </header>
-      <div style={{maxWidth: '800px', margin: '0 auto', padding: '60px 40px'}}>
+      <div className="vv-form-container">
         <p style={{color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px'}}>FERRARI 288 GTO · WORLD REGISTRY</p>
         <h1 style={{fontSize: '36px', fontWeight: 'bold', marginBottom: '16px'}}>Submit a Car</h1>
         <p style={{color: '#8BA5B8', lineHeight: '1.7', marginBottom: '48px'}}>Help us complete the registry. Fill in as much detail as you know — every field helps. All submissions are reviewed by community validators before being published.</p>

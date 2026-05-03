@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
   const formData = await request.formData();
   const password = formData.get('password') as string;
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || `https://${request.headers.get('host')}`;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.vinvault.net';
 
   if (!password || password !== adminPassword) {
     const login = new URL('/admin/login', siteUrl);

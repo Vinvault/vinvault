@@ -56,7 +56,7 @@ export default function HomeClient({
     <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Georgia, serif", minHeight: "100vh" }}>
 
       {/* ── Header ── */}
-      <header style={{ background: "#0A1828", borderBottom: "1px solid #1E3A5A", padding: "18px 40px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <header className="vv-header">
         <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "baseline", gap: "10px" }}>
           <span style={{ fontSize: "26px", fontWeight: "bold" }}>
             <span style={{ color: "#4A90B8" }}>Vin</span>
@@ -64,17 +64,18 @@ export default function HomeClient({
           </span>
           <span style={{ color: "#4A90B8", fontSize: "10px", letterSpacing: "4px" }}>REGISTRY</span>
         </Link>
-        <nav style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+        <nav className="vv-nav">
           <Link href="/ferrari/288-gto" style={{ color: "#8BA5B8", textDecoration: "none", padding: "8px 16px", fontSize: "13px" }}>Registry</Link>
+          <Link href="/about" style={{ color: "#8BA5B8", textDecoration: "none", padding: "8px 16px", fontSize: "13px" }}>About</Link>
           <Link href="/submit" style={{ color: "#8BA5B8", textDecoration: "none", padding: "8px 16px", fontSize: "13px" }}>Submit</Link>
           <Link href="/login" style={{ color: "#4A90B8", textDecoration: "none", border: "1px solid #4A90B8", padding: "7px 18px", fontSize: "13px", marginLeft: "8px" }}>Sign In</Link>
         </nav>
       </header>
 
       {/* ── Hero ── */}
-      <section style={{ textAlign: "center", padding: "90px 40px 72px", borderBottom: "1px solid #1E3A5A" }}>
+      <section className="vv-hero">
         <p style={{ color: "#4A90B8", letterSpacing: "4px", fontSize: "11px", marginBottom: "20px" }}>THE DEFINITIVE REGISTRY</p>
-        <h1 style={{ fontSize: "52px", fontWeight: "bold", lineHeight: "1.1", marginBottom: "20px", maxWidth: "760px", margin: "0 auto 20px" }}>
+        <h1 className="vv-h1-hero">
           The World's Most Complete<br />
           <span style={{ color: "#4A90B8" }}>Classic Car Registry</span>
         </h1>
@@ -84,11 +85,11 @@ export default function HomeClient({
         </p>
 
         {/* Search */}
-        <div style={{ display: "flex", justifyContent: "center", gap: "0", maxWidth: "520px", margin: "0 auto" }}>
+        <div style={{ display: "flex", justifyContent: "center", gap: "0", maxWidth: "520px", margin: "0 auto", width: "100%" }}>
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder='Search by make or model — "Ferrari", "288 GTO", "Lamborghini"…'
+            placeholder='Search — "Ferrari", "288 GTO"…'
             style={{
               flex: 1,
               background: "#0D1E36",
@@ -99,9 +100,10 @@ export default function HomeClient({
               fontSize: "14px",
               fontFamily: "Georgia, serif",
               outline: "none",
+              minWidth: 0,
             }}
           />
-          <div style={{ background: "#4A90B8", padding: "13px 20px", display: "flex", alignItems: "center" }}>
+          <div style={{ background: "#4A90B8", padding: "13px 20px", display: "flex", alignItems: "center", flexShrink: 0 }}>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <circle cx="6.5" cy="6.5" r="5" stroke="#fff" strokeWidth="1.5" />
               <line x1="10.5" y1="10.5" x2="14" y2="14" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
@@ -111,7 +113,7 @@ export default function HomeClient({
       </section>
 
       {/* ── Stats bar ── */}
-      <section style={{ background: "#0A1828", borderBottom: "1px solid #1E3A5A", padding: "28px 40px", display: "flex", justifyContent: "center", gap: "80px" }}>
+      <section className="vv-stats-bar">
         {[
           { n: String(recentCount), l: "Cars in Registry" },
           { n: String(modelCount), l: "Models Tracked" },
@@ -125,8 +127,8 @@ export default function HomeClient({
       </section>
 
       {/* ── Registries grid ── */}
-      <section style={{ maxWidth: "1200px", margin: "0 auto", padding: "64px 40px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "36px" }}>
+      <section className="vv-section">
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "36px", flexWrap: "wrap", gap: "8px" }}>
           <div>
             <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "8px" }}>BROWSE</p>
             <h2 style={{ fontSize: "28px", fontWeight: "bold" }}>Registries</h2>
@@ -146,7 +148,7 @@ export default function HomeClient({
             </button>
           </div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "24px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "24px" }}>
             {filtered.map((r) => {
               const p = pct(r.documented, r.total);
               return (
@@ -181,7 +183,6 @@ export default function HomeClient({
               );
             })}
 
-            {/* "Coming soon" placeholder when only one registry exists */}
             {filtered.length === REGISTRIES.length && (
               <div style={{ background: "#080F1A", border: "1px dashed #1E3A5A", padding: "28px", display: "flex", alignItems: "center", justifyContent: "center", minHeight: "160px" }}>
                 <div style={{ textAlign: "center" }}>
@@ -196,11 +197,11 @@ export default function HomeClient({
 
       {/* ── Recently Added ── */}
       {recent.length > 0 && (
-        <section style={{ borderTop: "1px solid #1E3A5A", padding: "64px 40px" }}>
+        <section className="vv-section-full">
           <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
             <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "8px" }}>LATEST</p>
             <h2 style={{ fontSize: "28px", fontWeight: "bold", marginBottom: "36px" }}>Recently Added</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "16px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "16px" }}>
               {recent.map((s) => (
                 <Link key={s.id} href={`/ferrari/288-gto/${s.chassis_number}`} style={{ textDecoration: "none", color: "inherit" }}>
                   <div style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "20px 24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}
@@ -224,18 +225,20 @@ export default function HomeClient({
       )}
 
       {/* ── Why VinVault ── */}
-      <section style={{ borderTop: "1px solid #1E3A5A", padding: "64px 40px" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "40px" }}>
-          {[
-            { title: "Community Verified", desc: "Every entry validated by trusted contributors with deep expertise in each model." },
-            { title: "Complete History", desc: "Chassis numbers, production dates, provenance, ownership history, and auction records." },
-            { title: "Global Registry", desc: "Cars tracked across dozens of countries. Submit a car to help complete the record." },
-          ].map((item) => (
-            <div key={item.title} style={{ borderTop: "2px solid #4A90B8", paddingTop: "20px" }}>
-              <h3 style={{ fontSize: "16px", marginBottom: "12px" }}>{item.title}</h3>
-              <p style={{ color: "#8BA5B8", fontSize: "14px", lineHeight: "1.7" }}>{item.desc}</p>
-            </div>
-          ))}
+      <section className="vv-section-full">
+        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+          <div className="vv-features-grid">
+            {[
+              { title: "Community Verified", desc: "Every entry validated by trusted contributors with deep expertise in each model." },
+              { title: "Complete History", desc: "Chassis numbers, production dates, provenance, ownership history, and auction records." },
+              { title: "Global Registry", desc: "Cars tracked across dozens of countries. Submit a car to help complete the record." },
+            ].map((item) => (
+              <div key={item.title} style={{ borderTop: "2px solid #4A90B8", paddingTop: "20px" }}>
+                <h3 style={{ fontSize: "16px", marginBottom: "12px" }}>{item.title}</h3>
+                <p style={{ color: "#8BA5B8", fontSize: "14px", lineHeight: "1.7" }}>{item.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -251,10 +254,11 @@ export default function HomeClient({
       </section>
 
       {/* ── Footer ── */}
-      <footer style={{ borderTop: "1px solid #1E3A5A", padding: "28px 40px", display: "flex", justifyContent: "space-between", alignItems: "center", color: "#4A6A8A", fontSize: "13px" }}>
+      <footer className="vv-footer">
         <span><span style={{ color: "#4A90B8" }}>Vin</span>Vault Registry © 2026</span>
-        <div style={{ display: "flex", gap: "24px" }}>
+        <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
           <Link href="/ferrari/288-gto" style={{ color: "#4A6A8A", textDecoration: "none" }}>Registry</Link>
+          <Link href="/about" style={{ color: "#4A6A8A", textDecoration: "none" }}>About</Link>
           <Link href="/submit" style={{ color: "#4A6A8A", textDecoration: "none" }}>Submit</Link>
           <Link href="/login" style={{ color: "#4A6A8A", textDecoration: "none" }}>Sign In</Link>
         </div>
