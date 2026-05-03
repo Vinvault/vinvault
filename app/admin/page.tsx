@@ -47,7 +47,12 @@ export default async function AdminPage() {
           <span style={{fontSize: '24px', fontWeight: 'bold'}}><span style={{color: '#4A90B8'}}>Vin</span><span style={{color: '#E2EEF7'}}>Vault</span></span>
           <span style={{color: '#4A90B8', fontSize: '10px', letterSpacing: '4px', marginLeft: '10px'}}>REGISTRY</span>
         </Link>
-        <div style={{color: '#E07070', fontSize: '13px', letterSpacing: '2px'}}>ADMIN PANEL</div>
+        <div style={{display: 'flex', alignItems: 'center', gap: '24px'}}>
+          <div style={{color: '#E07070', fontSize: '13px', letterSpacing: '2px'}}>ADMIN PANEL</div>
+          <form action="/api/admin/logout" method="POST">
+            <button type="submit" style={{background: 'none', border: '1px solid #1E3A5A', color: '#4A6A8A', padding: '6px 14px', fontSize: '12px', letterSpacing: '1px', cursor: 'pointer', fontFamily: 'Georgia, serif'}}>Sign out</button>
+          </form>
+        </div>
       </header>
       <div style={{maxWidth: '1200px', margin: '0 auto', padding: '40px'}}>
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px'}}>
