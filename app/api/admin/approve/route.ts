@@ -8,7 +8,11 @@ export async function POST(request: NextRequest) {
   const id = formData.get('id');
   await fetch(`${supabaseUrl}/rest/v1/submissions?id=eq.${id}`, {
     method: 'PATCH',
-    headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Content-Type': 'application/json' },
+    headers: {
+      'apikey': supabaseKey,
+      'Authorization': `Bearer ${supabaseKey}`,
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify({ status: 'approved' })
   });
   return NextResponse.redirect(new URL('/admin', request.url));
