@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic';
+
 async function getSubmission(id: string) {
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
