@@ -18,10 +18,10 @@ export default function NotFound() {
           <p style={{ color: '#1E3A5A', fontSize: 'clamp(60px, 20vw, 120px)', fontWeight: 'bold', lineHeight: 1, marginBottom: '0', fontFamily: 'Georgia, serif', letterSpacing: '-4px' }}>404</p>
           <p style={{ color: '#4A90B8', letterSpacing: '4px', fontSize: '11px', marginBottom: '24px', marginTop: '-8px' }}>PAGE NOT FOUND</p>
           <h1 style={{ fontSize: 'clamp(20px, 5vw, 28px)', fontWeight: 'bold', marginBottom: '16px' }}>
-            This chassis doesn't exist
+            Page Not Found
           </h1>
           <p style={{ color: '#8BA5B8', fontSize: '16px', lineHeight: '1.7', marginBottom: '48px' }}>
-            The page you're looking for hasn't been documented yet — or the URL may be incorrect. Double-check the address, or head back to the registry.
+            The page you're looking for doesn't exist or may have moved.
           </p>
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link
