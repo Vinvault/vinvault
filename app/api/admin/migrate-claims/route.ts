@@ -5,6 +5,10 @@ export const dynamic = "force-dynamic";
 // One-time migration token — deleted after use
 const MIGRATION_TOKEN = "vv-migrate-2026-a7f3b9e1";
 
+export async function GET() {
+  return NextResponse.json({ version: "v3", token_required: true });
+}
+
 export async function POST(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token");
   if (token !== MIGRATION_TOKEN) {
