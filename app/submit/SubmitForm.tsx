@@ -1,12 +1,23 @@
 "use client";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import AppHeader from "@/app/components/AppHeader";
+import { createSupabaseBrowserClient } from "@/lib/supabase";
 
 export default function SubmitForm({ prefillChassis }: { prefillChassis?: string }) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [photoFiles, setPhotoFiles] = useState<File[]>([]);
+  const [photoError, setPhotoError] = useState("");
+  const [uploadingPhotos, setUploadingPhotos] = useState(false);
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const supabase = createSupabaseBrowserClient();
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => setUserEmail(user?.email ?? null));
+  }, []);
   const [form, setForm] = useState({
     chassis_number: prefillChassis || "",
     engine_number: "",
@@ -48,11 +59,35 @@ export default function SubmitForm({ prefillChassis }: { prefillChassis?: string
         setLoading(false);
         return;
       }
+      // Upload photos if user is logged in and has selected files
+      if (userEmail && photoFiles.length > 0) {
+        setUploadingPhotos(true);
+        const chassis = form.chassis_number.trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+        await Promise.all(
+          photoFiles.map(async (file) => {
+            const path = `${chassis}/${Date.now()}_${Math.random().toString(36).slice(2)}.${file.name.split(".").pop()}`;
+            await supabase.storage.from("chassis-photos").upload(path, file);
+          })
+        );
+        setUploadingPhotos(false);
+      }
+
       setSubmitted(true);
     } catch (err: any) {
       setError("Submission failed: " + err.message);
     }
     setLoading(false);
+  };
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    setPhotoError("");
+    const valid = files.filter(f => {
+      if (f.size > 5 * 1024 * 1024) { setPhotoError("Max 5 MB per photo."); return false; }
+      if (!["image/jpeg", "image/png", "image/webp"].includes(f.type)) { setPhotoError("JPEG, PNG, or WebP only."); return false; }
+      return true;
+    });
+    setPhotoFiles(valid.slice(0, 10));
   };
 
   const field = (label: string, name: string, placeholder = "", type = "text", required = false) => (
@@ -127,12 +162,41 @@ export default function SubmitForm({ prefillChassis }: { prefillChassis?: string
           </div>
           {field("SOURCE / REFERENCE", "source", "e.g. Auction catalog, owner contact, magazine article")}
           {field("YOUR EMAIL", "submitter_email", "For follow-up questions", "email")}
-          <div style={{marginTop: '40px', padding: '20px', background: '#0A1828', border: '1px solid #1E3A5A', marginBottom: '32px'}}>
+          <h2 style={{color: '#4A90B8', fontSize: '11px', letterSpacing: '3px', marginBottom: '24px', borderBottom: '1px solid #1E3A5A', paddingBottom: '12px', marginTop: '40px'}}>PHOTOS (OPTIONAL)</h2>
+          {userEmail ? (
+            <div style={{marginBottom: '24px'}}>
+              <label style={{display: 'block', color: '#8BA5B8', fontSize: '11px', letterSpacing: '2px', marginBottom: '8px'}}>UPLOAD PHOTOS</label>
+              <label style={{display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#0A1828', border: '1px solid #1E3A5A', color: '#8BA5B8', padding: '10px 20px', fontSize: '13px', cursor: 'pointer', marginBottom: '12px'}}>
+                + Choose Photos (max 10, 5 MB each)
+                <input ref={photoInputRef} type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={handlePhotoChange} style={{display: 'none'}} />
+              </label>
+              {photoError && <p style={{color: '#E07070', fontSize: '13px', marginBottom: '8px'}}>{photoError}</p>}
+              {photoFiles.length > 0 && (
+                <div style={{display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '8px'}}>
+                  {photoFiles.map((f, i) => (
+                    <div key={i} style={{background: '#0A1828', border: '1px solid #1E3A5A', padding: '4px 10px', fontSize: '12px', color: '#8BA5B8', display: 'flex', alignItems: 'center', gap: '8px'}}>
+                      {f.name}
+                      <button type="button" onClick={() => setPhotoFiles(prev => prev.filter((_, j) => j !== i))}
+                        style={{background: 'none', border: 'none', color: '#4A6A8A', cursor: 'pointer', fontSize: '14px', padding: '0', lineHeight: 1}}>×</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div style={{marginBottom: '24px', background: '#0A1828', border: '1px solid #1E3A5A', padding: '16px 20px'}}>
+              <p style={{color: '#8BA5B8', fontSize: '13px', lineHeight: '1.7', margin: 0}}>
+                <Link href="/login" style={{color: '#4A90B8', textDecoration: 'none'}}>Sign in</Link> to upload photos with your submission. You can also add photos later from the car detail page.
+              </p>
+            </div>
+          )}
+
+          <div style={{marginTop: '24px', padding: '20px', background: '#0A1828', border: '1px solid #1E3A5A', marginBottom: '32px'}}>
             <p style={{color: '#8BA5B8', fontSize: '13px', lineHeight: '1.7', margin: 0}}>By submitting you confirm this information is accurate to the best of your knowledge. False submissions will result in a ban from the registry.</p>
           </div>
-          <button type="submit" disabled={loading}
+          <button type="submit" disabled={loading || uploadingPhotos}
             style={{background: loading ? '#2A4A6A' : '#4A90B8', color: '#fff', padding: '16px 40px', fontSize: '15px', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'Georgia, serif', width: '100%'}}>
-            {loading ? 'SUBMITTING...' : 'SUBMIT FOR REVIEW'}
+            {uploadingPhotos ? 'UPLOADING PHOTOS...' : loading ? 'SUBMITTING...' : 'SUBMIT FOR REVIEW'}
           </button>
         </form>
       </div>

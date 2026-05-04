@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import AppHeader from "@/app/components/AppHeader";
 
 const TOTAL_PRODUCED = 272;
@@ -28,6 +28,14 @@ const STATUS_STYLE: Record<string, { bg: string; color: string }> = {
 
 export default function RegistryClient({ cars, ownedChassis = new Set<string>() }: { cars: Submission[]; ownedChassis?: Set<string> }) {
   const [query, setQuery] = useState('');
+  const [thumbnails, setThumbnails] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    fetch('/api/chassis-thumbnails')
+      .then(r => r.ok ? r.json() : {})
+      .then(setThumbnails)
+      .catch(() => {});
+  }, []);
   const [market, setMarket] = useState('');
   const [status, setStatus] = useState('');
 
@@ -143,6 +151,7 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
             <thead>
               <tr style={{ borderBottom: '1px solid #1E3A5A', color: '#4A90B8', fontSize: '11px', letterSpacing: '2px', textAlign: 'left' }}>
                 <th style={{ padding: '16px 12px' }}>#</th>
+                <th style={{ padding: '16px 8px', width: '44px' }}></th>
                 <th style={{ padding: '16px 12px' }}>CHASSIS NUMBER</th>
                 <th style={{ padding: '16px 12px' }}>COLOR</th>
                 <th style={{ padding: '16px 12px' }}>MARKET</th>
@@ -152,12 +161,26 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
             </thead>
             <tbody>
               {filtered.length === 0 ? (
-                <tr><td colSpan={6} style={{ padding: '48px', textAlign: 'center', color: '#4A6A8A' }}>No entries match your filters.</td></tr>
+                <tr><td colSpan={7} style={{ padding: '48px', textAlign: 'center', color: '#4A6A8A' }}>No entries match your filters.</td></tr>
               ) : filtered.map((car, i) => {
                 const st = STATUS_STYLE[car.status] ?? STATUS_STYLE.pending;
                 return (
                   <tr key={car.id} style={{ borderBottom: '1px solid #0D1E36' }}>
                     <td style={{ padding: '18px 12px', color: '#4A6A8A', fontSize: '13px' }}>{i + 1}</td>
+                    <td style={{ padding: '8px 8px', width: '44px' }}>
+                      {thumbnails[car.chassis_number] ? (
+                        <div style={{ width: '36px', height: '28px', overflow: 'hidden', background: '#0A1828', border: '1px solid #1E3A5A' }}>
+                          <img
+                            src={thumbnails[car.chassis_number]}
+                            alt=""
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            loading="lazy"
+                          />
+                        </div>
+                      ) : (
+                        <div style={{ width: '36px', height: '28px', background: '#0A1828', border: '1px solid #0D1E36' }} />
+                      )}
+                    </td>
                     <td style={{ padding: '18px 12px', fontFamily: 'monospace', fontSize: '14px', letterSpacing: '1px' }}>
                       {car.chassis_number}
                       {ownedChassis.has(car.chassis_number) && (
