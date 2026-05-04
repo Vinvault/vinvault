@@ -274,4 +274,36 @@ details[open] > summary span:last-child::before { content: "−"; }
   .vv-page-container {
     padding: 40px 16px;
   }
+
+  /* Car detail page on mobile */
+  .vv-car-detail {
+    padding: 24px 16px !important;
+  }
+
+  /* Hero section on mobile */
+  .vv-chassis-hero {
+    padding: 32px 16px 24px !important;
+  }
+
+  /* Admin container */
+  .vv-admin-container {
+    padding: 24px 16px 0 !important;
+  }
+
+  /* Breadcrumb responsive */
+  nav[aria-label="Breadcrumb"],
+  div[style*="14px 40px"] {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  /* Ensure images don't overflow */
+  img {
+    max-width: 100%;
+  }
+
+  /* Make sure tables scroll */
+  table {
+    min-width: 480px;
+  }
 }

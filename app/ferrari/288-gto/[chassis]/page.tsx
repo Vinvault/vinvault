@@ -163,7 +163,7 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
       </div>
 
       {/* Hero */}
-      <section style={{ padding: "48px 40px 36px", borderBottom: "1px solid #1E3A5A" }}>
+      <section className="vv-chassis-hero" style={{ padding: "48px 40px 36px", borderBottom: "1px solid #1E3A5A" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "16px" }}>
           <div>
             <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>FERRARI 288 GTO · CHASSIS RECORD</p>
@@ -188,7 +188,7 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
       </section>
 
       {/* Main content */}
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 40px" }}>
+      <div className="vv-car-detail" style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 40px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "40px", marginBottom: "40px" }}>
           {/* Identity */}
           <div>
@@ -267,6 +267,25 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
         {/* Comments */}
         <div style={{ borderTop: "1px solid #1E3A5A", paddingTop: "40px" }}>
           <ChassisComments chassis={car.chassis_number} />
+        </div>
+
+        {/* Forum / Discussions */}
+        <div style={{ borderTop: "1px solid #1E3A5A", paddingTop: "40px", marginTop: "8px" }}>
+          <h2 style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "16px" }}>DISCUSSIONS</h2>
+          <div style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "24px" }}>
+            <p style={{ color: "#8BA5B8", fontSize: "14px", lineHeight: "1.7", marginBottom: "16px" }}>
+              Join the discussion about chassis {car.chassis_number} on the VinVault Forum.
+            </p>
+            <a
+              href={`https://forum.vinvault.net/t/ferrari-288-gto-${encodeURIComponent(car.chassis_number.toLowerCase())}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: "inline-flex", alignItems: "center", gap: "8px", color: "#4A90B8", textDecoration: "none", fontSize: "13px", border: "1px solid #1E3A5A", padding: "10px 20px", background: "#080F1A" }}
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#4A90B8" strokeWidth="1.5"/><path d="M4 5h6M4 7.5h4" stroke="#4A90B8" strokeWidth="1.2" strokeLinecap="round"/></svg>
+              Discuss this chassis on the forum →
+            </a>
+          </div>
         </div>
       </div>
 

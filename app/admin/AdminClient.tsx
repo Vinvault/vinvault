@@ -50,6 +50,7 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
   const [tab, setTab] = useState<"submissions" | "claims">("submissions");
   const [claimProcessing, setClaimProcessing] = useState<string | null>(null);
   const [claimResults, setClaimResults] = useState<Record<string, string>>({});
+  const [storageMsg, setStorageMsg] = useState("");
 
   const stats = useMemo(() => computeStats(submissions), [submissions]);
 
@@ -77,6 +78,13 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
       return true;
     });
   }, [claims, query, statusFilter]);
+
+  async function initStorage() {
+    setStorageMsg("Creating storage bucket...");
+    const res = await fetch("/api/admin/init-storage", { method: "POST" });
+    const data = await res.json();
+    setStorageMsg(res.ok ? `Storage setup: ${JSON.stringify(data)}` : `Error: ${JSON.stringify(data)}`);
+  }
 
   async function handleClaim(id: string, action: "approved" | "rejected") {
     setClaimProcessing(id);
@@ -131,7 +139,7 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
         </div>
       </header>
 
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 40px 0" }}>
+      <div className="vv-admin-container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 40px 0" }}>
         {/* Stats */}
         <div style={{ marginBottom: "32px" }}>
           <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "20px" }}>OVERVIEW</p>
@@ -150,6 +158,17 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Storage setup */}
+        <div style={{ marginBottom: "24px", display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+          <button
+            onClick={initStorage}
+            style={{ background: "#0A1828", border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "8px 16px", fontSize: "12px", cursor: "pointer", fontFamily: "Georgia, serif", letterSpacing: "1px" }}
+          >
+            ⚙ Init Storage Bucket
+          </button>
+          {storageMsg && <span style={{ color: "#4A6A8A", fontSize: "12px" }}>{storageMsg}</span>}
         </div>
 
         {/* Tabs */}
