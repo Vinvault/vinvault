@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import AppHeader from "@/app/components/AppHeader";
 
 export default function SubmitForm({ prefillChassis }: { prefillChassis?: string }) {
   const [submitted, setSubmitted] = useState(false);
@@ -89,15 +90,7 @@ export default function SubmitForm({ prefillChassis }: { prefillChassis?: string
 
   return (
     <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh'}}>
-      <header className="vv-header">
-        <Link href="/" style={{textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: '10px'}}>
-          <span style={{fontSize: '24px', fontWeight: 'bold'}}><span style={{color: '#4A90B8'}}>Vin</span><span style={{color: '#E2EEF7'}}>Vault</span></span>
-          <span style={{color: '#4A90B8', fontSize: '10px', letterSpacing: '4px'}}>REGISTRY</span>
-        </Link>
-        <nav className="vv-nav" style={{fontSize: '13px'}}>
-          <Link href="/ferrari/288-gto" style={{color: '#8BA5B8', textDecoration: 'none', padding: '6px 12px'}}>Registry</Link>
-        </nav>
-      </header>
+      <AppHeader />
       <nav style={{padding: '14px 40px', background: '#0A1828', borderBottom: '1px solid #1E3A5A', fontSize: '12px', color: '#4A6A8A', display: 'flex', gap: '6px', flexWrap: 'wrap'}}>
         <Link href="/" style={{color: '#4A6A8A', textDecoration: 'none'}}>Home</Link>
         <span style={{color: '#1E3A5A'}}>/</span>

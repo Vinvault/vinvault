@@ -55,6 +55,8 @@ details[open] > summary span:last-child::before { content: "−"; }
   top: 0;
   z-index: 100;
   backdrop-filter: blur(8px);
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .vv-nav {
@@ -62,6 +64,32 @@ details[open] > summary span:last-child::before { content: "−"; }
   gap: 8px;
   align-items: center;
 }
+
+/* ── Hamburger menu (AppHeader) ── */
+.vv-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  margin-left: auto;
+}
+
+.vv-hline {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #8BA5B8;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  transform-origin: center;
+}
+
+.vv-hline-open-1 { transform: translateY(7px) rotate(45deg); }
+.vv-hline-open-2 { opacity: 0; }
+.vv-hline-open-3 { transform: translateY(-7px) rotate(-45deg); }
 
 .vv-hero {
   text-align: center;
@@ -161,13 +189,37 @@ details[open] > summary span:last-child::before { content: "−"; }
 @media (max-width: 768px) {
   .vv-header {
     padding: 14px 16px;
-    flex-wrap: wrap;
-    gap: 12px;
+    gap: 0;
+  }
+
+  .vv-hamburger {
+    display: flex;
   }
 
   .vv-nav {
-    gap: 4px;
-    flex-wrap: wrap;
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    border-top: 1px solid #1E3A5A;
+    margin-top: 8px;
+    padding-top: 8px;
+    padding-bottom: 4px;
+  }
+
+  .vv-nav.vv-nav-open {
+    display: flex;
+  }
+
+  .vv-nav a, .vv-nav button {
+    padding: 10px 4px !important;
+    border: none !important;
+    border-bottom: 1px solid #0D1E36 !important;
+    width: 100%;
+    text-align: left;
+    font-size: 14px !important;
+    display: block;
   }
 
   .vv-hero {

@@ -2,6 +2,11 @@ export const dynamic = "force-dynamic";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ShareButton, PrintButton } from "./ChassisActions";
+import ChassisComments from "./ChassisComments";
+import ChassisPhotos from "./ChassisPhotos";
+import ClaimButton from "./ClaimButton";
+import WatchButton from "./WatchButton";
+import AppHeader from "@/app/components/AppHeader";
 
 const BASE = "https://www.vinvault.net";
 
@@ -12,6 +17,21 @@ async function getSubmission(chassis: string) {
   try {
     const res = await fetch(
       `${supabaseUrl}/rest/v1/submissions?chassis_number=eq.${encodeURIComponent(chassis)}&status=eq.approved&limit=1`,
+      { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` }, cache: "no-store" }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data[0] ?? null;
+  } catch { return null; }
+}
+
+async function getOwnerClaim(chassis: string) {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+  if (!supabaseUrl || !supabaseKey) return null;
+  try {
+    const res = await fetch(
+      `${supabaseUrl}/rest/v1/car_claims?chassis_number=eq.${encodeURIComponent(chassis)}&status=eq.approved&limit=1`,
       { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` }, cache: "no-store" }
     );
     if (!res.ok) return null;
@@ -60,9 +80,10 @@ export async function generateMetadata({ params }: { params: Promise<{ chassis: 
 
 export default async function CarPage({ params }: { params: Promise<{ chassis: string }> }) {
   const { chassis } = await params;
-  const [car, similar] = await Promise.all([
+  const [car, similar, ownerClaim] = await Promise.all([
     getSubmission(chassis),
     getSimilarCars(chassis),
+    getOwnerClaim(chassis),
   ]);
 
   const jsonLd = car ? {
@@ -85,17 +106,7 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
   if (!car) {
     return (
       <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Georgia, serif", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-        <header className="vv-header">
-          <Link href="/" style={{ textDecoration: "none" }}>
-            <span style={{ fontSize: "24px", fontWeight: "bold" }}>
-              <span style={{ color: "#4A90B8" }}>Vin</span><span style={{ color: "#E2EEF7" }}>Vault</span>
-            </span>
-            <span style={{ color: "#4A90B8", fontSize: "10px", letterSpacing: "4px", marginLeft: "10px" }}>REGISTRY</span>
-          </Link>
-          <nav className="vv-nav" style={{ fontSize: "13px" }}>
-            <Link href="/ferrari/288-gto" style={{ color: "#8BA5B8", textDecoration: "none", padding: "6px 12px" }}>Registry</Link>
-          </nav>
-        </header>
+        <AppHeader />
 
         {/* Breadcrumb */}
         <div style={{ padding: "16px 40px", background: "#0A1828", borderBottom: "1px solid #1E3A5A", fontSize: "12px", color: "#4A6A8A" }}>
@@ -140,18 +151,7 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
         />
       )}
 
-      <header className="vv-header">
-        <Link href="/" style={{ textDecoration: "none" }}>
-          <span style={{ fontSize: "24px", fontWeight: "bold" }}>
-            <span style={{ color: "#4A90B8" }}>Vin</span><span style={{ color: "#E2EEF7" }}>Vault</span>
-          </span>
-          <span style={{ color: "#4A90B8", fontSize: "10px", letterSpacing: "4px", marginLeft: "10px" }}>REGISTRY</span>
-        </Link>
-        <nav className="vv-nav" style={{ fontSize: "13px" }}>
-          <Link href="/ferrari/288-gto" style={{ color: "#8BA5B8", textDecoration: "none", padding: "6px 12px" }}>Registry</Link>
-          <Link href="/submit" style={{ color: "#4A90B8", textDecoration: "none", border: "1px solid #4A90B8", padding: "6px 14px" }}>Submit</Link>
-        </nav>
-      </header>
+      <AppHeader />
 
       {/* Breadcrumb */}
       <div style={{ padding: "14px 40px", background: "#0A1828", borderBottom: "1px solid #1E3A5A", fontSize: "12px", color: "#4A6A8A", display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
@@ -176,9 +176,12 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
           </div>
           <div style={{ display: "flex", gap: "12px", alignItems: "flex-start", flexWrap: "wrap" }}>
             <span style={{ background: "#0D2A1A", color: "#4AB87A", padding: "8px 20px", fontSize: "12px", letterSpacing: "2px" }}>APPROVED</span>
-            {/* Share button */}
+            {ownerClaim && (
+              <span style={{ background: "#0D1E36", color: "#4A90B8", padding: "8px 20px", fontSize: "12px", letterSpacing: "2px", border: "1px solid #4A90B8" }}>OWNER VERIFIED</span>
+            )}
+            <WatchButton chassis={car.chassis_number} />
+            <ClaimButton chassis={car.chassis_number} />
             <ShareButton chassis={car.chassis_number} />
-            {/* Print button */}
             <PrintButton />
           </div>
         </div>
@@ -255,6 +258,16 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
           </p>
           <Link href="/ferrari/288-gto" style={{ color: "#4A90B8", fontSize: "13px", textDecoration: "none" }}>← Back to Registry</Link>
         </div>
+
+        {/* Photos */}
+        <div style={{ marginTop: "48px", borderTop: "1px solid #1E3A5A", paddingTop: "40px" }}>
+          <ChassisPhotos chassis={car.chassis_number} />
+        </div>
+
+        {/* Comments */}
+        <div style={{ borderTop: "1px solid #1E3A5A", paddingTop: "40px" }}>
+          <ChassisComments chassis={car.chassis_number} />
+        </div>
       </div>
 
       {/* Similar cars */}
@@ -284,6 +297,13 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
       )}
 
       <footer style={{ borderTop: "1px solid #1E3A5A", padding: "32px 40px", textAlign: "center", color: "#4A6A8A", fontSize: "13px" }}>
+        <div style={{ marginBottom: "12px" }}>
+          <a href="https://forum.vinvault.net" target="_blank" rel="noopener noreferrer" style={{ color: "#4A90B8", textDecoration: "none", fontSize: "13px" }}>
+            forum.vinvault.net
+          </a>
+          <span style={{ margin: "0 12px" }}>·</span>
+          <a href={`https://www.vinvault.net/api/v1/chassis/${car.chassis_number}`} style={{ color: "#4A6A8A", textDecoration: "none", fontSize: "12px" }}>API</a>
+        </div>
         <span style={{ color: "#4A90B8" }}>Vin</span>Vault Registry © 2026 · vinvault.net
       </footer>
     </main>

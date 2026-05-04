@@ -47,7 +47,10 @@ async function updateAndApprove(formData: FormData) {
 
   if (res.ok) {
     const [updated] = await res.json();
-    await sendStatusEmail(updated?.submitter_email, "approved", updated?.chassis_number);
+    await Promise.all([
+      sendStatusEmail(updated?.submitter_email, "approved", updated?.chassis_number),
+      notifyWatchers(updated?.chassis_number, "approval"),
+    ]);
   }
 
   redirect("/admin");
@@ -82,12 +85,54 @@ async function rejectSubmission(formData: FormData) {
 async function sendStatusEmail(email: string | undefined, status: "approved" | "rejected", chassis: string) {
   const apiKey = process.env.BREVO_API_KEY;
   if (!apiKey || !email) return;
-  const subject = status === "approved"
-    ? `Your VinVault submission has been approved — ${chassis}`
-    : `Your VinVault submission — ${chassis}`;
-  const body = status === "approved"
-    ? `Your Ferrari 288 GTO chassis record (${chassis}) has been approved and is now live in the VinVault registry.\n\nView it at: https://www.vinvault.net/ferrari/288-gto/${chassis}\n\nThank you for contributing to the registry.`
-    : `Your Ferrari 288 GTO chassis submission (${chassis}) could not be verified with the information provided and has been rejected.\n\nIf you have additional documentation, please resubmit with more details.\n\nThank you for contributing to VinVault.`;
+
+  const registryUrl = `https://www.vinvault.net/ferrari/288-gto/${chassis}`;
+  const isApproved = status === "approved";
+  const subject = isApproved
+    ? `Your submission has been approved — ${chassis}`
+    : `Your submission for ${chassis} was not approved`;
+
+  const htmlContent = isApproved ? `
+<!DOCTYPE html><html><body style="margin:0;padding:0;background:#080F1A;font-family:Georgia,serif;">
+<div style="max-width:600px;margin:0 auto;padding:40px 24px;">
+  <div style="margin-bottom:32px;">
+    <span style="font-size:22px;font-weight:bold;"><span style="color:#4A90B8">Vin</span><span style="color:#E2EEF7">Vault</span></span>
+    <span style="color:#4A90B8;font-size:10px;letter-spacing:4px;margin-left:10px;">REGISTRY</span>
+  </div>
+  <div style="background:#0A1828;border:1px solid #1E3A5A;padding:32px;">
+    <p style="color:#4AB87A;font-size:11px;letter-spacing:3px;margin:0 0 16px;">SUBMISSION APPROVED</p>
+    <h1 style="color:#E2EEF7;font-size:24px;margin:0 0 16px;">Your chassis record is now live</h1>
+    <p style="color:#8BA5B8;font-size:15px;line-height:1.7;margin:0 0 24px;">
+      Ferrari 288 GTO chassis <strong style="color:#E2EEF7;font-family:monospace;">${chassis}</strong> has been verified and published to the VinVault world registry.
+    </p>
+    <a href="${registryUrl}" style="display:inline-block;background:#4A90B8;color:#fff;padding:12px 28px;text-decoration:none;font-size:13px;letter-spacing:2px;">VIEW CHASSIS RECORD</a>
+    <p style="color:#4A6A8A;font-size:13px;margin:24px 0 0;">Thank you for contributing to the historical record.</p>
+  </div>
+  <p style="color:#4A6A8A;font-size:12px;margin-top:24px;text-align:center;">VinVault Registry · <a href="https://www.vinvault.net" style="color:#4A6A8A;">vinvault.net</a></p>
+</div></body></html>` : `
+<!DOCTYPE html><html><body style="margin:0;padding:0;background:#080F1A;font-family:Georgia,serif;">
+<div style="max-width:600px;margin:0 auto;padding:40px 24px;">
+  <div style="margin-bottom:32px;">
+    <span style="font-size:22px;font-weight:bold;"><span style="color:#4A90B8">Vin</span><span style="color:#E2EEF7">Vault</span></span>
+    <span style="color:#4A90B8;font-size:10px;letter-spacing:4px;margin-left:10px;">REGISTRY</span>
+  </div>
+  <div style="background:#0A1828;border:1px solid #1E3A5A;padding:32px;">
+    <p style="color:#B8944A;font-size:11px;letter-spacing:3px;margin:0 0 16px;">SUBMISSION UPDATE</p>
+    <h1 style="color:#E2EEF7;font-size:24px;margin:0 0 16px;">We couldn't verify this submission</h1>
+    <p style="color:#8BA5B8;font-size:15px;line-height:1.7;margin:0 0 16px;">
+      Your submission for chassis <strong style="color:#E2EEF7;font-family:monospace;">${chassis}</strong> could not be verified with the information provided.
+    </p>
+    <p style="color:#8BA5B8;font-size:15px;line-height:1.7;margin:0 0 24px;">
+      If you have additional documentation — factory records, auction catalogues, or owner contacts — please resubmit with more details.
+    </p>
+    <a href="https://www.vinvault.net/submit?chassis=${encodeURIComponent(chassis)}" style="display:inline-block;background:#0A1828;border:1px solid #4A90B8;color:#4A90B8;padding:12px 28px;text-decoration:none;font-size:13px;letter-spacing:2px;">RESUBMIT WITH MORE DETAILS</a>
+  </div>
+  <p style="color:#4A6A8A;font-size:12px;margin-top:24px;text-align:center;">VinVault Registry · <a href="https://www.vinvault.net" style="color:#4A6A8A;">vinvault.net</a></p>
+</div></body></html>`;
+
+  const textContent = isApproved
+    ? `Your Ferrari 288 GTO chassis record (${chassis}) has been approved.\n\nView it at: ${registryUrl}\n\nThank you for contributing to the registry.`
+    : `Your submission for ${chassis} could not be verified. Please resubmit with additional documentation at https://www.vinvault.net/submit?chassis=${chassis}`;
 
   try {
     await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -97,9 +142,37 @@ async function sendStatusEmail(email: string | undefined, status: "approved" | "
         sender: { name: "VinVault Registry", email: "registry@vinvault.net" },
         to: [{ email }],
         subject,
-        textContent: body,
+        htmlContent,
+        textContent,
       }),
     });
+  } catch {}
+}
+
+async function notifyWatchers(chassis: string, event: string) {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_KEY;
+  const apiKey = process.env.BREVO_API_KEY;
+  if (!url || !key || !apiKey) return;
+  try {
+    const res = await fetch(`${url}/rest/v1/car_watches?chassis_number=eq.${encodeURIComponent(chassis)}`,
+      { headers: { apikey: key, Authorization: `Bearer ${key}` }, cache: "no-store" });
+    if (!res.ok) return;
+    const watchers: { user_email: string }[] = await res.json();
+    const registryUrl = `https://www.vinvault.net/ferrari/288-gto/${chassis}`;
+    for (const w of watchers) {
+      await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": apiKey, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sender: { name: "VinVault Registry", email: "registry@vinvault.net" },
+          to: [{ email: w.user_email }],
+          subject: `Update on chassis ${chassis} — VinVault`,
+          htmlContent: `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#080F1A;font-family:Georgia,serif;"><div style="max-width:600px;margin:0 auto;padding:40px 24px;"><div style="margin-bottom:32px;"><span style="font-size:22px;font-weight:bold;"><span style="color:#4A90B8">Vin</span><span style="color:#E2EEF7">Vault</span></span><span style="color:#4A90B8;font-size:10px;letter-spacing:4px;margin-left:10px;">REGISTRY</span></div><div style="background:#0A1828;border:1px solid #1E3A5A;padding:32px;"><p style="color:#4A90B8;font-size:11px;letter-spacing:3px;margin:0 0 16px;">WATCHED CAR UPDATE</p><h1 style="color:#E2EEF7;font-size:22px;margin:0 0 16px;">Chassis ${chassis} has been updated</h1><p style="color:#8BA5B8;font-size:15px;line-height:1.7;margin:0 0 24px;">A chassis you are watching has a new ${event} in the VinVault registry.</p><a href="${registryUrl}" style="display:inline-block;background:#4A90B8;color:#fff;padding:12px 28px;text-decoration:none;font-size:13px;letter-spacing:2px;">VIEW UPDATE</a></div><p style="color:#4A6A8A;font-size:12px;margin-top:24px;text-align:center;">VinVault Registry · <a href="https://www.vinvault.net" style="color:#4A6A8A;">vinvault.net</a></p></div></body></html>`,
+          textContent: `Chassis ${chassis} has been updated: ${event}.\n\nView it at: ${registryUrl}`,
+        }),
+      });
+    }
   } catch {}
 }
 

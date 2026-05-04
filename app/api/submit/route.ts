@@ -104,9 +104,29 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: `Database error: ${response.status}` }, { status: 500 });
     }
 
+    // Notify admin of new submission (fire-and-forget)
+    notifyAdmin(sanitized.chassis_number, sanitized.submitter_email).catch(() => {});
+
     return NextResponse.json({ success: true });
   } catch (err: any) {
     console.error("Fetch error:", err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
+}
+
+async function notifyAdmin(chassis: string, submitterEmail: string) {
+  const apiKey = process.env.BREVO_API_KEY;
+  if (!apiKey) return;
+  const adminUrl = `https://www.vinvault.net/admin`;
+  await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: { "api-key": apiKey, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      sender: { name: "VinVault Registry", email: "registry@vinvault.net" },
+      to: [{ email: "setup@vinvault.net" }],
+      subject: `New submission: ${chassis} — VinVault`,
+      htmlContent: `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#080F1A;font-family:Georgia,serif;"><div style="max-width:600px;margin:0 auto;padding:40px 24px;"><div style="background:#0A1828;border:1px solid #1E3A5A;padding:32px;"><p style="color:#B8944A;font-size:11px;letter-spacing:3px;margin:0 0 16px;">NEW SUBMISSION</p><h1 style="color:#E2EEF7;font-size:22px;margin:0 0 12px;">Chassis ${chassis}</h1><p style="color:#8BA5B8;font-size:14px;line-height:1.6;margin:0 0 8px;">Submitted by: ${submitterEmail || "Anonymous"}</p><a href="${adminUrl}" style="display:inline-block;background:#4A90B8;color:#fff;padding:12px 24px;text-decoration:none;font-size:13px;letter-spacing:2px;margin-top:16px;">REVIEW IN ADMIN</a></div></div></body></html>`,
+      textContent: `New submission for chassis ${chassis} from ${submitterEmail || "Anonymous"}.\n\nReview at: ${adminUrl}`,
+    }),
+  });
 }

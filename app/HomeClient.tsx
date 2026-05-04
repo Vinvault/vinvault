@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState, useMemo } from "react";
 import CountUp from "./components/CountUp";
 import NewsletterForm from "./components/NewsletterForm";
+import AppHeader from "./components/AppHeader";
 
 interface Registry {
   make: string;
@@ -57,23 +58,12 @@ export default function HomeClient({
   return (
     <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Georgia, serif", minHeight: "100vh" }}>
 
-      {/* ── Header ── */}
-      <header className="vv-header">
-        <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "baseline", gap: "10px" }}>
-          <span style={{ fontSize: "26px", fontWeight: "bold" }}>
-            <span style={{ color: "#4A90B8" }}>Vin</span>
-            <span style={{ color: "#E2EEF7" }}>Vault</span>
-          </span>
-          <span style={{ color: "#4A90B8", fontSize: "10px", letterSpacing: "4px" }}>REGISTRY</span>
-        </Link>
-        <nav className="vv-nav">
-          <Link href="/ferrari/288-gto" style={{ color: "#8BA5B8", textDecoration: "none", padding: "8px 12px", fontSize: "13px" }}>Registry</Link>
-          <Link href="/about" style={{ color: "#8BA5B8", textDecoration: "none", padding: "8px 12px", fontSize: "13px" }}>About</Link>
-          <Link href="/faq" style={{ color: "#8BA5B8", textDecoration: "none", padding: "8px 12px", fontSize: "13px" }}>FAQ</Link>
-          <Link href="/submit" style={{ color: "#fff", textDecoration: "none", background: "#4A90B8", padding: "7px 18px", fontSize: "13px", marginLeft: "4px" }}>Submit a Car</Link>
-          <Link href="/login" style={{ color: "#4A90B8", textDecoration: "none", border: "1px solid #4A90B8", padding: "7px 18px", fontSize: "13px" }}>Sign In</Link>
-        </nav>
-      </header>
+      <AppHeader nav={[
+        { href: "/ferrari/288-gto", label: "Registry" },
+        { href: "/about", label: "About" },
+        { href: "/faq", label: "FAQ" },
+        { href: "/submit", label: "Submit a Car", highlight: true },
+      ]} />
 
       {/* ── Hero ── */}
       <section className="vv-hero">

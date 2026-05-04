@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState, useMemo } from "react";
+import AppHeader from "@/app/components/AppHeader";
 
 const TOTAL_PRODUCED = 272;
 
@@ -13,13 +14,19 @@ interface Submission {
   created_at: string;
 }
 
+const REGISTRY_NAV = [
+  { href: "/ferrari/288-gto", label: "Registry" },
+  { href: "/about", label: "About" },
+  { href: "/submit", label: "Submit", highlight: true as const },
+];
+
 const STATUS_STYLE: Record<string, { bg: string; color: string }> = {
   approved:  { bg: '#0D2A1A', color: '#4AB87A' },
   pending:   { bg: '#2A1A0D', color: '#B8944A' },
   rejected:  { bg: '#2A0D0D', color: '#E07070' },
 };
 
-export default function RegistryClient({ cars }: { cars: Submission[] }) {
+export default function RegistryClient({ cars, ownedChassis = new Set<string>() }: { cars: Submission[]; ownedChassis?: Set<string> }) {
   const [query, setQuery] = useState('');
   const [market, setMarket] = useState('');
   const [status, setStatus] = useState('');
@@ -44,20 +51,7 @@ export default function RegistryClient({ cars }: { cars: Submission[] }) {
 
   return (
     <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh' }}>
-      <header className="vv-header">
-        <Link href="/" style={{ textDecoration: 'none' }}>
-          <span style={{ fontSize: '24px', fontWeight: 'bold' }}>
-            <span style={{ color: '#4A90B8' }}>Vin</span><span style={{ color: '#E2EEF7' }}>Vault</span>
-          </span>
-          <span style={{ color: '#4A90B8', fontSize: '10px', letterSpacing: '4px', marginLeft: '10px' }}>REGISTRY</span>
-        </Link>
-        <nav className="vv-nav" style={{ fontSize: '13px' }}>
-          <Link href="/" style={{ color: '#8BA5B8', textDecoration: 'none', padding: '6px 12px' }}>Home</Link>
-          <Link href="/about" style={{ color: '#8BA5B8', textDecoration: 'none', padding: '6px 12px' }}>About</Link>
-          <Link href="/submit" style={{ color: '#4A90B8', textDecoration: 'none', border: '1px solid #4A90B8', padding: '6px 16px' }}>Submit</Link>
-          <Link href="/login" style={{ color: '#8BA5B8', textDecoration: 'none', padding: '6px 12px' }}>Sign In</Link>
-        </nav>
-      </header>
+      <AppHeader nav={REGISTRY_NAV} />
 
       <section className="vv-registry-header">
         <p style={{ color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px' }}>WORLD REGISTRY</p>
@@ -101,6 +95,15 @@ export default function RegistryClient({ cars }: { cars: Submission[] }) {
           <p style={{ color: '#4A6A8A', fontSize: '11px', marginTop: '6px' }}>
             {TOTAL_PRODUCED - documented} chassis still to be documented — <Link href="/submit" style={{ color: '#4A90B8', textDecoration: 'none' }}>submit a car</Link> to help complete the record.
           </p>
+        </div>
+
+        {/* Forum link */}
+        <div style={{ marginTop: '20px' }}>
+          <a href="https://forum.vinvault.net/c/ferrari-288-gto" target="_blank" rel="noopener noreferrer"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#4A90B8', textDecoration: 'none', fontSize: '13px', border: '1px solid #1E3A5A', padding: '8px 16px', background: '#0A1828' }}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#4A90B8" strokeWidth="1.5"/><path d="M4 5h6M4 7.5h4" stroke="#4A90B8" strokeWidth="1.2" strokeLinecap="round"/></svg>
+            Discuss on the VinVault Forum →
+          </a>
         </div>
       </section>
 
@@ -155,7 +158,14 @@ export default function RegistryClient({ cars }: { cars: Submission[] }) {
                 return (
                   <tr key={car.id} style={{ borderBottom: '1px solid #0D1E36' }}>
                     <td style={{ padding: '18px 12px', color: '#4A6A8A', fontSize: '13px' }}>{i + 1}</td>
-                    <td style={{ padding: '18px 12px', fontFamily: 'monospace', fontSize: '14px', letterSpacing: '1px' }}>{car.chassis_number}</td>
+                    <td style={{ padding: '18px 12px', fontFamily: 'monospace', fontSize: '14px', letterSpacing: '1px' }}>
+                      {car.chassis_number}
+                      {ownedChassis.has(car.chassis_number) && (
+                        <span style={{ marginLeft: '8px', background: '#0D1E36', color: '#4A90B8', padding: '2px 8px', fontSize: '10px', letterSpacing: '1px', verticalAlign: 'middle' }}>
+                          OWNER
+                        </span>
+                      )}
+                    </td>
                     <td style={{ padding: '18px 12px', color: '#8BA5B8' }}>{car.exterior_color || '—'}</td>
                     <td style={{ padding: '18px 12px', color: '#8BA5B8' }}>{car.original_market || '—'}</td>
                     <td style={{ padding: '18px 12px' }}>
@@ -180,8 +190,14 @@ export default function RegistryClient({ cars }: { cars: Submission[] }) {
         </p>
       </section>
 
-      <footer style={{ borderTop: '1px solid #1E3A5A', padding: '32px 40px', textAlign: 'center', color: '#4A6A8A', fontSize: '13px' }}>
-        <span style={{ color: '#4A90B8' }}>Vin</span>Vault Registry © 2026 · vinvault.net
+      <footer className="vv-footer" style={{ justifyContent: 'center', textAlign: 'center' }}>
+        <div>
+          <a href="https://forum.vinvault.net" target="_blank" rel="noopener noreferrer" style={{ color: '#4A90B8', textDecoration: 'none', marginRight: '16px' }}>Forum</a>
+          <a href="/about" style={{ color: '#4A6A8A', textDecoration: 'none', marginRight: '16px' }}>About</a>
+          <a href="/terms" style={{ color: '#4A6A8A', textDecoration: 'none', marginRight: '16px' }}>Terms</a>
+          <a href="/privacy" style={{ color: '#4A6A8A', textDecoration: 'none' }}>Privacy</a>
+        </div>
+        <div><span style={{ color: '#4A90B8' }}>Vin</span>Vault Registry © 2026 · vinvault.net</div>
       </footer>
     </main>
   );

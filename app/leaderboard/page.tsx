@@ -2,6 +2,7 @@ export const revalidate = 120;
 import Link from "next/link";
 import type { Metadata } from "next";
 import Breadcrumb from "@/app/components/Breadcrumb";
+import AppHeader from "@/app/components/AppHeader";
 
 export const metadata: Metadata = {
   title: "Leaderboard — VinVault",
@@ -70,19 +71,7 @@ export default async function LeaderboardPage() {
 
   return (
     <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Georgia, serif", minHeight: "100vh" }}>
-      <header className="vv-header">
-        <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "baseline", gap: "10px" }}>
-          <span style={{ fontSize: "24px", fontWeight: "bold" }}>
-            <span style={{ color: "#4A90B8" }}>Vin</span><span style={{ color: "#E2EEF7" }}>Vault</span>
-          </span>
-          <span style={{ color: "#4A90B8", fontSize: "10px", letterSpacing: "4px" }}>REGISTRY</span>
-        </Link>
-        <nav className="vv-nav" style={{ fontSize: "13px" }}>
-          <Link href="/" style={{ color: "#8BA5B8", textDecoration: "none", padding: "6px 12px" }}>Home</Link>
-          <Link href="/ferrari/288-gto" style={{ color: "#8BA5B8", textDecoration: "none", padding: "6px 12px" }}>Registry</Link>
-          <Link href="/submit" style={{ color: "#4A90B8", textDecoration: "none", border: "1px solid #4A90B8", padding: "6px 16px" }}>Submit</Link>
-        </nav>
-      </header>
+      <AppHeader />
 
       <Breadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "Leaderboard" }]} />
 

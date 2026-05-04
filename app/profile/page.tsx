@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
+import AppHeader from "@/app/components/AppHeader";
 
 interface Submission {
   id: string;
@@ -12,16 +13,37 @@ interface Submission {
   created_at: string;
 }
 
+interface Claim {
+  id: string;
+  chassis_number: string;
+  status: string;
+  message: string;
+  created_at: string;
+}
+
 const STATUS_STYLE: Record<string, { bg: string; color: string; label: string }> = {
   approved:  { bg: '#0D2A1A', color: '#4AB87A', label: 'Approved' },
   pending:   { bg: '#2A1A0D', color: '#B8944A', label: 'Pending Review' },
   rejected:  { bg: '#2A0D0D', color: '#E07070', label: 'Rejected' },
 };
 
+const CLAIM_STATUS: Record<string, { bg: string; color: string; label: string }> = {
+  approved: { bg: '#0D2A1A', color: '#4AB87A', label: 'Approved — Owner Verified' },
+  pending:  { bg: '#2A1A0D', color: '#B8944A', label: 'Pending Review' },
+  rejected: { bg: '#2A0D0D', color: '#E07070', label: 'Rejected' },
+};
+
+const PROFILE_NAV = [
+  { href: "/ferrari/288-gto", label: "Registry" },
+  { href: "/submit", label: "Submit", highlight: true as const },
+];
+
 export default function ProfilePage() {
   const [user, setUser] = useState<{ email: string } | null>(null);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [claims, setClaims] = useState<Claim[]>([]);
   const [loading, setLoading] = useState(true);
+  const supabase = createSupabaseBrowserClient();
 
   function computePoints(subs: Submission[]) {
     const approved = subs.filter(s => s.status === "approved").length;
@@ -36,50 +58,36 @@ export default function ProfilePage() {
     return { label: "Bronze", color: "#C87840", bg: "#1A1000" };
   }
 
-  const supabase = createSupabaseBrowserClient();
-
   useEffect(() => {
     async function load() {
       const { data: { user: authUser } } = await supabase.auth.getUser();
       if (!authUser) { setLoading(false); return; }
       setUser({ email: authUser.email ?? '' });
 
-      const { data } = await supabase
-        .from('submissions')
-        .select('id,chassis_number,exterior_color,original_market,status,created_at')
-        .eq('submitter_email', authUser.email)
-        .order('created_at', { ascending: false });
+      const [subsData, claimsRes] = await Promise.all([
+        supabase
+          .from('submissions')
+          .select('id,chassis_number,exterior_color,original_market,status,created_at')
+          .eq('submitter_email', authUser.email)
+          .order('created_at', { ascending: false }),
+        fetch(`/api/car-claims?user=1`),
+      ]);
 
-      setSubmissions(data ?? []);
+      setSubmissions(subsData.data ?? []);
+
+      if (claimsRes.ok) {
+        const claimsData = await claimsRes.json();
+        setClaims(Array.isArray(claimsData) ? claimsData : []);
+      }
+
       setLoading(false);
     }
     load();
   }, []);
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    window.location.href = '/login';
-  };
-
   return (
     <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh' }}>
-      <header className="vv-header">
-        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: '10px' }}>
-          <span style={{ fontSize: '24px', fontWeight: 'bold' }}>
-            <span style={{ color: '#4A90B8' }}>Vin</span><span style={{ color: '#E2EEF7' }}>Vault</span>
-          </span>
-          <span style={{ color: '#4A90B8', fontSize: '10px', letterSpacing: '4px' }}>REGISTRY</span>
-        </Link>
-        <nav className="vv-nav" style={{ fontSize: '13px' }}>
-          <Link href="/ferrari/288-gto" style={{ color: '#8BA5B8', textDecoration: 'none', padding: '6px 12px' }}>Registry</Link>
-          <Link href="/submit" style={{ color: '#8BA5B8', textDecoration: 'none', padding: '6px 12px' }}>Submit</Link>
-          {user && (
-            <button onClick={handleSignOut} style={{ background: 'none', border: '1px solid #1E3A5A', color: '#4A6A8A', padding: '6px 16px', fontSize: '13px', cursor: 'pointer', fontFamily: 'Georgia, serif' }}>
-              Sign Out
-            </button>
-          )}
-        </nav>
-      </header>
+      <AppHeader nav={PROFILE_NAV} />
 
       <nav aria-label="Breadcrumb" style={{ padding: '14px 40px', background: '#0A1828', borderBottom: '1px solid #1E3A5A', fontSize: '12px', color: '#4A6A8A', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
         <Link href="/" style={{ color: '#4A6A8A', textDecoration: 'none' }}>Home</Link>
@@ -97,7 +105,7 @@ export default function ProfilePage() {
             <p style={{ color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px' }}>PROFILE</p>
             <h1 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '16px' }}>Sign in to view your profile</h1>
             <p style={{ color: '#8BA5B8', fontSize: '15px', marginBottom: '36px', lineHeight: '1.7' }}>
-              Track your submitted cars and their approval status.
+              Track your submitted cars, ownership claims, and registry contributions.
             </p>
             <Link href="/login" style={{ background: '#4A90B8', color: '#fff', padding: '13px 32px', textDecoration: 'none', fontSize: '13px', letterSpacing: '2px' }}>
               SIGN IN
@@ -132,8 +140,8 @@ export default function ProfilePage() {
               {[
                 { n: submissions.length, l: 'Total Submitted', color: '#4A90B8' },
                 { n: submissions.filter(s => s.status === 'approved').length, l: 'Approved', color: '#4AB87A' },
-                { n: submissions.filter(s => s.status === 'pending').length, l: 'Pending Review', color: '#B8944A' },
-                { n: submissions.filter(s => s.status === 'rejected').length, l: 'Rejected', color: '#E07070' },
+                { n: submissions.filter(s => s.status === 'pending').length, l: 'Pending', color: '#B8944A' },
+                { n: claims.filter(c => c.status === 'approved').length, l: 'Cars Claimed', color: '#4A90B8' },
               ].map(stat => (
                 <div key={stat.l} style={{ background: '#0A1828', border: '1px solid #1E3A5A', padding: '20px 28px', textAlign: 'center', flex: '1', minWidth: '120px' }}>
                   <div style={{ fontSize: '28px', fontWeight: 'bold', color: stat.color }}>{stat.n}</div>
@@ -142,6 +150,42 @@ export default function ProfilePage() {
               ))}
             </div>
 
+            {/* Ownership Claims */}
+            {claims.length > 0 && (
+              <div style={{ marginBottom: '48px' }}>
+                <p style={{ color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px' }}>OWNERSHIP CLAIMS</p>
+                <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}>Your Claims</h2>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {claims.map(c => {
+                    const cs = CLAIM_STATUS[c.status] ?? CLAIM_STATUS.pending;
+                    return (
+                      <Link key={c.id} href={`/ferrari/288-gto/${c.chassis_number}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <div
+                          style={{ background: '#0A1828', border: '1px solid #1E3A5A', padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}
+                          onMouseEnter={e => (e.currentTarget.style.borderColor = '#4A90B8')}
+                          onMouseLeave={e => (e.currentTarget.style.borderColor = '#1E3A5A')}
+                        >
+                          <div>
+                            <p style={{ fontFamily: 'monospace', fontSize: '15px', letterSpacing: '1px', marginBottom: '4px' }}>{c.chassis_number}</p>
+                            <p style={{ color: '#4A6A8A', fontSize: '12px' }}>Ferrari 288 GTO</p>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                            <span style={{ background: cs.bg, color: cs.color, padding: '4px 12px', fontSize: '11px', letterSpacing: '1px' }}>
+                              {cs.label.toUpperCase()}
+                            </span>
+                            <span style={{ color: '#4A6A8A', fontSize: '12px' }}>
+                              {new Date(c.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Submissions */}
             <div>
               <p style={{ color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px' }}>YOUR SUBMISSIONS</p>
               <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '24px' }}>Submitted Cars</h2>
