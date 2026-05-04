@@ -23,9 +23,10 @@ const DEFAULT_NAV: NavItem[] = [
 export default function AppHeader({ nav = DEFAULT_NAV, adminBadge = false }: AppHeaderProps) {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const supabase = createSupabaseBrowserClient();
 
+  // Defer client creation to useEffect so it never runs during static prerendering
   useEffect(() => {
+    const supabase = createSupabaseBrowserClient();
     supabase.auth.getUser().then(({ data: { user } }) => setUserEmail(user?.email ?? null));
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUserEmail(session?.user?.email ?? null);
@@ -34,8 +35,7 @@ export default function AppHeader({ nav = DEFAULT_NAV, adminBadge = false }: App
   }, []);
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    window.location.href = "/";
+    createSupabaseBrowserClient().auth.signOut().then(() => { window.location.href = "/"; });
   };
 
   const shortEmail = userEmail

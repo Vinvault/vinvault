@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
       apikey: key, Authorization: `Bearer ${key}`,
       "Content-Type": "application/json", Prefer: "return=representation",
     },
-    body: JSON.stringify({ chassis_number, user_email: user.email, message: message?.trim() || null }),
+    body: JSON.stringify({ chassis_number, user_id: user.id, user_email: user.email, message: message?.trim() || null }),
   });
   if (!res.ok) return NextResponse.json({ error: "Failed to save." }, { status: 500 });
   const [claim] = await res.json();
