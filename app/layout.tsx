@@ -1,23 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import CookieBanner from "./components/CookieBanner";
 import BackToTop from "./components/BackToTop";
 import GoogleAnalytics from "./components/GoogleAnalytics";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "VinVault — Classic Car Registry",
-  description: "The world's most complete classic car registry. Community-verified chassis records for the rarest cars ever built.",
+  title: "VinVault — Curated Automotive Registry",
+  description: "The definitive record of the world's most special, limited, and collectible automobiles. Every chassis documented. Every history preserved.",
 };
 
 export const viewport: Viewport = {
@@ -33,7 +22,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className="h-full antialiased"
     >
       <head>
         <GoogleAnalytics />

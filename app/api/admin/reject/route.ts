@@ -43,7 +43,7 @@ async function notifySubmitter(email: string, chassis: string) {
       sender: { name: 'VinVault Registry', email: 'registry@vinvault.net' },
       to: [{ email }],
       subject: `Update on your submission for ${chassis} — VinVault`,
-      htmlContent: `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#080F1A;font-family:Georgia,serif;">
+      htmlContent: `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#080F1A;font-family:Verdana,sans-serif;">
         <div style="max-width:600px;margin:0 auto;padding:40px 24px;">
           <div style="background:#0A1828;border:1px solid #1E3A5A;padding:32px;">
             <p style="color:#4A90B8;font-size:10px;letter-spacing:3px;margin:0 0 8px;">VINVAULT REGISTRY</p>

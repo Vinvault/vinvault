@@ -31,7 +31,7 @@ export default function BackToTop() {
         justifyContent: "center",
         cursor: "pointer",
         fontSize: "18px",
-        fontFamily: "Georgia, serif",
+        fontFamily: "Verdana, sans-serif",
         transition: "border-color 0.2s",
       }}
       onMouseEnter={(e) => (e.currentTarget.style.borderColor = "#4A90B8")}

@@ -68,13 +68,13 @@ export default function ChassisComments({ chassis }: { chassis: string }) {
             placeholder="Share what you know about this chassis…"
             maxLength={2000}
             rows={3}
-            style={{ width: "100%", background: "#0D1E36", border: "1px solid #1E3A5A", color: "#E2EEF7", padding: "12px 16px", fontSize: "14px", fontFamily: "Georgia, serif", boxSizing: "border-box", resize: "vertical" }}
+            style={{ width: "100%", background: "#0D1E36", border: "1px solid #1E3A5A", color: "#E2EEF7", padding: "12px 16px", fontSize: "14px", fontFamily: "Verdana, sans-serif", boxSizing: "border-box", resize: "vertical" }}
           />
           {error && <p style={{ color: "#E07070", fontSize: "13px", marginTop: "6px" }}>{error}</p>}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "8px" }}>
             <span style={{ color: "#4A6A8A", fontSize: "12px" }}>{body.length}/2000</span>
             <button type="submit" disabled={submitting || !body.trim()}
-              style={{ background: submitting ? "#2A4A6A" : "#4A90B8", color: "#fff", border: "none", padding: "10px 24px", fontSize: "13px", cursor: submitting ? "not-allowed" : "pointer", fontFamily: "Georgia, serif", letterSpacing: "1px" }}>
+              style={{ background: submitting ? "#2A4A6A" : "#4A90B8", color: "#fff", border: "none", padding: "10px 24px", fontSize: "13px", cursor: submitting ? "not-allowed" : "pointer", fontFamily: "Verdana, sans-serif", letterSpacing: "1px" }}>
               {submitting ? "POSTING…" : "POST COMMENT"}
             </button>
           </div>

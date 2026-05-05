@@ -93,7 +93,7 @@ async function sendStatusEmail(email: string | undefined, status: "approved" | "
     : `Your submission for ${chassis} was not approved`;
 
   const htmlContent = isApproved ? `
-<!DOCTYPE html><html><body style="margin:0;padding:0;background:#080F1A;font-family:Georgia,serif;">
+<!DOCTYPE html><html><body style="margin:0;padding:0;background:#080F1A;font-family:Verdana,sans-serif;">
 <div style="max-width:600px;margin:0 auto;padding:40px 24px;">
   <div style="margin-bottom:32px;">
     <span style="font-size:22px;font-weight:bold;"><span style="color:#4A90B8">Vin</span><span style="color:#E2EEF7">Vault</span></span>
@@ -110,7 +110,7 @@ async function sendStatusEmail(email: string | undefined, status: "approved" | "
   </div>
   <p style="color:#4A6A8A;font-size:12px;margin-top:24px;text-align:center;">VinVault Registry · <a href="https://www.vinvault.net" style="color:#4A6A8A;">vinvault.net</a></p>
 </div></body></html>` : `
-<!DOCTYPE html><html><body style="margin:0;padding:0;background:#080F1A;font-family:Georgia,serif;">
+<!DOCTYPE html><html><body style="margin:0;padding:0;background:#080F1A;font-family:Verdana,sans-serif;">
 <div style="max-width:600px;margin:0 auto;padding:40px 24px;">
   <div style="margin-bottom:32px;">
     <span style="font-size:22px;font-weight:bold;"><span style="color:#4A90B8">Vin</span><span style="color:#E2EEF7">Vault</span></span>
@@ -168,7 +168,7 @@ async function notifyWatchers(chassis: string, event: string) {
           sender: { name: "VinVault Registry", email: "registry@vinvault.net" },
           to: [{ email: w.user_email }],
           subject: `Update on chassis ${chassis} — VinVault`,
-          htmlContent: `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#080F1A;font-family:Georgia,serif;"><div style="max-width:600px;margin:0 auto;padding:40px 24px;"><div style="margin-bottom:32px;"><span style="font-size:22px;font-weight:bold;"><span style="color:#4A90B8">Vin</span><span style="color:#E2EEF7">Vault</span></span><span style="color:#4A90B8;font-size:10px;letter-spacing:4px;margin-left:10px;">REGISTRY</span></div><div style="background:#0A1828;border:1px solid #1E3A5A;padding:32px;"><p style="color:#4A90B8;font-size:11px;letter-spacing:3px;margin:0 0 16px;">WATCHED CAR UPDATE</p><h1 style="color:#E2EEF7;font-size:22px;margin:0 0 16px;">Chassis ${chassis} has been updated</h1><p style="color:#8BA5B8;font-size:15px;line-height:1.7;margin:0 0 24px;">A chassis you are watching has a new ${event} in the VinVault registry.</p><a href="${registryUrl}" style="display:inline-block;background:#4A90B8;color:#fff;padding:12px 28px;text-decoration:none;font-size:13px;letter-spacing:2px;">VIEW UPDATE</a></div><p style="color:#4A6A8A;font-size:12px;margin-top:24px;text-align:center;">VinVault Registry · <a href="https://www.vinvault.net" style="color:#4A6A8A;">vinvault.net</a></p></div></body></html>`,
+          htmlContent: `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#080F1A;font-family:Verdana,sans-serif;"><div style="max-width:600px;margin:0 auto;padding:40px 24px;"><div style="margin-bottom:32px;"><span style="font-size:22px;font-weight:bold;"><span style="color:#4A90B8">Vin</span><span style="color:#E2EEF7">Vault</span></span><span style="color:#4A90B8;font-size:10px;letter-spacing:4px;margin-left:10px;">REGISTRY</span></div><div style="background:#0A1828;border:1px solid #1E3A5A;padding:32px;"><p style="color:#4A90B8;font-size:11px;letter-spacing:3px;margin:0 0 16px;">WATCHED CAR UPDATE</p><h1 style="color:#E2EEF7;font-size:22px;margin:0 0 16px;">Chassis ${chassis} has been updated</h1><p style="color:#8BA5B8;font-size:15px;line-height:1.7;margin:0 0 24px;">A chassis you are watching has a new ${event} in the VinVault registry.</p><a href="${registryUrl}" style="display:inline-block;background:#4A90B8;color:#fff;padding:12px 28px;text-decoration:none;font-size:13px;letter-spacing:2px;">VIEW UPDATE</a></div><p style="color:#4A6A8A;font-size:12px;margin-top:24px;text-align:center;">VinVault Registry · <a href="https://www.vinvault.net" style="color:#4A6A8A;">vinvault.net</a></p></div></body></html>`,
           textContent: `Chassis ${chassis} has been updated: ${event}.\n\nView it at: ${registryUrl}`,
         }),
       });
@@ -183,7 +183,7 @@ const inputStyle = {
   color: "#E2EEF7",
   padding: "10px 14px",
   fontSize: "13px",
-  fontFamily: "Georgia, serif",
+  fontFamily: "Verdana, sans-serif",
   boxSizing: "border-box" as const,
 };
 
@@ -206,7 +206,7 @@ export default async function SubmissionPage({ params }: { params: Promise<{ id:
 
   if (!s) {
     return (
-      <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Georgia, serif", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ textAlign: "center" }}>
           <h1 style={{ fontSize: "28px", marginBottom: "16px" }}>Not found</h1>
           <Link href="/admin" style={{ color: "#4A90B8" }}>Back to Admin</Link>
@@ -216,7 +216,7 @@ export default async function SubmissionPage({ params }: { params: Promise<{ id:
   }
 
   return (
-    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Georgia, serif", minHeight: "100vh" }}>
+    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
       <header className="vv-header">
         <Link href="/" style={{ textDecoration: "none" }}>
           <span style={{ fontSize: "24px", fontWeight: "bold" }}>
@@ -276,7 +276,7 @@ export default async function SubmissionPage({ params }: { params: Promise<{ id:
           <div style={{ display: "flex", gap: "16px", marginTop: "32px", flexWrap: "wrap" }}>
             <button
               type="submit"
-              style={{ background: "#0D2A1A", color: "#4AB87A", border: "1px solid #4AB87A", padding: "14px 32px", fontSize: "13px", letterSpacing: "2px", cursor: "pointer", fontFamily: "Georgia, serif" }}
+              style={{ background: "#0D2A1A", color: "#4AB87A", border: "1px solid #4AB87A", padding: "14px 32px", fontSize: "13px", letterSpacing: "2px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
             >
               ✓ SAVE & APPROVE
             </button>
@@ -287,7 +287,7 @@ export default async function SubmissionPage({ params }: { params: Promise<{ id:
           <input type="hidden" name="id" value={s.id} />
           <button
             type="submit"
-            style={{ background: "#2A0D0D", color: "#E07070", border: "1px solid #E07070", padding: "14px 32px", fontSize: "13px", letterSpacing: "2px", cursor: "pointer", fontFamily: "Georgia, serif" }}
+            style={{ background: "#2A0D0D", color: "#E07070", border: "1px solid #E07070", padding: "14px 32px", fontSize: "13px", letterSpacing: "2px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
           >
             ✗ REJECT
           </button>

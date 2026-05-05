@@ -58,7 +58,7 @@ export default function Login() {
     color: '#E2EEF7',
     padding: '12px 16px',
     fontSize: '14px',
-    fontFamily: 'Georgia, serif',
+    fontFamily: 'Verdana, sans-serif',
     boxSizing: 'border-box' as const,
     marginBottom: '16px',
     outline: 'none',
@@ -73,7 +73,7 @@ export default function Login() {
   };
 
   return (
-    <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <header style={{ background: '#0A1828', borderBottom: '1px solid #1E3A5A', padding: '20px 40px' }}>
         <Link href="/" style={{ textDecoration: 'none' }}>
           <span style={{ fontSize: '24px', fontWeight: 'bold' }}>
@@ -94,7 +94,7 @@ export default function Login() {
                   flex: 1, padding: '14px', background: 'none', border: 'none',
                   borderBottom: mode === m ? '2px solid #4A90B8' : '2px solid transparent',
                   color: mode === m ? '#E2EEF7' : '#4A6A8A',
-                  fontSize: '11px', letterSpacing: '3px', cursor: 'pointer', fontFamily: 'Georgia, serif',
+                  fontSize: '11px', letterSpacing: '3px', cursor: 'pointer', fontFamily: 'Verdana, sans-serif',
                 }}
               >
                 {m === 'login' ? 'SIGN IN' : 'REGISTER'}
@@ -135,7 +135,7 @@ export default function Login() {
               style={{
                 width: '100%', background: loading ? '#2A4A6A' : '#4A90B8', color: '#fff',
                 padding: '14px', fontSize: '13px', letterSpacing: '2px', border: 'none',
-                cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'Georgia, serif', marginTop: '8px',
+                cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'Verdana, sans-serif', marginTop: '8px',
               }}
             >
               {loading ? 'PLEASE WAIT...' : mode === 'login' ? 'SIGN IN' : 'CREATE ACCOUNT'}
@@ -146,7 +146,7 @@ export default function Login() {
             {mode === 'login' ? 'No account? ' : 'Already registered? '}
             <button
               onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
-              style={{ background: 'none', border: 'none', color: '#4A90B8', cursor: 'pointer', fontFamily: 'Georgia, serif', fontSize: '13px' }}
+              style={{ background: 'none', border: 'none', color: '#4A90B8', cursor: 'pointer', fontFamily: 'Verdana, sans-serif', fontSize: '13px' }}
             >
               {mode === 'login' ? 'Register here' : 'Sign in'}
             </button>

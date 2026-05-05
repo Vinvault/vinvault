@@ -53,16 +53,16 @@ export default function ClaimButton({ chassis }: { chassis: string }) {
         <textarea value={message} onChange={e => setMessage(e.target.value)}
           placeholder="Brief note: how you can verify ownership (bill of sale, title, etc.)"
           rows={3} maxLength={1000}
-          style={{ width: "100%", background: "#0D1E36", border: "1px solid #1E3A5A", color: "#E2EEF7", padding: "10px 14px", fontSize: "13px", fontFamily: "Georgia, serif", boxSizing: "border-box", resize: "vertical", marginBottom: "12px" }}
+          style={{ width: "100%", background: "#0D1E36", border: "1px solid #1E3A5A", color: "#E2EEF7", padding: "10px 14px", fontSize: "13px", fontFamily: "Verdana, sans-serif", boxSizing: "border-box", resize: "vertical", marginBottom: "12px" }}
         />
         {error && <p style={{ color: "#E07070", fontSize: "13px", marginBottom: "8px" }}>{error}</p>}
         <div style={{ display: "flex", gap: "12px" }}>
           <button type="submit" disabled={status === "submitting"}
-            style={{ background: "#4A90B8", color: "#fff", border: "none", padding: "10px 24px", fontSize: "13px", cursor: "pointer", fontFamily: "Georgia, serif" }}>
+            style={{ background: "#4A90B8", color: "#fff", border: "none", padding: "10px 24px", fontSize: "13px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}>
             {status === "submitting" ? "SUBMITTING…" : "SUBMIT CLAIM"}
           </button>
           <button type="button" onClick={() => setStatus("idle")}
-            style={{ background: "none", border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "10px 20px", fontSize: "13px", cursor: "pointer", fontFamily: "Georgia, serif" }}>
+            style={{ background: "none", border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "10px 20px", fontSize: "13px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}>
             CANCEL
           </button>
         </div>
@@ -72,7 +72,7 @@ export default function ClaimButton({ chassis }: { chassis: string }) {
 
   return (
     <button onClick={() => setStatus("form")}
-      style={{ border: "1px solid #1E3A5A", color: "#8BA5B8", background: "none", padding: "8px 20px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Georgia, serif" }}>
+      style={{ border: "1px solid #1E3A5A", color: "#8BA5B8", background: "none", padding: "8px 20px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}>
       CLAIM THIS CAR
     </button>
   );

@@ -9,7 +9,7 @@ export default function Error({
   reset: () => void;
 }) {
   return (
-    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Georgia, serif", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <header className="vv-header">
         <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "baseline", gap: "10px" }}>
           <span style={{ fontSize: "24px", fontWeight: "bold" }}>
@@ -29,7 +29,7 @@ export default function Error({
           <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
             <button
               onClick={reset}
-              style={{ background: "#4A90B8", color: "#fff", padding: "12px 28px", border: "none", fontSize: "13px", letterSpacing: "2px", cursor: "pointer", fontFamily: "Georgia, serif" }}
+              style={{ background: "#4A90B8", color: "#fff", padding: "12px 28px", border: "none", fontSize: "13px", letterSpacing: "2px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
             >
               TRY AGAIN
             </button>

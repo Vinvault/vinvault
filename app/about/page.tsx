@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh' }}>
+    <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh' }}>
       <AppHeader />
 
       <Breadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "About" }]} />
@@ -20,13 +20,13 @@ export default function AboutPage() {
           What is VinVault?
         </h1>
         <p style={{ color: '#8BA5B8', fontSize: '17px', lineHeight: '1.8', marginBottom: '48px', maxWidth: '640px' }}>
-          VinVault is a community-powered registry dedicated to documenting the complete chassis history of the world's most significant classic cars — starting with the Ferrari 288 GTO.
+          VinVault is a community-powered registry dedicated to documenting the complete chassis history of the world's most significant, rare, and collectible automobiles.
         </p>
 
         <div style={{ borderTop: '1px solid #1E3A5A', paddingTop: '48px', marginBottom: '48px' }}>
           <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>Why we built this</h2>
           <p style={{ color: '#8BA5B8', fontSize: '15px', lineHeight: '1.8', marginBottom: '16px' }}>
-            For rare, historically significant cars, provenance is everything. A Ferrari 288 GTO with documented history is worth significantly more — and tells a richer story — than one whose origins are unknown.
+            For rare, historically significant cars, provenance is everything. A collectible with documented history is worth significantly more — and tells a richer story — than one whose origins are unknown.
           </p>
           <p style={{ color: '#8BA5B8', fontSize: '15px', lineHeight: '1.8', marginBottom: '16px' }}>
             Yet no single, authoritative, publicly accessible record exists for most iconic models. Auction houses hold fragments. Private collectors guard documents. Magazine articles scatter clues across decades.
@@ -100,7 +100,7 @@ export default function AboutPage() {
         <div style={{ borderTop: '1px solid #1E3A5A', paddingTop: '48px', marginBottom: '48px' }}>
           <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>How to contribute</h2>
           <p style={{ color: '#8BA5B8', fontSize: '15px', lineHeight: '1.8', marginBottom: '28px' }}>
-            The registry is only as complete as the information the community provides. If you have knowledge of any Ferrari 288 GTO — whether you own it, have seen it at a show, or read about it in a magazine — please submit the details.
+            The registry is only as complete as the information the community provides. If you have knowledge of any collectible automobile — whether you own it, have seen it at a show, or read about it in a magazine — please submit the details.
           </p>
           <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
             <Link href="/submit" style={{ background: '#4A90B8', color: '#fff', padding: '13px 32px', textDecoration: 'none', fontSize: '13px', letterSpacing: '2px' }}>

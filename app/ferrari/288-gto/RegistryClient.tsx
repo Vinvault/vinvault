@@ -58,7 +58,7 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
   const pctBar = Math.min(100, (documented / TOTAL_PRODUCED) * 100);
 
   return (
-    <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh' }}>
+    <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh' }}>
       <AppHeader nav={REGISTRY_NAV} />
 
       <section className="vv-registry-header">
@@ -120,12 +120,12 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
           value={query}
           onChange={e => setQuery(e.target.value)}
           placeholder="Search chassis number..."
-          style={{ background: '#0D1E36', border: '1px solid #1E3A5A', color: '#E2EEF7', padding: '10px 16px', fontSize: '14px', width: '240px', maxWidth: '100%', fontFamily: 'Georgia, serif', outline: 'none' }}
+          style={{ background: '#0D1E36', border: '1px solid #1E3A5A', color: '#E2EEF7', padding: '10px 16px', fontSize: '14px', width: '240px', maxWidth: '100%', fontFamily: 'Verdana, sans-serif', outline: 'none' }}
         />
         <select
           value={market}
           onChange={e => setMarket(e.target.value)}
-          style={{ background: '#0D1E36', border: '1px solid #1E3A5A', color: '#8BA5B8', padding: '10px 16px', fontSize: '14px', fontFamily: 'Georgia, serif' }}
+          style={{ background: '#0D1E36', border: '1px solid #1E3A5A', color: '#8BA5B8', padding: '10px 16px', fontSize: '14px', fontFamily: 'Verdana, sans-serif' }}
         >
           <option value="">All Markets</option>
           {markets.map(m => <option key={m} value={m}>{m}</option>)}
@@ -133,7 +133,7 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
         <select
           value={status}
           onChange={e => setStatus(e.target.value)}
-          style={{ background: '#0D1E36', border: '1px solid #1E3A5A', color: '#8BA5B8', padding: '10px 16px', fontSize: '14px', fontFamily: 'Georgia, serif' }}
+          style={{ background: '#0D1E36', border: '1px solid #1E3A5A', color: '#8BA5B8', padding: '10px 16px', fontSize: '14px', fontFamily: 'Verdana, sans-serif' }}
         >
           <option value="">All Status</option>
           <option value="approved">Approved</option>

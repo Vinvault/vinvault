@@ -56,7 +56,7 @@ export default function HomeClient({
   }, [query]);
 
   return (
-    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Georgia, serif", minHeight: "100vh" }}>
+    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
 
       <AppHeader nav={[
         { href: "/ferrari/288-gto", label: "Registry" },
@@ -69,12 +69,11 @@ export default function HomeClient({
       <section className="vv-hero">
         <p style={{ color: "#4A90B8", letterSpacing: "4px", fontSize: "11px", marginBottom: "20px" }}>THE DEFINITIVE REGISTRY</p>
         <h1 className="vv-h1-hero">
-          The World's Most Complete<br />
-          <span style={{ color: "#4A90B8" }}>Classic Car Registry</span>
+          <span style={{ color: "#4A90B8" }}>Curated Automotive Registry</span>
         </h1>
         <p style={{ color: "#8BA5B8", fontSize: "17px", maxWidth: "560px", margin: "0 auto 44px", lineHeight: "1.75" }}>
-          Community-verified chassis records for the rarest cars ever built.
-          Every VIN documented. Every history preserved.
+          The definitive record of the world's most special, limited, and collectible automobiles.
+          Every chassis documented. Every history preserved.
         </p>
 
         {/* Search */}
@@ -82,7 +81,7 @@ export default function HomeClient({
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder='Search — "Ferrari", "288 GTO"…'
+            placeholder='Search registries…'
             style={{
               flex: 1,
               background: "#0D1E36",
@@ -91,7 +90,7 @@ export default function HomeClient({
               color: "#E2EEF7",
               padding: "13px 18px",
               fontSize: "14px",
-              fontFamily: "Georgia, serif",
+              fontFamily: "Verdana, sans-serif",
               outline: "none",
               minWidth: 0,
             }}
@@ -138,7 +137,7 @@ export default function HomeClient({
         {filtered.length === 0 ? (
           <div style={{ textAlign: "center", padding: "60px", color: "#4A6A8A", border: "1px solid #1E3A5A" }}>
             <p style={{ fontSize: "15px" }}>No registries match "{query}"</p>
-            <button onClick={() => setQuery("")} style={{ marginTop: "16px", background: "none", border: "1px solid #1E3A5A", color: "#4A90B8", padding: "8px 20px", cursor: "pointer", fontFamily: "Georgia, serif", fontSize: "13px" }}>
+            <button onClick={() => setQuery("")} style={{ marginTop: "16px", background: "none", border: "1px solid #1E3A5A", color: "#4A90B8", padding: "8px 20px", cursor: "pointer", fontFamily: "Verdana, sans-serif", fontSize: "13px" }}>
               Clear search
             </button>
           </div>
@@ -204,7 +203,7 @@ export default function HomeClient({
                     onMouseLeave={(e) => (e.currentTarget.style.borderColor = "#1E3A5A")}>
                     <div>
                       <p style={{ fontFamily: "monospace", fontSize: "14px", letterSpacing: "1px", marginBottom: "4px" }}>{s.chassis_number}</p>
-                      <p style={{ color: "#4A6A8A", fontSize: "12px" }}>Ferrari 288 GTO{s.original_market ? ` · ${s.original_market}` : ""}</p>
+                      <p style={{ color: "#4A6A8A", fontSize: "12px" }}>{s.original_market || "Registry Entry"}</p>
                     </div>
                     <div style={{ textAlign: "right" }}>
                       <p style={{ color: "#4A90B8", fontSize: "11px" }}>

@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function NotFound() {
   return (
-    <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <header className="vv-header">
         <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: '10px' }}>
           <span style={{ fontSize: '24px', fontWeight: 'bold' }}>
@@ -15,7 +15,7 @@ export default function NotFound() {
 
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 20px' }}>
         <div style={{ textAlign: 'center', maxWidth: '540px', width: '100%' }}>
-          <p style={{ color: '#1E3A5A', fontSize: 'clamp(60px, 20vw, 120px)', fontWeight: 'bold', lineHeight: 1, marginBottom: '0', fontFamily: 'Georgia, serif', letterSpacing: '-4px' }}>404</p>
+          <p style={{ color: '#1E3A5A', fontSize: 'clamp(60px, 20vw, 120px)', fontWeight: 'bold', lineHeight: 1, marginBottom: '0', fontFamily: 'Verdana, sans-serif', letterSpacing: '-4px' }}>404</p>
           <p style={{ color: '#4A90B8', letterSpacing: '4px', fontSize: '11px', marginBottom: '24px', marginTop: '-8px' }}>PAGE NOT FOUND</p>
           <h1 style={{ fontSize: 'clamp(20px, 5vw, 28px)', fontWeight: 'bold', marginBottom: '16px' }}>
             Page Not Found

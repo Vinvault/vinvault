@@ -40,7 +40,7 @@ export default function WatchButton({ chassis }: { chassis: string }) {
         color: watching ? "#4AB87A" : "#8BA5B8",
         background: watching ? "#0D2A1A" : "none",
         padding: "8px 20px", fontSize: "12px", letterSpacing: "1px",
-        cursor: "pointer", fontFamily: "Georgia, serif",
+        cursor: "pointer", fontFamily: "Verdana, sans-serif",
       }}>
       {watching ? "✓ WATCHING" : "WATCH"}
     </button>

@@ -18,7 +18,7 @@ export function ShareButton({ chassis }: { chassis: string }) {
   return (
     <button
       onClick={handleShare}
-      style={{ background: "none", border: "1px solid #1E3A5A", color: copied ? "#4AB87A" : "#8BA5B8", padding: "7px 16px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Georgia, serif", transition: "color 0.2s" }}
+      style={{ background: "none", border: "1px solid #1E3A5A", color: copied ? "#4AB87A" : "#8BA5B8", padding: "7px 16px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Verdana, sans-serif", transition: "color 0.2s" }}
     >
       {copied ? "Copied!" : "Share"}
     </button>
@@ -29,7 +29,7 @@ export function PrintButton() {
   return (
     <button
       onClick={() => window.print()}
-      style={{ background: "none", border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "7px 16px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Georgia, serif" }}
+      style={{ background: "none", border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "7px 16px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
     >
       Print
     </button>

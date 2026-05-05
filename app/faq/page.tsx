@@ -114,7 +114,7 @@ const FAQS = [
 
 export default function FAQPage() {
   return (
-    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Georgia, serif", minHeight: "100vh" }}>
+    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
       <AppHeader />
 
       <Breadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "FAQ" }]} />

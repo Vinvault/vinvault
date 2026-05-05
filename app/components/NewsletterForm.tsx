@@ -44,7 +44,7 @@ export default function NewsletterForm() {
           color: "#E2EEF7",
           padding: "12px 16px",
           fontSize: "14px",
-          fontFamily: "Georgia, serif",
+          fontFamily: "Verdana, sans-serif",
           outline: "none",
           minWidth: 0,
         }}
@@ -60,7 +60,7 @@ export default function NewsletterForm() {
           fontSize: "13px",
           letterSpacing: "1px",
           cursor: status === "loading" ? "not-allowed" : "pointer",
-          fontFamily: "Georgia, serif",
+          fontFamily: "Verdana, sans-serif",
           flexShrink: 0,
         }}
       >

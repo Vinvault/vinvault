@@ -94,7 +94,7 @@ export default function SubmitForm({ prefillChassis }: { prefillChassis?: string
     <div style={{marginBottom: '24px'}}>
       <label style={{display: 'block', color: '#8BA5B8', fontSize: '11px', letterSpacing: '2px', marginBottom: '8px'}}>{label}{required && ' *'}</label>
       <input type={type} name={name} placeholder={placeholder} value={(form as any)[name]} onChange={handle} required={required}
-        style={{width: '100%', background: '#0D1E36', border: '1px solid #1E3A5A', color: '#E2EEF7', padding: '12px 16px', fontSize: '14px', fontFamily: 'Georgia, serif', boxSizing: 'border-box' as const}}
+        style={{width: '100%', background: '#0D1E36', border: '1px solid #1E3A5A', color: '#E2EEF7', padding: '12px 16px', fontSize: '14px', fontFamily: 'Verdana, sans-serif', boxSizing: 'border-box' as const}}
       />
     </div>
   );
@@ -103,7 +103,7 @@ export default function SubmitForm({ prefillChassis }: { prefillChassis?: string
     <div style={{marginBottom: '24px'}}>
       <label style={{display: 'block', color: '#8BA5B8', fontSize: '11px', letterSpacing: '2px', marginBottom: '8px'}}>{label}</label>
       <select name={name} value={(form as any)[name]} onChange={handle}
-        style={{width: '100%', background: '#0D1E36', border: '1px solid #1E3A5A', color: '#E2EEF7', padding: '12px 16px', fontSize: '14px', fontFamily: 'Georgia, serif'}}>
+        style={{width: '100%', background: '#0D1E36', border: '1px solid #1E3A5A', color: '#E2EEF7', padding: '12px 16px', fontSize: '14px', fontFamily: 'Verdana, sans-serif'}}>
         <option value="">Select...</option>
         {options.map(o => <option key={o} value={o}>{o}</option>)}
       </select>
@@ -112,7 +112,7 @@ export default function SubmitForm({ prefillChassis }: { prefillChassis?: string
 
   if (submitted) {
     return (
-      <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         <div style={{textAlign: 'center', maxWidth: '500px'}}>
           <div style={{fontSize: '48px', marginBottom: '24px', color: '#4AB87A'}}>✓</div>
           <h1 style={{fontSize: '28px', marginBottom: '16px'}}>Submission Received</h1>
@@ -124,7 +124,7 @@ export default function SubmitForm({ prefillChassis }: { prefillChassis?: string
   }
 
   return (
-    <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh'}}>
+    <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh'}}>
       <AppHeader />
       <nav style={{padding: '14px 40px', background: '#0A1828', borderBottom: '1px solid #1E3A5A', fontSize: '12px', color: '#4A6A8A', display: 'flex', gap: '6px', flexWrap: 'wrap'}}>
         <Link href="/" style={{color: '#4A6A8A', textDecoration: 'none'}}>Home</Link>
@@ -158,7 +158,7 @@ export default function SubmitForm({ prefillChassis }: { prefillChassis?: string
           <div style={{marginBottom: '24px'}}>
             <label style={{display: 'block', color: '#8BA5B8', fontSize: '11px', letterSpacing: '2px', marginBottom: '8px'}}>KNOWN HISTORY</label>
             <textarea name="provenance" value={form.provenance} onChange={handle} placeholder="Describe what you know about this car's history..." rows={5}
-              style={{width: '100%', background: '#0D1E36', border: '1px solid #1E3A5A', color: '#E2EEF7', padding: '12px 16px', fontSize: '14px', fontFamily: 'Georgia, serif', boxSizing: 'border-box' as const, resize: 'vertical'}}/>
+              style={{width: '100%', background: '#0D1E36', border: '1px solid #1E3A5A', color: '#E2EEF7', padding: '12px 16px', fontSize: '14px', fontFamily: 'Verdana, sans-serif', boxSizing: 'border-box' as const, resize: 'vertical'}}/>
           </div>
           {field("SOURCE / REFERENCE", "source", "e.g. Auction catalog, owner contact, magazine article")}
           {field("YOUR EMAIL", "submitter_email", "For follow-up questions", "email")}
@@ -195,7 +195,7 @@ export default function SubmitForm({ prefillChassis }: { prefillChassis?: string
             <p style={{color: '#8BA5B8', fontSize: '13px', lineHeight: '1.7', margin: 0}}>By submitting you confirm this information is accurate to the best of your knowledge. False submissions will result in a ban from the registry.</p>
           </div>
           <button type="submit" disabled={loading || uploadingPhotos}
-            style={{background: loading ? '#2A4A6A' : '#4A90B8', color: '#fff', padding: '16px 40px', fontSize: '15px', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'Georgia, serif', width: '100%'}}>
+            style={{background: loading ? '#2A4A6A' : '#4A90B8', color: '#fff', padding: '16px 40px', fontSize: '15px', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'Verdana, sans-serif', width: '100%'}}>
             {uploadingPhotos ? 'UPLOADING PHOTOS...' : loading ? 'SUBMITTING...' : 'SUBMIT FOR REVIEW'}
           </button>
         </form>

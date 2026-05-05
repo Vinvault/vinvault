@@ -105,7 +105,7 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
 
   if (!car) {
     return (
-      <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Georgia, serif", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
         <AppHeader />
 
         {/* Breadcrumb */}
@@ -143,7 +143,7 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
   }
 
   return (
-    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Georgia, serif", minHeight: "100vh" }}>
+    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
       {jsonLd && (
         <script
           type="application/ld+json"
@@ -203,7 +203,7 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
             ].filter(([, v]) => v).map(([l, v, mono]) => (
               <div key={l as string} style={{ display: "flex", justifyContent: "space-between", padding: "12px 0", borderBottom: "1px solid #0D1E36", gap: "12px" }}>
                 <span style={{ color: "#8BA5B8", fontSize: "14px", flexShrink: 0 }}>{l}</span>
-                <span style={{ fontSize: "14px", fontFamily: mono ? "monospace" : "Georgia", textAlign: "right" }}>{String(v)}</span>
+                <span style={{ fontSize: "14px", fontFamily: mono ? "monospace" : "Verdana", textAlign: "right" }}>{String(v)}</span>
               </div>
             ))}
           </div>

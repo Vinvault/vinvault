@@ -114,11 +114,11 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
     fontSize: "12px",
     letterSpacing: "2px",
     cursor: "pointer",
-    fontFamily: "Georgia, serif",
+    fontFamily: "Verdana, sans-serif",
   });
 
   return (
-    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Georgia, serif", minHeight: "100vh" }}>
+    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
       <header className="vv-header">
         <Link href="/" style={{ textDecoration: "none" }}>
           <span style={{ fontSize: "24px", fontWeight: "bold" }}>
@@ -132,7 +132,7 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
             Instagram Queue
           </Link>
           <form action="/api/admin/logout" method="POST">
-            <button type="submit" style={{ background: "none", border: "1px solid #1E3A5A", color: "#4A6A8A", padding: "6px 14px", fontSize: "12px", cursor: "pointer", fontFamily: "Georgia, serif" }}>
+            <button type="submit" style={{ background: "none", border: "1px solid #1E3A5A", color: "#4A6A8A", padding: "6px 14px", fontSize: "12px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}>
               Sign out
             </button>
           </form>
@@ -164,7 +164,7 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
         <div style={{ marginBottom: "24px", display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
           <button
             onClick={initStorage}
-            style={{ background: "#0A1828", border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "8px 16px", fontSize: "12px", cursor: "pointer", fontFamily: "Georgia, serif", letterSpacing: "1px" }}
+            style={{ background: "#0A1828", border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "8px 16px", fontSize: "12px", cursor: "pointer", fontFamily: "Verdana, sans-serif", letterSpacing: "1px" }}
           >
             ⚙ Init Storage Bucket
           </button>
@@ -187,12 +187,12 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
             value={query}
             onChange={e => setQuery(e.target.value)}
             placeholder={tab === "submissions" ? "Search chassis, email, market..." : "Search chassis or email..."}
-            style={{ background: "#0D1E36", border: "1px solid #1E3A5A", color: "#E2EEF7", padding: "10px 16px", fontSize: "13px", width: "280px", maxWidth: "100%", fontFamily: "Georgia, serif", outline: "none" }}
+            style={{ background: "#0D1E36", border: "1px solid #1E3A5A", color: "#E2EEF7", padding: "10px 16px", fontSize: "13px", width: "280px", maxWidth: "100%", fontFamily: "Verdana, sans-serif", outline: "none" }}
           />
           <select
             value={statusFilter}
             onChange={e => setStatusFilter(e.target.value)}
-            style={{ background: "#0D1E36", border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "10px 16px", fontSize: "13px", fontFamily: "Georgia, serif" }}
+            style={{ background: "#0D1E36", border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "10px 16px", fontSize: "13px", fontFamily: "Verdana, sans-serif" }}
           >
             <option value="">All Status</option>
             <option value="pending">Pending</option>
@@ -294,14 +294,14 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
                           <button
                             disabled={claimProcessing === c.id}
                             onClick={() => handleClaim(c.id, "approved")}
-                            style={{ background: "#0D2A1A", color: "#4AB87A", border: "1px solid #4AB87A", padding: "8px 20px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Georgia, serif" }}
+                            style={{ background: "#0D2A1A", color: "#4AB87A", border: "1px solid #4AB87A", padding: "8px 20px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
                           >
                             ✓ Approve
                           </button>
                           <button
                             disabled={claimProcessing === c.id}
                             onClick={() => handleClaim(c.id, "rejected")}
-                            style={{ background: "#2A0D0D", color: "#E07070", border: "1px solid #E07070", padding: "8px 20px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Georgia, serif" }}
+                            style={{ background: "#2A0D0D", color: "#E07070", border: "1px solid #E07070", padding: "8px 20px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
                           >
                             ✗ Reject
                           </button>

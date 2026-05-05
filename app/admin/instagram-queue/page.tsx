@@ -52,7 +52,7 @@ export default async function InstagramQueuePage() {
   const posted = cars.filter((c: any) => c.instagram_posted);
 
   return (
-    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Georgia, serif", minHeight: "100vh" }}>
+    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
       <header className="vv-header">
         <Link href="/" style={{ textDecoration: "none" }}>
           <span style={{ fontSize: "24px", fontWeight: "bold" }}>
@@ -100,7 +100,7 @@ export default async function InstagramQueuePage() {
                       <input type="hidden" name="id" value={car.id} />
                       <button
                         type="submit"
-                        style={{ background: "#4A90B8", border: "none", color: "#fff", padding: "8px 20px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Georgia, serif" }}
+                        style={{ background: "#4A90B8", border: "none", color: "#fff", padding: "8px 20px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
                       >
                         ✓ Mark as Posted
                       </button>
@@ -117,7 +117,7 @@ export default async function InstagramQueuePage() {
                       color: "#8BA5B8",
                       lineHeight: "1.6",
                       whiteSpace: "pre-wrap",
-                      fontFamily: "Georgia, serif",
+                      fontFamily: "Verdana, sans-serif",
                       margin: 0,
                     }}>
                       {postText}

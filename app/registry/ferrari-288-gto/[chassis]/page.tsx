@@ -34,7 +34,7 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
 
   if (!car) {
     return (
-      <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         <div style={{textAlign: 'center'}}>
           <p style={{color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px'}}>CHASSIS NOT FOUND</p>
           <h1 style={{fontSize: '32px', marginBottom: '24px', fontFamily: 'monospace'}}>{chassis?.toUpperCase()}</h1>
@@ -46,7 +46,7 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
   }
 
   return (
-    <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh'}}>
+    <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh'}}>
       <header style={{background: '#0A1828', borderBottom: '1px solid #1E3A5A', padding: '20px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <Link href="/" style={{textDecoration: 'none'}}>
           <span style={{fontSize: '24px', fontWeight: 'bold'}}>
@@ -84,7 +84,7 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
             ].map(row => (
               <div key={row.label} style={{display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid #0D1E36'}}>
                 <span style={{color: '#8BA5B8', fontSize: '14px'}}>{row.label}</span>
-                <span style={{fontSize: '14px', fontFamily: row.label.includes('Number') ? 'monospace' : 'Georgia'}}>{row.value}</span>
+                <span style={{fontSize: '14px', fontFamily: row.label.includes('Number') ? 'monospace' : 'Verdana'}}>{row.value}</span>
               </div>
             ))}
           </div>

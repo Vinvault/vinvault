@@ -8,7 +8,7 @@ export default function GlobalError({
 }) {
   return (
     <html lang="en">
-      <body style={{ margin: 0, padding: 0, background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif' }}>
+      <body style={{ margin: 0, padding: 0, background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif' }}>
         <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
           <header style={{ background: '#0A1828', borderBottom: '1px solid #1E3A5A', padding: '20px 40px' }}>
             <a href="/" style={{ textDecoration: 'none' }}>
@@ -33,7 +33,7 @@ export default function GlobalError({
               <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
                 <button
                   onClick={unstable_retry}
-                  style={{ background: '#4A90B8', color: '#fff', padding: '13px 32px', border: 'none', fontSize: '13px', letterSpacing: '2px', cursor: 'pointer', fontFamily: 'Georgia, serif' }}
+                  style={{ background: '#4A90B8', color: '#fff', padding: '13px 32px', border: 'none', fontSize: '13px', letterSpacing: '2px', cursor: 'pointer', fontFamily: 'Verdana, sans-serif' }}
                 >
                   TRY AGAIN
                 </button>

@@ -8,7 +8,7 @@ const cars = [
 
 export default function Ferrari288GTORegistry() {
   return (
-    <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh'}}>
+    <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh'}}>
 
       {/* Header */}
       <header style={{background: '#0A1828', borderBottom: '1px solid #1E3A5A', padding: '20px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -50,9 +50,9 @@ export default function Ferrari288GTORegistry() {
       <section style={{padding: '24px 40px', borderBottom: '1px solid #1E3A5A', display: 'flex', gap: '16px', alignItems: 'center'}}>
         <input 
           placeholder="Search chassis number..." 
-          style={{background: '#0D1E36', border: '1px solid #1E3A5A', color: '#E2EEF7', padding: '10px 16px', fontSize: '14px', width: '280px', fontFamily: 'Georgia, serif'}}
+          style={{background: '#0D1E36', border: '1px solid #1E3A5A', color: '#E2EEF7', padding: '10px 16px', fontSize: '14px', width: '280px', fontFamily: 'Verdana, sans-serif'}}
         />
-        <select style={{background: '#0D1E36', border: '1px solid #1E3A5A', color: '#8BA5B8', padding: '10px 16px', fontSize: '14px', fontFamily: 'Georgia, serif'}}>
+        <select style={{background: '#0D1E36', border: '1px solid #1E3A5A', color: '#8BA5B8', padding: '10px 16px', fontSize: '14px', fontFamily: 'Verdana, sans-serif'}}>
           <option>All Markets</option>
           <option>Italy</option>
           <option>USA</option>
@@ -60,7 +60,7 @@ export default function Ferrari288GTORegistry() {
           <option>Japan</option>
           <option>UK</option>
         </select>
-        <select style={{background: '#0D1E36', border: '1px solid #1E3A5A', color: '#8BA5B8', padding: '10px 16px', fontSize: '14px', fontFamily: 'Georgia, serif'}}>
+        <select style={{background: '#0D1E36', border: '1px solid #1E3A5A', color: '#8BA5B8', padding: '10px 16px', fontSize: '14px', fontFamily: 'Verdana, sans-serif'}}>
           <option>All Status</option>
           <option>Documented</option>
           <option>Unverified</option>

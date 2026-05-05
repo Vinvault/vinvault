@@ -115,7 +115,7 @@ export default function AppHeader({ nav = DEFAULT_NAV, adminBadge = false }: App
                 padding: "6px 14px",
                 fontSize: "13px",
                 cursor: "pointer",
-                fontFamily: "Georgia, serif",
+                fontFamily: "Verdana, sans-serif",
               }}
             >
               Sign Out

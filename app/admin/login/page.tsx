@@ -8,7 +8,7 @@ export default async function LoginPage({
   const { error, next } = await searchParams;
 
   return (
-    <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <header style={{ background: '#0A1828', borderBottom: '1px solid #1E3A5A', padding: '20px 40px' }}>
         <Link href="/" style={{ textDecoration: 'none' }}>
           <span style={{ fontSize: '24px', fontWeight: 'bold' }}>
@@ -48,7 +48,7 @@ export default async function LoginPage({
                   color: '#E2EEF7',
                   padding: '12px 16px',
                   fontSize: '15px',
-                  fontFamily: 'Georgia, serif',
+                  fontFamily: 'Verdana, sans-serif',
                   outline: 'none',
                   boxSizing: 'border-box',
                 }}
@@ -65,7 +65,7 @@ export default async function LoginPage({
                 fontSize: '13px',
                 letterSpacing: '3px',
                 cursor: 'pointer',
-                fontFamily: 'Georgia, serif',
+                fontFamily: 'Verdana, sans-serif',
               }}
             >
               ENTER

@@ -86,7 +86,7 @@ export default function ProfilePage() {
   }, []);
 
   return (
-    <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Georgia, serif', minHeight: '100vh' }}>
+    <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh' }}>
       <AppHeader nav={PROFILE_NAV} />
 
       <nav aria-label="Breadcrumb" style={{ padding: '14px 40px', background: '#0A1828', borderBottom: '1px solid #1E3A5A', fontSize: '12px', color: '#4A6A8A', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>

@@ -39,7 +39,7 @@ export default function CookieBanner() {
       justifyContent: "space-between",
       gap: "16px",
       flexWrap: "wrap",
-      fontFamily: "Georgia, serif",
+      fontFamily: "Verdana, sans-serif",
     }}>
       <p style={{ color: "#8BA5B8", fontSize: "13px", lineHeight: "1.6", margin: 0, maxWidth: "680px" }}>
         VinVault uses essential cookies for authentication and optional analytics cookies to improve the service.{" "}
@@ -48,13 +48,13 @@ export default function CookieBanner() {
       <div style={{ display: "flex", gap: "12px", flexShrink: 0 }}>
         <button
           onClick={decline}
-          style={{ background: "none", border: "1px solid #1E3A5A", color: "#4A6A8A", padding: "8px 20px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Georgia, serif" }}
+          style={{ background: "none", border: "1px solid #1E3A5A", color: "#4A6A8A", padding: "8px 20px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
         >
           Decline
         </button>
         <button
           onClick={accept}
-          style={{ background: "#4A90B8", border: "none", color: "#fff", padding: "8px 20px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Georgia, serif" }}
+          style={{ background: "#4A90B8", border: "none", color: "#fff", padding: "8px 20px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
         >
           Accept
         </button>

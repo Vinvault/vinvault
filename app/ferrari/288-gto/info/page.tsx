@@ -36,7 +36,7 @@ const SPECS = [
 
 export default function Ferrari288GTOInfoPage() {
   return (
-    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Georgia, serif", minHeight: "100vh" }}>
+    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
       <header className="vv-header">
         <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "baseline", gap: "10px" }}>
           <span style={{ fontSize: "24px", fontWeight: "bold" }}>

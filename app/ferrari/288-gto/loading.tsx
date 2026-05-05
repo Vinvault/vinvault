@@ -1,6 +1,6 @@
 export default function RegistryLoading() {
   return (
-    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Georgia, serif", minHeight: "100vh" }}>
+    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
       {/* Header skeleton */}
       <div style={{ background: "#0A1828", borderBottom: "1px solid #1E3A5A", padding: "18px 40px", height: "61px" }} />
 
