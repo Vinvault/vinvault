@@ -16,6 +16,8 @@ interface AppHeaderProps {
 
 const DEFAULT_NAV: NavItem[] = [
   { href: "/ferrari/288-gto", label: "Registry" },
+  { href: "/sightings", label: "Sightings" },
+  { href: "/vin-lookup", label: "VIN Lookup" },
   { href: "/about", label: "About" },
   { href: "/faq", label: "FAQ" },
   { href: "/submit", label: "Submit a Car", highlight: true },

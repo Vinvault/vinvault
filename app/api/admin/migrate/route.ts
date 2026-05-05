@@ -20,6 +20,48 @@ CREATE TABLE IF NOT EXISTS user_flags (
   is_banned BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT NOW()
 );
+CREATE TABLE IF NOT EXISTS sightings (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  chassis_number TEXT NOT NULL,
+  spotter_email TEXT NOT NULL,
+  spotter_id UUID,
+  spotted_at TIMESTAMPTZ NOT NULL,
+  latitude DECIMAL(10,7) NOT NULL,
+  longitude DECIMAL(10,7) NOT NULL,
+  location_name TEXT NOT NULL,
+  country TEXT NOT NULL,
+  photo_url TEXT NOT NULL,
+  numberplate_seen TEXT,
+  notes TEXT,
+  status TEXT NOT NULL DEFAULT 'pending',
+  confidence_score INTEGER NOT NULL DEFAULT 0,
+  verified_by TEXT[],
+  flag_count INTEGER DEFAULT 0,
+  is_duplicate_flag BOOLEAN DEFAULT FALSE,
+  nearby_sighting_id UUID,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS sightings_chassis_idx ON sightings(chassis_number);
+CREATE INDEX IF NOT EXISTS sightings_status_idx ON sightings(status);
+CREATE INDEX IF NOT EXISTS sightings_spotted_at_idx ON sightings(spotted_at DESC);
+CREATE TABLE IF NOT EXISTS vin_lookup_services (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  service_name TEXT NOT NULL,
+  country_name TEXT NOT NULL,
+  country_code TEXT NOT NULL,
+  service_url TEXT NOT NULL,
+  description TEXT,
+  service_type TEXT NOT NULL DEFAULT 'government',
+  is_free BOOLEAN DEFAULT FALSE,
+  latitude DECIMAL(9,6),
+  longitude DECIMAL(9,6),
+  submitted_by TEXT,
+  is_approved BOOLEAN DEFAULT FALSE,
+  is_pre_populated BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS vin_lookup_country_idx ON vin_lookup_services(country_code);
+CREATE INDEX IF NOT EXISTS vin_lookup_approved_idx ON vin_lookup_services(is_approved);
 `;
 
 export async function POST(request: NextRequest) {

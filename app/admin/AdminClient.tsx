@@ -44,6 +44,34 @@ function computeStats(submissions: Submission[]): Stats {
   };
 }
 
+interface PendingVinService {
+  id: string;
+  service_name: string;
+  country_name: string;
+  country_code: string;
+  service_url: string;
+  description?: string;
+  service_type: string;
+  is_free: boolean;
+  submitted_by?: string;
+  is_approved: boolean;
+  created_at: string;
+}
+
+interface PendingSighting {
+  id: string;
+  chassis_number: string;
+  spotter_email: string;
+  spotted_at: string;
+  location_name: string;
+  country: string;
+  photo_url: string;
+  notes?: string;
+  confidence_score: number;
+  status: string;
+  created_at: string;
+}
+
 interface FlaggedUser {
   id: string;
   user_email: string;
@@ -57,19 +85,35 @@ interface FlaggedUser {
 export default function AdminClient({ submissions, claims }: { submissions: Submission[]; claims: Claim[] }) {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [tab, setTab] = useState<"submissions" | "claims" | "moderation">("submissions");
+  const [tab, setTab] = useState<"submissions" | "claims" | "sightings" | "vin-lookup" | "moderation">("submissions");
   const [claimProcessing, setClaimProcessing] = useState<string | null>(null);
   const [claimResults, setClaimResults] = useState<Record<string, string>>({});
   const [storageMsg, setStorageMsg] = useState("");
   const [flaggedUsers, setFlaggedUsers] = useState<FlaggedUser[]>([]);
   const [moderationMsg, setModerationMsg] = useState("");
   const [migrateMsg, setMigrateMsg] = useState("");
+  const [pendingSightings, setPendingSightings] = useState<PendingSighting[]>([]);
+  const [sightingResults, setSightingResults] = useState<Record<string, string>>({});
+  const [pendingVinServices, setPendingVinServices] = useState<PendingVinService[]>([]);
+  const [vinServiceResults, setVinServiceResults] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (tab === "moderation") {
       fetch("/api/admin/moderation")
         .then(r => r.ok ? r.json() : [])
         .then(setFlaggedUsers)
+        .catch(() => {});
+    }
+    if (tab === "sightings") {
+      fetch("/api/sightings?status=pending&limit=100")
+        .then(r => r.ok ? r.json() : [])
+        .then(setPendingSightings)
+        .catch(() => {});
+    }
+    if (tab === "vin-lookup") {
+      fetch("/api/vin-lookup?approved=false")
+        .then(r => r.ok ? r.json() : [])
+        .then(setPendingVinServices)
         .catch(() => {});
     }
   }, [tab]);
@@ -155,6 +199,28 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
       body: JSON.stringify({ action: "delete_user_submissions", user_email: email }),
     });
     setModerationMsg(res.ok ? `Deleted submissions from ${email}` : "Error deleting submissions");
+  }
+
+  async function handleVinService(id: string, approve: boolean) {
+    const res = await fetch("/api/vin-lookup", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, is_approved: approve }),
+    });
+    if (res.ok) {
+      setVinServiceResults(prev => ({ ...prev, [id]: approve }));
+    }
+  }
+
+  async function handleSighting(id: string, status: "approved" | "rejected") {
+    const res = await fetch("/api/sightings", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, status }),
+    });
+    if (res.ok) {
+      setSightingResults(prev => ({ ...prev, [id]: status }));
+    }
   }
 
   async function initStorage() {
@@ -256,6 +322,12 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
           </button>
           <button style={tabStyle(tab === "claims")} onClick={() => setTab("claims")}>
             OWNERSHIP CLAIMS ({claims.filter(c => c.status === "pending").length} pending)
+          </button>
+          <button style={tabStyle(tab === "sightings")} onClick={() => setTab("sightings")}>
+            SIGHTINGS
+          </button>
+          <button style={tabStyle(tab === "vin-lookup")} onClick={() => setTab("vin-lookup")}>
+            VIN LOOKUP
           </button>
           <button style={tabStyle(tab === "moderation")} onClick={() => setTab("moderation")}>
             MODERATION
@@ -398,6 +470,131 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
                             ✗ Reject
                           </button>
                         </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Sightings tab */}
+        {tab === "sightings" && (
+          <>
+            <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>PENDING SIGHTINGS</p>
+            {pendingSightings.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "80px", color: "#4A6A8A" }}>
+                <p>No pending sightings.</p>
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                {pendingSightings.map(s => {
+                  const result = sightingResults[s.id];
+                  const effectiveStatus = result || s.status;
+                  return (
+                    <div key={s.id} style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "20px 24px" }}>
+                      <div style={{ display: "flex", gap: "16px", alignItems: "flex-start" }}>
+                        {s.photo_url && (
+                          <img src={s.photo_url} alt="sighting" style={{ width: "100px", height: "75px", objectFit: "cover", flexShrink: 0, border: "1px solid #1E3A5A" }} />
+                        )}
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "8px", marginBottom: "8px" }}>
+                            <span style={{ fontFamily: "monospace", fontSize: "14px", color: "#4A90B8", letterSpacing: "1px" }}>{s.chassis_number}</span>
+                            <span style={{ background: "#2A1A0D", color: "#B8944A", padding: "3px 10px", fontSize: "11px", letterSpacing: "1px" }}>
+                              SCORE: {s.confidence_score}
+                            </span>
+                          </div>
+                          <p style={{ fontSize: "13px", marginBottom: "4px" }}>{s.location_name}, {s.country}</p>
+                          <p style={{ color: "#4A6A8A", fontSize: "12px", marginBottom: "4px" }}>
+                            by {s.spotter_email} · {new Date(s.spotted_at).toLocaleDateString("en-GB")}
+                          </p>
+                          {s.notes && <p style={{ color: "#8BA5B8", fontSize: "12px", lineHeight: "1.5" }}>{s.notes}</p>}
+                          {effectiveStatus === "pending" && (
+                            <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
+                              <button
+                                onClick={() => handleSighting(s.id, "approved")}
+                                style={{ background: "#0D2A1A", color: "#4AB87A", border: "1px solid #4AB87A", padding: "6px 16px", fontSize: "11px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
+                              >
+                                ✓ Approve
+                              </button>
+                              <button
+                                onClick={() => handleSighting(s.id, "rejected")}
+                                style={{ background: "#2A0D0D", color: "#E07070", border: "1px solid #E07070", padding: "6px 16px", fontSize: "11px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
+                              >
+                                ✗ Reject
+                              </button>
+                            </div>
+                          )}
+                          {effectiveStatus !== "pending" && (
+                            <span style={{
+                              display: "inline-block", marginTop: "12px",
+                              background: effectiveStatus === "approved" ? "#0D2A1A" : "#2A0D0D",
+                              color: effectiveStatus === "approved" ? "#4AB87A" : "#E07070",
+                              padding: "4px 12px", fontSize: "11px", letterSpacing: "1px",
+                            }}>{effectiveStatus.toUpperCase()}</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* VIN Lookup tab */}
+        {tab === "vin-lookup" && (
+          <>
+            <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>PENDING VIN LOOKUP SUBMISSIONS</p>
+            {pendingVinServices.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "80px", color: "#4A6A8A" }}>
+                <p>No pending VIN lookup submissions.</p>
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                {pendingVinServices.map(s => {
+                  const result = vinServiceResults[s.id];
+                  const processed = result !== undefined;
+                  return (
+                    <div key={s.id} style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "20px 24px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "8px", marginBottom: "8px" }}>
+                        <div>
+                          <span style={{ fontFamily: "monospace", fontSize: "13px", color: "#4A90B8", marginRight: "12px" }}>{s.country_code}</span>
+                          <span style={{ fontSize: "14px", fontWeight: "bold" }}>{s.service_name}</span>
+                        </div>
+                        <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                          <span style={{ background: "#0D1E36", color: "#4A6A8A", padding: "3px 10px", fontSize: "11px" }}>{s.service_type}</span>
+                          <span style={{ background: s.is_free ? "#0D2A1A" : "#0D1E36", color: s.is_free ? "#4AB87A" : "#4A6A8A", padding: "3px 10px", fontSize: "11px" }}>{s.is_free ? "FREE" : "PAID"}</span>
+                        </div>
+                      </div>
+                      <p style={{ color: "#8BA5B8", fontSize: "13px", marginBottom: "4px" }}>{s.country_name}</p>
+                      <a href={s.service_url} target="_blank" rel="noopener noreferrer" style={{ color: "#4A90B8", fontSize: "12px", marginBottom: "8px", display: "block" }}>{s.service_url}</a>
+                      {s.description && <p style={{ color: "#4A6A8A", fontSize: "12px", marginBottom: "8px", lineHeight: "1.5" }}>{s.description}</p>}
+                      {s.submitted_by && <p style={{ color: "#4A6A8A", fontSize: "11px", marginBottom: "12px" }}>Submitted by: {s.submitted_by}</p>}
+                      {!processed ? (
+                        <div style={{ display: "flex", gap: "8px" }}>
+                          <button
+                            onClick={() => handleVinService(s.id, true)}
+                            style={{ background: "#0D2A1A", color: "#4AB87A", border: "1px solid #4AB87A", padding: "6px 16px", fontSize: "11px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
+                          >
+                            ✓ Approve
+                          </button>
+                          <button
+                            onClick={() => handleVinService(s.id, false)}
+                            style={{ background: "#2A0D0D", color: "#E07070", border: "1px solid #E07070", padding: "6px 16px", fontSize: "11px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
+                          >
+                            ✗ Reject
+                          </button>
+                        </div>
+                      ) : (
+                        <span style={{
+                          display: "inline-block",
+                          background: result ? "#0D2A1A" : "#2A0D0D",
+                          color: result ? "#4AB87A" : "#E07070",
+                          padding: "4px 12px", fontSize: "11px", letterSpacing: "1px",
+                        }}>{result ? "APPROVED" : "REJECTED"}</span>
                       )}
                     </div>
                   );

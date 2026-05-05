@@ -8,6 +8,7 @@ import ClaimButton from "./ClaimButton";
 import WatchButton from "./WatchButton";
 import AppHeader from "@/app/components/AppHeader";
 import AppFooter from "@/app/components/AppFooter";
+import SightingsSection from "./SightingsSection";
 
 const BASE = "https://www.vinvault.net";
 
@@ -39,6 +40,20 @@ async function getOwnerClaim(chassis: string) {
     const data = await res.json();
     return data[0] ?? null;
   } catch { return null; }
+}
+
+async function getSightings(chassis: string) {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+  if (!supabaseUrl || !supabaseKey) return [];
+  try {
+    const res = await fetch(
+      `${supabaseUrl}/rest/v1/sightings?chassis_number=eq.${encodeURIComponent(chassis)}&status=in.(approved,pending_community)&order=spotted_at.desc&limit=50`,
+      { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` }, cache: "no-store" }
+    );
+    if (!res.ok) return [];
+    return res.json();
+  } catch { return []; }
 }
 
 async function getSimilarCars(excludeChassis: string) {
@@ -81,10 +96,11 @@ export async function generateMetadata({ params }: { params: Promise<{ chassis: 
 
 export default async function CarPage({ params }: { params: Promise<{ chassis: string }> }) {
   const { chassis } = await params;
-  const [car, similar, ownerClaim] = await Promise.all([
+  const [car, similar, ownerClaim, sightings] = await Promise.all([
     getSubmission(chassis),
     getSimilarCars(chassis),
     getOwnerClaim(chassis),
+    getSightings(chassis),
   ]);
 
   const jsonLd = car ? {
@@ -316,6 +332,11 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
               Discuss this chassis on the forum →
             </a>
           </div>
+        </div>
+
+        {/* Sightings */}
+        <div style={{ borderTop: "1px solid #1E3A5A", paddingTop: "40px", marginTop: "8px" }}>
+          <SightingsSection chassis={car.chassis_number} initialSightings={sightings} />
         </div>
       </div>
 
