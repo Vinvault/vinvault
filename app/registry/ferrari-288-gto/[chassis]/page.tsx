@@ -1,4 +1,6 @@
 import Link from "next/link";
+import AppHeader from "@/app/components/AppHeader";
+import AppFooter from "@/app/components/AppFooter";
 
 const carData: Record<string, any> = {
   "zffpa16b000040001": {
@@ -47,19 +49,7 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
 
   return (
     <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh'}}>
-      <header style={{background: '#0A1828', borderBottom: '1px solid #1E3A5A', padding: '20px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-        <Link href="/" style={{textDecoration: 'none'}}>
-          <span style={{fontSize: '24px', fontWeight: 'bold'}}>
-            <span style={{color: '#4A90B8'}}>Vin</span>
-            <span style={{color: '#E2EEF7'}}>Vault</span>
-          </span>
-          <span style={{color: '#4A90B8', fontSize: '10px', letterSpacing: '4px', marginLeft: '10px'}}>REGISTRY</span>
-        </Link>
-        <div style={{color: '#8BA5B8', fontSize: '13px'}}>
-          <Link href="/registry/ferrari-288-gto" style={{color: '#4A90B8', textDecoration: 'none'}}>Ferrari 288 GTO</Link>
-          {' → '}{car.chassis}
-        </div>
-      </header>
+      <AppHeader />
 
       <section style={{padding: '60px 40px 40px', borderBottom: '1px solid #1E3A5A'}}>
         <p style={{color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px'}}>FERRARI 288 GTO · CHASSIS RECORD</p>
@@ -147,9 +137,7 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
         </div>
       </div>
 
-      <footer style={{borderTop: '1px solid #1E3A5A', padding: '32px 40px', textAlign: 'center', color: '#4A6A8A', fontSize: '13px'}}>
-        <span style={{color: '#4A90B8'}}>Vin</span>Vault Registry © 2026 · vinvault.net
-      </footer>
+      <AppFooter />
     </main>
   );
 }

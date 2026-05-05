@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import Breadcrumb from "@/app/components/Breadcrumb";
 import AppHeader from "@/app/components/AppHeader";
+import AppFooter from "@/app/components/AppFooter";
 
 export const metadata: Metadata = {
   title: "Leaderboard — VinVault",
@@ -145,14 +146,7 @@ export default async function LeaderboardPage() {
         </div>
       </div>
 
-      <footer className="vv-footer">
-        <span><span style={{ color: "#4A90B8" }}>Vin</span>Vault Registry © 2026</span>
-        <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
-          <Link href="/ferrari/288-gto" style={{ color: "#4A6A8A", textDecoration: "none" }}>Registry</Link>
-          <Link href="/leaderboard" style={{ color: "#4A90B8", textDecoration: "none" }}>Leaderboard</Link>
-          <Link href="/submit" style={{ color: "#4A6A8A", textDecoration: "none" }}>Submit</Link>
-        </div>
-      </footer>
+      <AppFooter />
     </main>
   );
 }

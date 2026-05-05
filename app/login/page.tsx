@@ -3,6 +3,8 @@ import Link from "next/link";
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
+import AppHeader from "@/app/components/AppHeader";
+import AppFooter from "@/app/components/AppFooter";
 
 export default function Login() {
   const searchParams = useSearchParams();
@@ -74,14 +76,7 @@ export default function Login() {
 
   return (
     <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <header style={{ background: '#0A1828', borderBottom: '1px solid #1E3A5A', padding: '20px 40px' }}>
-        <Link href="/" style={{ textDecoration: 'none' }}>
-          <span style={{ fontSize: '24px', fontWeight: 'bold' }}>
-            <span style={{ color: '#4A90B8' }}>Vin</span><span style={{ color: '#E2EEF7' }}>Vault</span>
-          </span>
-          <span style={{ color: '#4A90B8', fontSize: '10px', letterSpacing: '4px', marginLeft: '10px' }}>REGISTRY</span>
-        </Link>
-      </header>
+      <AppHeader />
 
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px 20px' }}>
         <div style={{ width: '100%', maxWidth: '440px' }}>
@@ -154,9 +149,7 @@ export default function Login() {
         </div>
       </div>
 
-      <footer style={{ borderTop: '1px solid #1E3A5A', padding: '24px 40px', textAlign: 'center', color: '#4A6A8A', fontSize: '13px' }}>
-        <span style={{ color: '#4A90B8' }}>Vin</span>Vault Registry © 2026 · vinvault.net
-      </footer>
+      <AppFooter />
     </main>
   );
 }

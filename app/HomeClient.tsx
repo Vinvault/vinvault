@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import CountUp from "./components/CountUp";
 import NewsletterForm from "./components/NewsletterForm";
 import AppHeader from "./components/AppHeader";
+import AppFooter from "./components/AppFooter";
 
 interface Registry {
   make: string;
@@ -282,18 +283,7 @@ export default function HomeClient({
       </section>
 
       {/* ── Footer ── */}
-      <footer className="vv-footer">
-        <span><span style={{ color: "#4A90B8" }}>Vin</span>Vault Registry © 2026</span>
-        <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
-          <Link href="/ferrari/288-gto" style={{ color: "#4A6A8A", textDecoration: "none" }}>Registry</Link>
-          <Link href="/about" style={{ color: "#4A6A8A", textDecoration: "none" }}>About</Link>
-          <Link href="/faq" style={{ color: "#4A6A8A", textDecoration: "none" }}>FAQ</Link>
-          <Link href="/leaderboard" style={{ color: "#4A6A8A", textDecoration: "none" }}>Leaderboard</Link>
-          <Link href="/submit" style={{ color: "#4A6A8A", textDecoration: "none" }}>Submit</Link>
-          <Link href="/privacy" style={{ color: "#4A6A8A", textDecoration: "none" }}>Privacy</Link>
-          <Link href="/terms" style={{ color: "#4A6A8A", textDecoration: "none" }}>Terms</Link>
-        </div>
-      </footer>
+      <AppFooter />
     </main>
   );
 }

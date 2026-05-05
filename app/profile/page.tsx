@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 import AppHeader from "@/app/components/AppHeader";
+import AppFooter from "@/app/components/AppFooter";
 
 interface Submission {
   id: string;
@@ -35,7 +36,9 @@ const CLAIM_STATUS: Record<string, { bg: string; color: string; label: string }>
 
 const PROFILE_NAV = [
   { href: "/ferrari/288-gto", label: "Registry" },
-  { href: "/submit", label: "Submit", highlight: true as const },
+  { href: "/about", label: "About" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/submit", label: "Submit a Car", highlight: true as const },
 ];
 
 export default function ProfilePage() {
@@ -245,9 +248,7 @@ export default function ProfilePage() {
         )}
       </div>
 
-      <footer style={{ borderTop: '1px solid #1E3A5A', padding: '28px 40px', textAlign: 'center', color: '#4A6A8A', fontSize: '13px' }}>
-        <span style={{ color: '#4A90B8' }}>Vin</span>Vault Registry © 2026 · vinvault.net
-      </footer>
+      <AppFooter />
     </main>
   );
 }

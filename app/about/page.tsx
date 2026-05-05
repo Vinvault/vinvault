@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Breadcrumb from "@/app/components/Breadcrumb";
 import AppHeader from "@/app/components/AppHeader";
+import AppFooter from "@/app/components/AppFooter";
 
 export const metadata = {
   title: "About — VinVault Classic Car Registry",
@@ -130,15 +131,7 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <footer className="vv-footer">
-        <span><span style={{ color: '#4A90B8' }}>Vin</span>Vault Registry © 2026</span>
-        <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
-          <Link href="/" style={{ color: '#4A6A8A', textDecoration: 'none' }}>Home</Link>
-          <Link href="/ferrari/288-gto" style={{ color: '#4A6A8A', textDecoration: 'none' }}>Registry</Link>
-          <Link href="/submit" style={{ color: '#4A6A8A', textDecoration: 'none' }}>Submit</Link>
-          <Link href="/login" style={{ color: '#4A6A8A', textDecoration: 'none' }}>Sign In</Link>
-        </div>
-      </footer>
+      <AppFooter />
     </main>
   );
 }

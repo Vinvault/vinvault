@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import AppHeader from "@/app/components/AppHeader";
+import AppFooter from "@/app/components/AppFooter";
 
 export const metadata: Metadata = {
   title: "Ferrari 288 GTO — Specifications & History | VinVault",
@@ -37,18 +39,7 @@ const SPECS = [
 export default function Ferrari288GTOInfoPage() {
   return (
     <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
-      <header className="vv-header">
-        <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "baseline", gap: "10px" }}>
-          <span style={{ fontSize: "24px", fontWeight: "bold" }}>
-            <span style={{ color: "#4A90B8" }}>Vin</span><span style={{ color: "#E2EEF7" }}>Vault</span>
-          </span>
-          <span style={{ color: "#4A90B8", fontSize: "10px", letterSpacing: "4px" }}>REGISTRY</span>
-        </Link>
-        <nav className="vv-nav" style={{ fontSize: "13px" }}>
-          <Link href="/ferrari/288-gto" style={{ color: "#8BA5B8", textDecoration: "none", padding: "6px 12px" }}>Registry</Link>
-          <Link href="/submit" style={{ color: "#4A90B8", textDecoration: "none", border: "1px solid #4A90B8", padding: "6px 16px" }}>Submit</Link>
-        </nav>
-      </header>
+      <AppHeader />
 
       {/* Breadcrumb */}
       <div style={{ padding: "14px 40px", background: "#0A1828", borderBottom: "1px solid #1E3A5A", fontSize: "12px", color: "#4A6A8A" }}>
@@ -134,14 +125,7 @@ export default function Ferrari288GTOInfoPage() {
         </div>
       </div>
 
-      <footer className="vv-footer">
-        <span><span style={{ color: "#4A90B8" }}>Vin</span>Vault Registry © 2026</span>
-        <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
-          <Link href="/ferrari/288-gto" style={{ color: "#4A6A8A", textDecoration: "none" }}>Registry</Link>
-          <Link href="/about" style={{ color: "#4A6A8A", textDecoration: "none" }}>About</Link>
-          <Link href="/submit" style={{ color: "#4A6A8A", textDecoration: "none" }}>Submit</Link>
-        </div>
-      </footer>
+      <AppFooter />
     </main>
   );
 }

@@ -48,7 +48,7 @@ export default function GlobalError({
           </div>
 
           <footer style={{ borderTop: '1px solid #1E3A5A', padding: '28px 40px', textAlign: 'center', color: '#4A6A8A', fontSize: '13px' }}>
-            <span style={{ color: '#4A90B8' }}>Vin</span>Vault Registry © 2026 · vinvault.net
+            © 2026 <span style={{ color: '#4A90B8' }}>Vin</span>Vault — Curated Automotive Registry
           </footer>
         </div>
       </body>

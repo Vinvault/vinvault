@@ -1,17 +1,11 @@
 import Link from 'next/link';
+import AppHeader from '@/app/components/AppHeader';
+import AppFooter from '@/app/components/AppFooter';
 
 export default function NotFound() {
   return (
     <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <header className="vv-header">
-        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: '10px' }}>
-          <span style={{ fontSize: '24px', fontWeight: 'bold' }}>
-            <span style={{ color: '#4A90B8' }}>Vin</span>
-            <span style={{ color: '#E2EEF7' }}>Vault</span>
-          </span>
-          <span style={{ color: '#4A90B8', fontSize: '10px', letterSpacing: '4px' }}>REGISTRY</span>
-        </Link>
-      </header>
+      <AppHeader />
 
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 20px' }}>
         <div style={{ textAlign: 'center', maxWidth: '540px', width: '100%' }}>
@@ -21,7 +15,7 @@ export default function NotFound() {
             Page Not Found
           </h1>
           <p style={{ color: '#8BA5B8', fontSize: '16px', lineHeight: '1.7', marginBottom: '48px' }}>
-            The page you're looking for doesn't exist or may have moved.
+            The page you&apos;re looking for doesn&apos;t exist or may have moved.
           </p>
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link
@@ -46,9 +40,7 @@ export default function NotFound() {
         </div>
       </div>
 
-      <footer style={{ borderTop: '1px solid #1E3A5A', padding: '28px 40px', textAlign: 'center', color: '#4A6A8A', fontSize: '13px' }}>
-        <span style={{ color: '#4A90B8' }}>Vin</span>Vault Registry © 2026 · vinvault.net
-      </footer>
+      <AppFooter />
     </main>
   );
 }

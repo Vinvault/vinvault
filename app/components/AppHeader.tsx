@@ -17,7 +17,8 @@ interface AppHeaderProps {
 const DEFAULT_NAV: NavItem[] = [
   { href: "/ferrari/288-gto", label: "Registry" },
   { href: "/about", label: "About" },
-  { href: "/submit", label: "Submit", highlight: true },
+  { href: "/faq", label: "FAQ" },
+  { href: "/submit", label: "Submit a Car", highlight: true },
 ];
 
 export default function AppHeader({ nav = DEFAULT_NAV, adminBadge = false }: AppHeaderProps) {

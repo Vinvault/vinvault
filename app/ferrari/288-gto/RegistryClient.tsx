@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState, useMemo, useEffect } from "react";
 import AppHeader from "@/app/components/AppHeader";
+import AppFooter from "@/app/components/AppFooter";
 
 const TOTAL_PRODUCED = 272;
 
@@ -12,6 +13,10 @@ interface Submission {
   original_market: string;
   status: string;
   created_at: string;
+  is_one_off?: boolean;
+  is_prototype?: boolean;
+  is_film_car?: boolean;
+  is_music_video_car?: boolean;
 }
 
 const REGISTRY_NAV = [
@@ -26,6 +31,8 @@ const STATUS_STYLE: Record<string, { bg: string; color: string }> = {
   rejected:  { bg: '#2A0D0D', color: '#E07070' },
 };
 
+type FlagFilter = "all" | "one_off" | "prototype" | "film_car" | "music_video";
+
 export default function RegistryClient({ cars, ownedChassis = new Set<string>() }: { cars: Submission[]; ownedChassis?: Set<string> }) {
   const [query, setQuery] = useState('');
   const [thumbnails, setThumbnails] = useState<Record<string, string>>({});
@@ -38,6 +45,7 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
   }, []);
   const [market, setMarket] = useState('');
   const [status, setStatus] = useState('');
+  const [flagFilter, setFlagFilter] = useState<FlagFilter>('all');
 
   const markets = useMemo(() => {
     const s = new Set(cars.map(c => c.original_market).filter(Boolean));
@@ -49,9 +57,13 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
       if (query && !c.chassis_number.toLowerCase().includes(query.toLowerCase())) return false;
       if (market && c.original_market !== market) return false;
       if (status && c.status !== status) return false;
+      if (flagFilter === 'one_off' && !c.is_one_off) return false;
+      if (flagFilter === 'prototype' && !c.is_prototype) return false;
+      if (flagFilter === 'film_car' && !c.is_film_car) return false;
+      if (flagFilter === 'music_video' && !c.is_music_video_car) return false;
       return true;
     });
-  }, [cars, query, market, status]);
+  }, [cars, query, market, status, flagFilter]);
 
   const documented = cars.filter(c => c.status === 'approved').length;
   const pct = Math.round((documented / TOTAL_PRODUCED) * 1000) / 10;
@@ -145,6 +157,35 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
         </Link>
       </section>
 
+      {/* Flag filters */}
+      <section style={{ padding: '12px 40px', borderBottom: '1px solid #0D1E36', display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+        <span style={{ color: '#4A6A8A', fontSize: '11px', letterSpacing: '2px', marginRight: '4px' }}>FILTER:</span>
+        {([
+          { key: 'all', label: 'All Cars' },
+          { key: 'one_off', label: 'One-Off', color: '#B87AE0' },
+          { key: 'prototype', label: 'Prototypes', color: '#E0B87A' },
+          { key: 'film_car', label: 'Film Cars', color: '#7AB8E0' },
+          { key: 'music_video', label: 'Music Video', color: '#E07AB8' },
+        ] as { key: FlagFilter; label: string; color?: string }[]).map(f => (
+          <button
+            key={f.key}
+            onClick={() => setFlagFilter(f.key)}
+            style={{
+              background: flagFilter === f.key ? (f.color ? `${f.color}22` : '#1E3A5A') : 'none',
+              border: `1px solid ${flagFilter === f.key ? (f.color || '#4A90B8') : '#1E3A5A'}`,
+              color: flagFilter === f.key ? (f.color || '#4A90B8') : '#4A6A8A',
+              padding: '5px 14px',
+              fontSize: '12px',
+              cursor: 'pointer',
+              fontFamily: 'Verdana, sans-serif',
+              letterSpacing: '1px',
+            }}
+          >
+            {f.label}
+          </button>
+        ))}
+      </section>
+
       <section className="vv-registry-body">
         <div className="vv-table-scroll">
           <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '24px', minWidth: '560px' }}>
@@ -188,6 +229,18 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
                           OWNER
                         </span>
                       )}
+                      {car.is_one_off && (
+                        <span title="One-Off" style={{ marginLeft: '6px', background: '#1A0D2A', color: '#B87AE0', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #5A2A8A' }}>1-OFF</span>
+                      )}
+                      {car.is_prototype && (
+                        <span title="Prototype" style={{ marginLeft: '6px', background: '#2A1A0D', color: '#E0B87A', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #8A5A2A' }}>PROTO</span>
+                      )}
+                      {car.is_film_car && (
+                        <span title="Film Car" style={{ marginLeft: '6px', background: '#0D1A2A', color: '#7AB8E0', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #2A5A8A' }}>FILM</span>
+                      )}
+                      {car.is_music_video_car && (
+                        <span title="Music Video Car" style={{ marginLeft: '6px', background: '#1A0D1A', color: '#E07AB8', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #8A2A5A' }}>MV</span>
+                      )}
                     </td>
                     <td style={{ padding: '18px 12px', color: '#8BA5B8' }}>{car.exterior_color || '—'}</td>
                     <td style={{ padding: '18px 12px', color: '#8BA5B8' }}>{car.original_market || '—'}</td>
@@ -213,15 +266,7 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
         </p>
       </section>
 
-      <footer className="vv-footer" style={{ justifyContent: 'center', textAlign: 'center' }}>
-        <div>
-          <a href="https://forum.vinvault.net" target="_blank" rel="noopener noreferrer" style={{ color: '#4A90B8', textDecoration: 'none', marginRight: '16px' }}>Forum</a>
-          <a href="/about" style={{ color: '#4A6A8A', textDecoration: 'none', marginRight: '16px' }}>About</a>
-          <a href="/terms" style={{ color: '#4A6A8A', textDecoration: 'none', marginRight: '16px' }}>Terms</a>
-          <a href="/privacy" style={{ color: '#4A6A8A', textDecoration: 'none' }}>Privacy</a>
-        </div>
-        <div><span style={{ color: '#4A90B8' }}>Vin</span>Vault Registry © 2026 · vinvault.net</div>
-      </footer>
+      <AppFooter />
     </main>
   );
 }

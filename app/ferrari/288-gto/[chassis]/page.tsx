@@ -7,6 +7,7 @@ import ChassisPhotos from "./ChassisPhotos";
 import ClaimButton from "./ClaimButton";
 import WatchButton from "./WatchButton";
 import AppHeader from "@/app/components/AppHeader";
+import AppFooter from "@/app/components/AppFooter";
 
 const BASE = "https://www.vinvault.net";
 
@@ -135,9 +136,7 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
           </div>
         </div>
 
-        <footer style={{ borderTop: "1px solid #1E3A5A", padding: "32px 40px", textAlign: "center", color: "#4A6A8A", fontSize: "13px" }}>
-          <span style={{ color: "#4A90B8" }}>Vin</span>Vault Registry © 2026 · vinvault.net
-        </footer>
+        <AppFooter />
       </main>
     );
   }
@@ -178,6 +177,18 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
             <span style={{ background: "#0D2A1A", color: "#4AB87A", padding: "8px 20px", fontSize: "12px", letterSpacing: "2px" }}>APPROVED</span>
             {ownerClaim && (
               <span style={{ background: "#0D1E36", color: "#4A90B8", padding: "8px 20px", fontSize: "12px", letterSpacing: "2px", border: "1px solid #4A90B8" }}>OWNER VERIFIED</span>
+            )}
+            {car.is_one_off && (
+              <span style={{ background: "#1A0D2A", color: "#B87AE0", padding: "8px 20px", fontSize: "12px", letterSpacing: "2px", border: "1px solid #5A2A8A" }}>ONE-OFF</span>
+            )}
+            {car.is_prototype && (
+              <span style={{ background: "#2A1A0D", color: "#E0B87A", padding: "8px 20px", fontSize: "12px", letterSpacing: "2px", border: "1px solid #8A5A2A" }}>PROTOTYPE</span>
+            )}
+            {car.is_film_car && (
+              <span style={{ background: "#0D1A2A", color: "#7AB8E0", padding: "8px 20px", fontSize: "12px", letterSpacing: "2px", border: "1px solid #2A5A8A" }}>FILM CAR</span>
+            )}
+            {car.is_music_video_car && (
+              <span style={{ background: "#1A0D1A", color: "#E07AB8", padding: "8px 20px", fontSize: "12px", letterSpacing: "2px", border: "1px solid #8A2A5A" }}>MUSIC VIDEO</span>
             )}
             <WatchButton chassis={car.chassis_number} />
             <ClaimButton chassis={car.chassis_number} />
@@ -240,6 +251,25 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
           <div style={{ marginBottom: "32px" }}>
             <h2 style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "16px" }}>SOURCE</h2>
             <p style={{ color: "#8BA5B8", background: "#0A1828", padding: "20px 24px", border: "1px solid #1E3A5A" }}>{car.source}</p>
+          </div>
+        )}
+
+        {/* Special designations */}
+        {(car.is_film_car || car.is_music_video_car) && (
+          <div style={{ marginBottom: "32px" }}>
+            <h2 style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "16px" }}>SPECIAL DESIGNATIONS</h2>
+            {car.is_film_car && car.film_details && (
+              <div style={{ background: "#0A1828", border: "1px solid #2A5A8A", padding: "20px 24px", marginBottom: "12px" }}>
+                <p style={{ color: "#7AB8E0", fontSize: "11px", letterSpacing: "2px", marginBottom: "8px" }}>FILM CAR</p>
+                <p style={{ color: "#8BA5B8", lineHeight: "1.7" }}>{car.film_details}</p>
+              </div>
+            )}
+            {car.is_music_video_car && car.music_video_details && (
+              <div style={{ background: "#0A1828", border: "1px solid #8A2A5A", padding: "20px 24px" }}>
+                <p style={{ color: "#E07AB8", fontSize: "11px", letterSpacing: "2px", marginBottom: "8px" }}>MUSIC VIDEO CAR</p>
+                <p style={{ color: "#8BA5B8", lineHeight: "1.7" }}>{car.music_video_details}</p>
+              </div>
+            )}
           </div>
         )}
 
@@ -315,16 +345,7 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
         </section>
       )}
 
-      <footer style={{ borderTop: "1px solid #1E3A5A", padding: "32px 40px", textAlign: "center", color: "#4A6A8A", fontSize: "13px" }}>
-        <div style={{ marginBottom: "12px" }}>
-          <a href="https://forum.vinvault.net" target="_blank" rel="noopener noreferrer" style={{ color: "#4A90B8", textDecoration: "none", fontSize: "13px" }}>
-            forum.vinvault.net
-          </a>
-          <span style={{ margin: "0 12px" }}>·</span>
-          <a href={`https://www.vinvault.net/api/v1/chassis/${car.chassis_number}`} style={{ color: "#4A6A8A", textDecoration: "none", fontSize: "12px" }}>API</a>
-        </div>
-        <span style={{ color: "#4A90B8" }}>Vin</span>Vault Registry © 2026 · vinvault.net
-      </footer>
+      <AppFooter />
     </main>
   );
 }

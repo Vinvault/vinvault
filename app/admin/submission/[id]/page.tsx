@@ -27,11 +27,16 @@ async function updateAndApprove(formData: FormData) {
     "chassis_number","engine_number","gearbox_number","production_date",
     "original_market","exterior_color","interior_color","condition_score",
     "matching_numbers","has_service_history","has_books","has_toolkit","provenance","source",
+    "film_details","music_video_details",
   ];
-  const update: Record<string, string> = { status: "approved" };
+  const boolFields = ["is_one_off","is_prototype","is_film_car","is_music_video_car"];
+  const update: Record<string, string | boolean> = { status: "approved" };
   fields.forEach((f) => {
     const v = formData.get(f);
     if (v !== null) update[f] = v as string;
+  });
+  boolFields.forEach((f) => {
+    update[f] = formData.get(f) === "true";
   });
 
   const res = await fetch(`${supabaseUrl}/rest/v1/submissions?id=eq.${id}`, {
@@ -273,6 +278,32 @@ export default async function SubmissionPage({ params }: { params: Promise<{ id:
           <Field label="PROVENANCE" name="provenance" value={s.provenance} textarea />
           <Field label="SOURCE" name="source" value={s.source} />
 
+          <div style={{ marginTop: "32px", marginBottom: "24px" }}>
+            <p style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "16px", borderBottom: "1px solid #1E3A5A", paddingBottom: "10px" }}>SPECIAL DESIGNATIONS</p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px", marginBottom: "16px" }}>
+              {([
+                { name: "is_one_off", label: "One-Off" },
+                { name: "is_prototype", label: "Prototype" },
+                { name: "is_film_car", label: "Film Car" },
+                { name: "is_music_video_car", label: "Music Video Car" },
+              ] as { name: string; label: string }[]).map(({ name, label }) => (
+                <div key={name} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <select
+                    name={name}
+                    defaultValue={s[name] ? "true" : "false"}
+                    style={{ background: "#0D1E36", border: "1px solid #1E3A5A", color: "#E2EEF7", padding: "8px 12px", fontSize: "12px", fontFamily: "Verdana, sans-serif" }}
+                  >
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                  </select>
+                  <label style={{ color: "#8BA5B8", fontSize: "12px", letterSpacing: "1px" }}>{label.toUpperCase()}</label>
+                </div>
+              ))}
+            </div>
+            <Field label="FILM DETAILS" name="film_details" value={s.film_details} textarea />
+            <Field label="MUSIC VIDEO DETAILS" name="music_video_details" value={s.music_video_details} textarea />
+          </div>
+
           <div style={{ display: "flex", gap: "16px", marginTop: "32px", flexWrap: "wrap" }}>
             <button
               type="submit"
@@ -294,8 +325,8 @@ export default async function SubmissionPage({ params }: { params: Promise<{ id:
         </form>
       </div>
 
-      <footer style={{ borderTop: "1px solid #1E3A5A", padding: "32px 40px", textAlign: "center", color: "#4A6A8A", fontSize: "13px" }}>
-        <span style={{ color: "#4A90B8" }}>Vin</span>Vault Registry © 2026 · Admin
+      <footer style={{ borderTop: "1px solid #1E3A5A", padding: "28px 40px", textAlign: "center", color: "#4A6A8A", fontSize: "13px" }}>
+        © 2026 <span style={{ color: "#4A90B8" }}>Vin</span>Vault — Curated Automotive Registry
       </footer>
     </main>
   );

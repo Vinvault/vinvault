@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 interface Submission {
   id: string;
@@ -44,13 +44,35 @@ function computeStats(submissions: Submission[]): Stats {
   };
 }
 
+interface FlaggedUser {
+  id: string;
+  user_email: string;
+  flagged_by?: string;
+  reason?: string;
+  flag_count: number;
+  is_banned: boolean;
+  created_at: string;
+}
+
 export default function AdminClient({ submissions, claims }: { submissions: Submission[]; claims: Claim[] }) {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [tab, setTab] = useState<"submissions" | "claims">("submissions");
+  const [tab, setTab] = useState<"submissions" | "claims" | "moderation">("submissions");
   const [claimProcessing, setClaimProcessing] = useState<string | null>(null);
   const [claimResults, setClaimResults] = useState<Record<string, string>>({});
   const [storageMsg, setStorageMsg] = useState("");
+  const [flaggedUsers, setFlaggedUsers] = useState<FlaggedUser[]>([]);
+  const [moderationMsg, setModerationMsg] = useState("");
+  const [migrateMsg, setMigrateMsg] = useState("");
+
+  useEffect(() => {
+    if (tab === "moderation") {
+      fetch("/api/admin/moderation")
+        .then(r => r.ok ? r.json() : [])
+        .then(setFlaggedUsers)
+        .catch(() => {});
+    }
+  }, [tab]);
 
   const stats = useMemo(() => computeStats(submissions), [submissions]);
 
@@ -78,6 +100,62 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
       return true;
     });
   }, [claims, query, statusFilter]);
+
+  async function runMigration() {
+    setMigrateMsg("Running migrations...");
+    const res = await fetch("/api/admin/migrate", { method: "POST" });
+    const data = await res.json();
+    if (data.allOk) {
+      setMigrateMsg("✓ Migrations applied successfully");
+    } else {
+      const failed = (data.results || []).filter((r: { ok: boolean; sql: string; error?: string }) => !r.ok);
+      if (failed.length > 0) {
+        setMigrateMsg(`Some steps had errors (columns may already exist). Check Supabase Studio if needed.`);
+      } else {
+        setMigrateMsg("Migration complete.");
+      }
+    }
+  }
+
+  async function flagUser(email: string, reason: string) {
+    await fetch("/api/admin/moderation", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "flag_user", user_email: email, reason, flagged_by: "admin" }),
+    });
+    setModerationMsg(`Flagged ${email}`);
+    fetch("/api/admin/moderation").then(r => r.ok ? r.json() : []).then(setFlaggedUsers);
+  }
+
+  async function banUser(email: string) {
+    await fetch("/api/admin/moderation", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "ban_user", user_email: email }),
+    });
+    setFlaggedUsers(prev => prev.map(u => u.user_email === email ? { ...u, is_banned: true } : u));
+    setModerationMsg(`Banned ${email}`);
+  }
+
+  async function unbanUser(email: string) {
+    await fetch("/api/admin/moderation", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "unban_user", user_email: email }),
+    });
+    setFlaggedUsers(prev => prev.map(u => u.user_email === email ? { ...u, is_banned: false } : u));
+    setModerationMsg(`Unbanned ${email}`);
+  }
+
+  async function deleteUserSubmissions(email: string) {
+    if (!confirm(`Delete ALL submissions from ${email}? This cannot be undone.`)) return;
+    const res = await fetch("/api/admin/moderation", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "delete_user_submissions", user_email: email }),
+    });
+    setModerationMsg(res.ok ? `Deleted submissions from ${email}` : "Error deleting submissions");
+  }
 
   async function initStorage() {
     setStorageMsg("Creating storage bucket...");
@@ -172,12 +250,15 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
         </div>
 
         {/* Tabs */}
-        <div style={{ display: "flex", borderBottom: "1px solid #1E3A5A", marginBottom: "24px" }}>
+        <div style={{ display: "flex", borderBottom: "1px solid #1E3A5A", marginBottom: "24px", flexWrap: "wrap" }}>
           <button style={tabStyle(tab === "submissions")} onClick={() => setTab("submissions")}>
             SUBMISSIONS ({submissions.length})
           </button>
           <button style={tabStyle(tab === "claims")} onClick={() => setTab("claims")}>
             OWNERSHIP CLAIMS ({claims.filter(c => c.status === "pending").length} pending)
+          </button>
+          <button style={tabStyle(tab === "moderation")} onClick={() => setTab("moderation")}>
+            MODERATION
           </button>
         </div>
 
@@ -239,10 +320,21 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
                             padding: "4px 10px", fontSize: "11px", letterSpacing: "1px",
                           }}>{s.status?.toUpperCase()}</span>
                         </td>
-                        <td style={{ padding: "14px 12px" }}>
+                        <td style={{ padding: "14px 12px", display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
                           <Link href={`/admin/submission/${s.id}`} style={{ color: "#4A90B8", fontSize: "12px", textDecoration: "none", border: "1px solid #1E3A5A", padding: "4px 10px" }}>
                             Review
                           </Link>
+                          {s.submitter_email && (
+                            <button
+                              onClick={() => {
+                                const reason = prompt(`Flag reason for ${s.submitter_email}:`) || "Flagged by admin";
+                                flagUser(s.submitter_email, reason);
+                              }}
+                              style={{ background: "#2A1A0D", color: "#E0B87A", border: "1px solid #8A5A2A", padding: "4px 10px", fontSize: "11px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
+                            >
+                              Flag User
+                            </button>
+                          )}
                         </td>
                       </tr>
                     ))}
@@ -314,10 +406,86 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
             )}
           </>
         )}
+
+        {/* Moderation tab */}
+        {tab === "moderation" && (
+          <>
+            <div style={{ marginBottom: "24px" }}>
+              <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>DATABASE MIGRATIONS</p>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap", marginBottom: "24px" }}>
+                <button
+                  onClick={runMigration}
+                  style={{ background: "#0A1828", border: "1px solid #4A90B8", color: "#4A90B8", padding: "8px 16px", fontSize: "12px", cursor: "pointer", fontFamily: "Verdana, sans-serif", letterSpacing: "1px" }}
+                >
+                  ⚙ Run DB Migrations (Special Flags + Moderation Tables)
+                </button>
+                {migrateMsg && <span style={{ color: "#4A6A8A", fontSize: "12px" }}>{migrateMsg}</span>}
+              </div>
+              <p style={{ color: "#4A6A8A", fontSize: "11px" }}>
+                Run this once after deployment to add the new columns to the database. Safe to run multiple times (uses IF NOT EXISTS).
+              </p>
+            </div>
+
+            <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px", borderTop: "1px solid #1E3A5A", paddingTop: "24px" }}>FLAGGED USERS</p>
+            {moderationMsg && (
+              <div style={{ background: "#0A1828", border: "1px solid #4A90B8", color: "#4A90B8", padding: "10px 16px", fontSize: "13px", marginBottom: "16px" }}>
+                {moderationMsg}
+              </div>
+            )}
+            {flaggedUsers.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "60px", color: "#4A6A8A" }}>
+                <p>No flagged users. Flag users from the Submissions tab.</p>
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                {flaggedUsers.map(u => (
+                  <div key={u.id} style={{ background: "#0A1828", border: `1px solid ${u.is_banned ? "#8A2A2A" : "#1E3A5A"}`, padding: "20px 24px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px", marginBottom: "12px" }}>
+                      <div>
+                        <p style={{ fontFamily: "monospace", fontSize: "14px", color: "#E2EEF7", marginBottom: "4px" }}>{u.user_email}</p>
+                        {u.reason && <p style={{ color: "#4A6A8A", fontSize: "12px" }}>Reason: {u.reason}</p>}
+                        {u.flagged_by && <p style={{ color: "#4A6A8A", fontSize: "12px" }}>Flagged by: {u.flagged_by}</p>}
+                      </div>
+                      <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
+                        <span style={{ background: u.is_banned ? "#2A0D0D" : "#2A1A0D", color: u.is_banned ? "#E07070" : "#B8944A", padding: "4px 12px", fontSize: "11px", letterSpacing: "1px" }}>
+                          {u.is_banned ? "BANNED" : `FLAGS: ${u.flag_count}`}
+                        </span>
+                        {u.is_banned ? (
+                          <button
+                            onClick={() => unbanUser(u.user_email)}
+                            style={{ background: "#0D2A1A", color: "#4AB87A", border: "1px solid #4AB87A", padding: "6px 16px", fontSize: "11px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
+                          >
+                            Unban
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => banUser(u.user_email)}
+                            style={{ background: "#2A0D0D", color: "#E07070", border: "1px solid #E07070", padding: "6px 16px", fontSize: "11px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
+                          >
+                            Ban User
+                          </button>
+                        )}
+                        <button
+                          onClick={() => deleteUserSubmissions(u.user_email)}
+                          style={{ background: "#2A0D0D", color: "#E07070", border: "1px solid #8A2A2A", padding: "6px 16px", fontSize: "11px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
+                        >
+                          Delete All Submissions
+                        </button>
+                      </div>
+                    </div>
+                    <p style={{ color: "#4A6A8A", fontSize: "12px" }}>
+                      Flagged {new Date(u.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
       </div>
 
-      <footer style={{ borderTop: "1px solid #1E3A5A", padding: "32px 40px", textAlign: "center", color: "#4A6A8A", fontSize: "13px", marginTop: "60px" }}>
-        <span style={{ color: "#4A90B8" }}>Vin</span>Vault Registry © 2026 · Admin
+      <footer style={{ borderTop: "1px solid #1E3A5A", padding: "28px 40px", textAlign: "center", color: "#4A6A8A", fontSize: "13px", marginTop: "60px" }}>
+        © 2026 <span style={{ color: "#4A90B8" }}>Vin</span>Vault — Curated Automotive Registry
       </footer>
     </main>
   );

@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import AppHeader from "@/app/components/AppHeader";
+import AppFooter from "@/app/components/AppFooter";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 
 export default function SubmitForm({ prefillChassis }: { prefillChassis?: string }) {
@@ -35,8 +36,20 @@ export default function SubmitForm({ prefillChassis }: { prefillChassis?: string
     source: "",
     submitter_email: "",
   });
+  const [flags, setFlags] = useState({
+    is_one_off: false,
+    is_prototype: false,
+    is_film_car: false,
+    film_details: "",
+    is_music_video_car: false,
+    music_video_details: "",
+  });
 
   const handle = (e: any) => setForm({...form, [e.target.name]: e.target.value});
+  const handleFlag = (e: any) => {
+    const { name, type, checked, value } = e.target;
+    setFlags(prev => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+  };
 
   const submit = async (e: any) => {
     e.preventDefault();
@@ -51,7 +64,7 @@ export default function SubmitForm({ prefillChassis }: { prefillChassis?: string
       const res = await fetch('/api/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, ...flags }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -162,6 +175,45 @@ export default function SubmitForm({ prefillChassis }: { prefillChassis?: string
           </div>
           {field("SOURCE / REFERENCE", "source", "e.g. Auction catalog, owner contact, magazine article")}
           {field("YOUR EMAIL", "submitter_email", "For follow-up questions", "email")}
+
+          <h2 style={{color: '#4A90B8', fontSize: '11px', letterSpacing: '3px', marginBottom: '24px', borderBottom: '1px solid #1E3A5A', paddingBottom: '12px', marginTop: '40px'}}>SPECIAL DESIGNATIONS (OPTIONAL)</h2>
+          <p style={{color: '#4A6A8A', fontSize: '12px', lineHeight: '1.6', marginBottom: '20px'}}>Check any special status flags that apply to this car. These will appear as badges on the car record.</p>
+
+          {[
+            { name: "is_one_off", label: "ONE-OFF — This is a unique, one-of-a-kind car" },
+            { name: "is_prototype", label: "PROTOTYPE — This is a pre-production prototype" },
+            { name: "is_film_car", label: "FILM CAR — This car appeared in a film or TV production" },
+            { name: "is_music_video_car", label: "MUSIC VIDEO CAR — This car appeared in a music video" },
+          ].map(({ name, label }) => (
+            <div key={name} style={{marginBottom: '16px', display: 'flex', alignItems: 'flex-start', gap: '12px'}}>
+              <input
+                type="checkbox"
+                id={name}
+                name={name}
+                checked={(flags as any)[name]}
+                onChange={handleFlag}
+                style={{marginTop: '2px', accentColor: '#4A90B8', width: '16px', height: '16px', flexShrink: 0}}
+              />
+              <label htmlFor={name} style={{color: '#8BA5B8', fontSize: '13px', cursor: 'pointer'}}>{label}</label>
+            </div>
+          ))}
+
+          {flags.is_film_car && (
+            <div style={{marginBottom: '24px', marginTop: '8px'}}>
+              <label style={{display: 'block', color: '#8BA5B8', fontSize: '11px', letterSpacing: '2px', marginBottom: '8px'}}>FILM DETAILS</label>
+              <textarea name="film_details" value={flags.film_details} onChange={handleFlag} placeholder="e.g. Ferrari 288 GTO used in Magnum P.I. (1984), driven by Tom Selleck" rows={3}
+                style={{width: '100%', background: '#0D1E36', border: '1px solid #1E3A5A', color: '#E2EEF7', padding: '12px 16px', fontSize: '14px', fontFamily: 'Verdana, sans-serif', boxSizing: 'border-box' as const, resize: 'vertical'}}/>
+            </div>
+          )}
+
+          {flags.is_music_video_car && (
+            <div style={{marginBottom: '24px', marginTop: '8px'}}>
+              <label style={{display: 'block', color: '#8BA5B8', fontSize: '11px', letterSpacing: '2px', marginBottom: '8px'}}>MUSIC VIDEO DETAILS</label>
+              <textarea name="music_video_details" value={flags.music_video_details} onChange={handleFlag} placeholder="e.g. Appeared in the music video for '…'" rows={3}
+                style={{width: '100%', background: '#0D1E36', border: '1px solid #1E3A5A', color: '#E2EEF7', padding: '12px 16px', fontSize: '14px', fontFamily: 'Verdana, sans-serif', boxSizing: 'border-box' as const, resize: 'vertical'}}/>
+            </div>
+          )}
+
           <h2 style={{color: '#4A90B8', fontSize: '11px', letterSpacing: '3px', marginBottom: '24px', borderBottom: '1px solid #1E3A5A', paddingBottom: '12px', marginTop: '40px'}}>PHOTOS (OPTIONAL)</h2>
           {userEmail ? (
             <div style={{marginBottom: '24px'}}>
@@ -200,9 +252,7 @@ export default function SubmitForm({ prefillChassis }: { prefillChassis?: string
           </button>
         </form>
       </div>
-      <footer style={{borderTop: '1px solid #1E3A5A', padding: '32px 40px', textAlign: 'center', color: '#4A6A8A', fontSize: '13px'}}>
-        <span style={{color: '#4A90B8'}}>Vin</span>Vault Registry © 2026 · vinvault.net
-      </footer>
+      <AppFooter />
     </main>
   );
 }

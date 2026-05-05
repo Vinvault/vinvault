@@ -82,6 +82,12 @@ export async function POST(request: NextRequest) {
     provenance: sanitize(body.provenance),
     source: sanitize(body.source),
     submitter_email: sanitize(body.submitter_email),
+    is_one_off: body.is_one_off === true,
+    is_prototype: body.is_prototype === true,
+    is_film_car: body.is_film_car === true,
+    film_details: sanitize(body.film_details),
+    is_music_video_car: body.is_music_video_car === true,
+    music_video_details: sanitize(body.music_video_details),
     status: "pending",
     created_at: new Date().toISOString(),
   };

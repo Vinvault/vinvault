@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import Breadcrumb from "@/app/components/Breadcrumb";
 import AppHeader from "@/app/components/AppHeader";
+import AppFooter from "@/app/components/AppFooter";
 
 export const metadata: Metadata = {
   title: "Terms of Service — VinVault",
@@ -80,14 +81,7 @@ export default function TermsPage() {
         </Section>
       </div>
 
-      <footer className="vv-footer">
-        <span><span style={{ color: "#4A90B8" }}>Vin</span>Vault Registry © 2026</span>
-        <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
-          <Link href="/privacy" style={{ color: "#4A6A8A", textDecoration: "none" }}>Privacy</Link>
-          <Link href="/terms" style={{ color: "#4A90B8", textDecoration: "none" }}>Terms</Link>
-          <Link href="/faq" style={{ color: "#4A6A8A", textDecoration: "none" }}>FAQ</Link>
-        </div>
-      </footer>
+      <AppFooter />
     </main>
   );
 }

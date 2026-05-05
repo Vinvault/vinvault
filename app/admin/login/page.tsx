@@ -74,8 +74,8 @@ export default async function LoginPage({
         </div>
       </div>
 
-      <footer style={{ borderTop: '1px solid #1E3A5A', padding: '32px 40px', textAlign: 'center', color: '#4A6A8A', fontSize: '13px' }}>
-        <span style={{ color: '#4A90B8' }}>Vin</span>Vault Registry © 2026 · Admin
+      <footer style={{ borderTop: '1px solid #1E3A5A', padding: '28px 40px', textAlign: 'center', color: '#4A6A8A', fontSize: '13px' }}>
+        © 2026 <span style={{ color: '#4A90B8' }}>Vin</span>Vault — Curated Automotive Registry
       </footer>
     </main>
   );
