@@ -4,7 +4,7 @@ import VinLookupClient from "./VinLookupClient";
 
 export const metadata: Metadata = {
   title: "VIN Lookup Directory — VinVault",
-  description: "Free official vehicle registration and VIN lookup services for 50+ countries. Find government vehicle history tools for the UK, USA, France, Poland, India, Japan, South Korea, and more.",
+  description: "Free official vehicle registration and VIN lookup services for 87 countries. Government tools for the UK, USA, Germany, France, Italy, Japan, South Korea, India, Australia, Brazil, Canada, South Africa, and more.",
 };
 
 const PRE_POPULATED: VinService[] = [
