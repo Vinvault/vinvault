@@ -82,10 +82,51 @@ interface FlaggedUser {
   created_at: string;
 }
 
+interface SpotterEvent {
+  id: string;
+  name: string;
+  location_name: string;
+  country: string;
+  event_date: string;
+  organizer_email: string;
+  is_approved: boolean;
+  created_at: string;
+}
+
+interface Make {
+  id: string;
+  name: string;
+  slug: string;
+  country: string;
+  founded_year: number;
+}
+
+interface Model {
+  id: string;
+  make: string;
+  model: string;
+  full_model_name: string;
+  production_start_year: number;
+  production_end_year: number;
+  body_style: string;
+}
+
+interface SpotterProfile {
+  id: string;
+  user_email: string;
+  username: string;
+  country: string;
+  trust_level: number;
+  total_sightings: number;
+  verified_sightings: number;
+  is_banned: boolean;
+  created_at: string;
+}
+
 export default function AdminClient({ submissions, claims }: { submissions: Submission[]; claims: Claim[] }) {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [tab, setTab] = useState<"submissions" | "claims" | "sightings" | "vin-lookup" | "moderation">("submissions");
+  const [tab, setTab] = useState<"submissions" | "claims" | "sightings" | "vin-lookup" | "events" | "makes-models" | "spotters" | "moderation">("submissions");
   const [claimProcessing, setClaimProcessing] = useState<string | null>(null);
   const [claimResults, setClaimResults] = useState<Record<string, string>>({});
   const [storageMsg, setStorageMsg] = useState("");
@@ -96,6 +137,16 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
   const [sightingResults, setSightingResults] = useState<Record<string, string>>({});
   const [pendingVinServices, setPendingVinServices] = useState<PendingVinService[]>([]);
   const [vinServiceResults, setVinServiceResults] = useState<Record<string, boolean>>({});
+  const [pendingEvents, setPendingEvents] = useState<SpotterEvent[]>([]);
+  const [eventResults, setEventResults] = useState<Record<string, boolean>>({});
+  const [makes, setMakes] = useState<Make[]>([]);
+  const [models, setModels] = useState<Model[]>([]);
+  const [newMake, setNewMake] = useState({ name: "", country: "", founded_year: "" });
+  const [newModel, setNewModel] = useState({ make: "", model: "", production_start_year: "", production_end_year: "", body_style: "coupe" });
+  const [makeMsg, setMakeMsg] = useState("");
+  const [modelMsg, setModelMsg] = useState("");
+  const [spotterProfiles, setSpotterProfiles] = useState<SpotterProfile[]>([]);
+  const [spotterMsg, setSpotterMsg] = useState("");
 
   useEffect(() => {
     if (tab === "moderation") {
@@ -114,6 +165,24 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
       fetch("/api/vin-lookup?approved=false")
         .then(r => r.ok ? r.json() : [])
         .then(setPendingVinServices)
+        .catch(() => {});
+    }
+    if (tab === "events") {
+      fetch("/api/admin/events")
+        .then(r => r.ok ? r.json() : [])
+        .then(setPendingEvents)
+        .catch(() => {});
+    }
+    if (tab === "makes-models") {
+      Promise.all([
+        fetch("/api/admin/makes").then(r => r.ok ? r.json() : []),
+        fetch("/api/admin/models").then(r => r.ok ? r.json() : []),
+      ]).then(([m, mo]) => { setMakes(m); setModels(mo); });
+    }
+    if (tab === "spotters") {
+      fetch("/api/admin/spotters")
+        .then(r => r.ok ? r.json() : [])
+        .then(setSpotterProfiles)
         .catch(() => {});
     }
   }, [tab]);
@@ -223,6 +292,74 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
     }
   }
 
+  async function handleEvent(id: string, approve: boolean) {
+    const res = await fetch("/api/admin/events", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, is_approved: approve }),
+    });
+    if (res.ok) setEventResults(prev => ({ ...prev, [id]: approve }));
+  }
+
+  async function saveMake() {
+    if (!newMake.name) return;
+    const slug = newMake.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+    const res = await fetch("/api/admin/makes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...newMake, slug, founded_year: newMake.founded_year ? parseInt(newMake.founded_year) : null }),
+    });
+    if (res.ok) {
+      setMakeMsg(`✓ Make "${newMake.name}" added`);
+      setNewMake({ name: "", country: "", founded_year: "" });
+      fetch("/api/admin/makes").then(r => r.ok ? r.json() : []).then(setMakes);
+    } else { setMakeMsg("Error saving make"); }
+  }
+
+  async function saveModel() {
+    if (!newModel.make || !newModel.model) return;
+    const full_model_name = `${newModel.make} ${newModel.model}`;
+    const res = await fetch("/api/admin/models", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...newModel,
+        full_model_name,
+        production_start_year: newModel.production_start_year ? parseInt(newModel.production_start_year) : null,
+        production_end_year: newModel.production_end_year ? parseInt(newModel.production_end_year) : null,
+      }),
+    });
+    if (res.ok) {
+      setModelMsg(`✓ Model "${full_model_name}" added`);
+      setNewModel({ make: "", model: "", production_start_year: "", production_end_year: "", body_style: "coupe" });
+      fetch("/api/admin/models").then(r => r.ok ? r.json() : []).then(setModels);
+    } else { setModelMsg("Error saving model"); }
+  }
+
+  async function updateSpotterTrust(id: string, trust_level: number) {
+    const res = await fetch("/api/admin/spotters", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, trust_level }),
+    });
+    if (res.ok) {
+      setSpotterProfiles(prev => prev.map(p => p.id === id ? { ...p, trust_level } : p));
+      setSpotterMsg(`Trust level updated`);
+    }
+  }
+
+  async function toggleSpotterBan(id: string, is_banned: boolean) {
+    const res = await fetch("/api/admin/spotters", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, is_banned }),
+    });
+    if (res.ok) {
+      setSpotterProfiles(prev => prev.map(p => p.id === id ? { ...p, is_banned } : p));
+      setSpotterMsg(is_banned ? "Spotter banned" : "Spotter unbanned");
+    }
+  }
+
   async function initStorage() {
     setStorageMsg("Creating storage bucket...");
     const res = await fetch("/api/admin/init-storage", { method: "POST" });
@@ -328,6 +465,15 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
           </button>
           <button style={tabStyle(tab === "vin-lookup")} onClick={() => setTab("vin-lookup")}>
             VIN LOOKUP
+          </button>
+          <button style={tabStyle(tab === "events")} onClick={() => setTab("events")}>
+            EVENTS
+          </button>
+          <button style={tabStyle(tab === "makes-models")} onClick={() => setTab("makes-models")}>
+            MAKES &amp; MODELS
+          </button>
+          <button style={tabStyle(tab === "spotters")} onClick={() => setTab("spotters")}>
+            SPOTTERS
           </button>
           <button style={tabStyle(tab === "moderation")} onClick={() => setTab("moderation")}>
             MODERATION
@@ -599,6 +745,153 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
                     </div>
                   );
                 })}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Events tab */}
+        {tab === "events" && (
+          <>
+            <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>PENDING EVENTS</p>
+            {pendingEvents.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "80px", color: "#4A6A8A" }}><p>No pending events.</p></div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                {pendingEvents.map(ev => {
+                  const result = eventResults[ev.id];
+                  return (
+                    <div key={ev.id} style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "20px 24px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "8px", marginBottom: "8px" }}>
+                        <div>
+                          <p style={{ fontSize: "15px", fontWeight: "bold", marginBottom: "4px" }}>{ev.name}</p>
+                          <p style={{ color: "#8BA5B8", fontSize: "13px" }}>{ev.location_name}, {ev.country}</p>
+                          <p style={{ color: "#4A6A8A", fontSize: "12px" }}>{ev.event_date} · {ev.organizer_email}</p>
+                        </div>
+                        {result !== undefined ? (
+                          <span style={{ background: result ? "#0D2A1A" : "#2A0D0D", color: result ? "#4AB87A" : "#E07070", padding: "4px 12px", fontSize: "11px", letterSpacing: "1px" }}>
+                            {result ? "APPROVED" : "REJECTED"}
+                          </span>
+                        ) : (
+                          <div style={{ display: "flex", gap: "8px" }}>
+                            <button onClick={() => handleEvent(ev.id, true)} style={{ background: "#0D2A1A", color: "#4AB87A", border: "1px solid #4AB87A", padding: "6px 16px", fontSize: "11px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}>✓ Approve</button>
+                            <button onClick={() => handleEvent(ev.id, false)} style={{ background: "#2A0D0D", color: "#E07070", border: "1px solid #E07070", padding: "6px 16px", fontSize: "11px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}>✗ Reject</button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Makes & Models tab */}
+        {tab === "makes-models" && (
+          <>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px", marginBottom: "40px" }}>
+              {/* Add Make */}
+              <div>
+                <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>ADD MAKE</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {[["Name", "name", "Ferrari"], ["Country", "country", "Italy"], ["Founded Year", "founded_year", "1939"]].map(([label, key, ph]) => (
+                    <div key={key}>
+                      <label style={{ display: "block", color: "#8BA5B8", fontSize: "11px", letterSpacing: "2px", marginBottom: "6px" }}>{label}</label>
+                      <input value={(newMake as Record<string, string>)[key]} onChange={e => setNewMake(m => ({ ...m, [key]: e.target.value }))} placeholder={ph} style={{ width: "100%", background: "#0D1E36", border: "1px solid #1E3A5A", color: "#E2EEF7", padding: "10px 14px", fontSize: "13px", fontFamily: "Verdana, sans-serif", boxSizing: "border-box" }} />
+                    </div>
+                  ))}
+                  {newMake.name && <p style={{ color: "#4A6A8A", fontSize: "11px" }}>Slug: {newMake.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")}</p>}
+                  {makeMsg && <p style={{ color: "#4AB87A", fontSize: "12px" }}>{makeMsg}</p>}
+                  <button onClick={saveMake} style={{ background: "#4A90B8", color: "#fff", border: "none", padding: "10px 20px", fontSize: "12px", cursor: "pointer", fontFamily: "Verdana, sans-serif", letterSpacing: "1px", alignSelf: "flex-start" }}>Save Make</button>
+                </div>
+              </div>
+              {/* Add Model */}
+              <div>
+                <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>ADD MODEL</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {[["Make", "make", "Ferrari"], ["Model Name", "model", "288 GTO"], ["Production Start", "production_start_year", "1984"], ["Production End", "production_end_year", "1985"]].map(([label, key, ph]) => (
+                    <div key={key}>
+                      <label style={{ display: "block", color: "#8BA5B8", fontSize: "11px", letterSpacing: "2px", marginBottom: "6px" }}>{label}</label>
+                      <input value={(newModel as Record<string, string>)[key]} onChange={e => setNewModel(m => ({ ...m, [key]: e.target.value }))} placeholder={ph} style={{ width: "100%", background: "#0D1E36", border: "1px solid #1E3A5A", color: "#E2EEF7", padding: "10px 14px", fontSize: "13px", fontFamily: "Verdana, sans-serif", boxSizing: "border-box" }} />
+                    </div>
+                  ))}
+                  <div>
+                    <label style={{ display: "block", color: "#8BA5B8", fontSize: "11px", letterSpacing: "2px", marginBottom: "6px" }}>BODY STYLE</label>
+                    <select value={newModel.body_style} onChange={e => setNewModel(m => ({ ...m, body_style: e.target.value }))} style={{ width: "100%", background: "#0D1E36", border: "1px solid #1E3A5A", color: "#E2EEF7", padding: "10px 14px", fontSize: "13px", fontFamily: "Verdana, sans-serif" }}>
+                      {["coupe", "convertible", "sedan", "suv", "roadster", "berlinetta"].map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                  </div>
+                  {newModel.make && newModel.model && <p style={{ color: "#4A6A8A", fontSize: "11px" }}>Full name: {newModel.make} {newModel.model}</p>}
+                  {modelMsg && <p style={{ color: "#4AB87A", fontSize: "12px" }}>{modelMsg}</p>}
+                  <button onClick={saveModel} style={{ background: "#4A90B8", color: "#fff", border: "none", padding: "10px 20px", fontSize: "12px", cursor: "pointer", fontFamily: "Verdana, sans-serif", letterSpacing: "1px", alignSelf: "flex-start" }}>Save Model</button>
+                </div>
+              </div>
+            </div>
+            {/* Makes list */}
+            <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "12px" }}>ALL MAKES ({makes.length})</p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "32px" }}>
+              {makes.map(m => (
+                <span key={m.id} style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "6px 14px", fontSize: "12px", color: "#8BA5B8" }}>{m.name} <span style={{ color: "#4A6A8A", fontSize: "10px" }}>/{m.slug}</span></span>
+              ))}
+            </div>
+            {/* Models list */}
+            <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "12px" }}>ALL MODELS ({models.length})</p>
+            <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "500px" }}>
+                <thead>
+                  <tr style={{ borderBottom: "1px solid #1E3A5A", color: "#4A90B8", fontSize: "11px", letterSpacing: "2px" }}>
+                    {["MAKE", "MODEL", "YEARS", "BODY"].map(h => <th key={h} style={{ padding: "10px 12px", textAlign: "left" }}>{h}</th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {models.map(m => (
+                    <tr key={m.id} style={{ borderBottom: "1px solid #0D1E36" }}>
+                      <td style={{ padding: "10px 12px", color: "#8BA5B8", fontSize: "13px" }}>{m.make}</td>
+                      <td style={{ padding: "10px 12px", fontSize: "13px" }}>{m.model}</td>
+                      <td style={{ padding: "10px 12px", color: "#4A6A8A", fontSize: "12px" }}>{m.production_start_year}{m.production_end_year ? `–${m.production_end_year}` : "–"}</td>
+                      <td style={{ padding: "10px 12px", color: "#4A6A8A", fontSize: "12px" }}>{m.body_style}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+
+        {/* Spotters tab */}
+        {tab === "spotters" && (
+          <>
+            <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>SPOTTER PROFILES ({spotterProfiles.length})</p>
+            {spotterMsg && <div style={{ background: "#0A1828", border: "1px solid #4A90B8", color: "#4A90B8", padding: "10px 16px", fontSize: "13px", marginBottom: "16px" }}>{spotterMsg}</div>}
+            {spotterProfiles.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "80px", color: "#4A6A8A" }}><p>No spotter profiles yet.</p></div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "1px", background: "#1E3A5A" }}>
+                {spotterProfiles.map(p => (
+                  <div key={p.id} style={{ background: "#080F1A", padding: "16px 20px", display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
+                    <div style={{ flex: 1, minWidth: "200px" }}>
+                      <p style={{ fontWeight: "bold", fontSize: "14px", marginBottom: "2px" }}>{p.username}</p>
+                      <p style={{ color: "#4A6A8A", fontSize: "12px" }}>{p.user_email}{p.country ? ` · ${p.country}` : ""}</p>
+                      <p style={{ color: "#4A6A8A", fontSize: "11px" }}>{p.verified_sightings} verified · {p.total_sightings} total · {new Date(p.created_at).toLocaleDateString()}</p>
+                    </div>
+                    <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
+                      <span style={{ color: "#8BA5B8", fontSize: "11px" }}>Trust:</span>
+                      <select value={p.trust_level} onChange={e => updateSpotterTrust(p.id, parseInt(e.target.value))} style={{ background: "#0D1E36", border: "1px solid #1E3A5A", color: "#E2EEF7", padding: "4px 10px", fontSize: "12px", fontFamily: "Verdana, sans-serif", cursor: "pointer" }}>
+                        <option value={1}>1 — New</option>
+                        <option value={2}>2 — Regular</option>
+                        <option value={3}>3 — Trusted</option>
+                        <option value={4}>4 — Expert</option>
+                      </select>
+                      {p.is_banned ? (
+                        <button onClick={() => toggleSpotterBan(p.id, false)} style={{ background: "#0D2A1A", color: "#4AB87A", border: "1px solid #4AB87A", padding: "5px 14px", fontSize: "11px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}>Unban</button>
+                      ) : (
+                        <button onClick={() => toggleSpotterBan(p.id, true)} style={{ background: "#2A0D0D", color: "#E07070", border: "1px solid #E07070", padding: "5px 14px", fontSize: "11px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}>Ban</button>
+                      )}
+                      {p.is_banned && <span style={{ background: "#2A0D0D", color: "#E07070", padding: "3px 10px", fontSize: "10px", letterSpacing: "1px" }}>BANNED</span>}
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </>
