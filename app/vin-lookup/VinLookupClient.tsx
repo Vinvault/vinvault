@@ -33,7 +33,6 @@ const SERVICE_TYPES = ["government", "commercial", "nonprofit", "community"];
 export default function VinLookupClient({ services }: Props) {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
-  const [freeOnly, setFreeOnly] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitMsg, setSubmitMsg] = useState("");
   const [form, setForm] = useState({
@@ -43,13 +42,12 @@ export default function VinLookupClient({ services }: Props) {
     service_url: "",
     description: "",
     service_type: "government",
-    is_free: false,
+    is_free: true,
     submitted_by: "",
   });
 
   const filtered = useMemo(() => {
     return services.filter(s => {
-      if (freeOnly && !s.is_free) return false;
       if (typeFilter && s.service_type !== typeFilter) return false;
       if (search) {
         const q = search.toLowerCase();
@@ -59,7 +57,7 @@ export default function VinLookupClient({ services }: Props) {
       }
       return true;
     });
-  }, [services, search, typeFilter, freeOnly]);
+  }, [services, search, typeFilter]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -73,7 +71,7 @@ export default function VinLookupClient({ services }: Props) {
       });
       if (res.ok) {
         setSubmitMsg("Thank you! Your submission is pending review.");
-        setForm({ service_name: "", country_name: "", country_code: "", service_url: "", description: "", service_type: "government", is_free: false, submitted_by: "" });
+        setForm({ service_name: "", country_name: "", country_code: "", service_url: "", description: "", service_type: "government", is_free: true, submitted_by: "" });
       } else {
         setSubmitMsg("Something went wrong. Please try again.");
       }
@@ -107,15 +105,10 @@ export default function VinLookupClient({ services }: Props) {
       {/* Legend */}
       <section style={{ padding: "16px 40px", borderBottom: "1px solid #1E3A5A", display: "flex", gap: "24px", flexWrap: "wrap", alignItems: "center" }}>
         <span style={{ color: "#4A6A8A", fontSize: "12px" }}>MAP LEGEND:</span>
-        {[
-          { color: "#4AB87A", label: "Free service" },
-          { color: "#4A90B8", label: "Paid / commercial" },
-        ].map(item => (
-          <div key={item.label} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <div style={{ width: "12px", height: "12px", background: item.color, border: "2px solid #fff", borderRadius: "50%" }} />
-            <span style={{ color: "#8BA5B8", fontSize: "12px" }}>{item.label}</span>
-          </div>
-        ))}
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <div style={{ width: "12px", height: "12px", background: "#4AB87A", border: "2px solid #fff", borderRadius: "50%" }} />
+          <span style={{ color: "#8BA5B8", fontSize: "12px" }}>Free service</span>
+        </div>
       </section>
 
       {/* Filters */}
@@ -134,15 +127,6 @@ export default function VinLookupClient({ services }: Props) {
           <option value="">All Types</option>
           {SERVICE_TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
         </select>
-        <label style={{ display: "flex", alignItems: "center", gap: "8px", color: "#8BA5B8", fontSize: "14px", cursor: "pointer" }}>
-          <input
-            type="checkbox"
-            checked={freeOnly}
-            onChange={e => setFreeOnly(e.target.checked)}
-            style={{ accentColor: "#4A90B8", width: "16px", height: "16px" }}
-          />
-          Free only
-        </label>
         <span style={{ marginLeft: "auto", color: "#4A6A8A", fontSize: "13px" }}>{filtered.length} of {services.length} services</span>
       </section>
 
@@ -158,7 +142,6 @@ export default function VinLookupClient({ services }: Props) {
                   <th style={{ padding: "14px 12px" }}>COUNTRY</th>
                   <th style={{ padding: "14px 12px" }}>SERVICE</th>
                   <th style={{ padding: "14px 12px" }}>TYPE</th>
-                  <th style={{ padding: "14px 12px" }}>COST</th>
                   <th style={{ padding: "14px 12px" }}>LINK</th>
                 </tr>
               </thead>
@@ -177,13 +160,6 @@ export default function VinLookupClient({ services }: Props) {
                     </td>
                     <td style={{ padding: "14px 12px" }}>
                       <span style={{ background: "#0D1E36", color: "#4A6A8A", padding: "3px 10px", fontSize: "11px" }}>{s.service_type}</span>
-                    </td>
-                    <td style={{ padding: "14px 12px" }}>
-                      <span style={{
-                        background: s.is_free ? "#0D2A1A" : "#0D1E36",
-                        color: s.is_free ? "#4AB87A" : "#4A6A8A",
-                        padding: "3px 10px", fontSize: "11px",
-                      }}>{s.is_free ? "FREE" : "PAID"}</span>
                     </td>
                     <td style={{ padding: "14px 12px" }}>
                       <a href={s.service_url} target="_blank" rel="noopener noreferrer"
@@ -234,21 +210,12 @@ export default function VinLookupClient({ services }: Props) {
                 style={{ ...inputStyle, resize: "vertical" as const }} />
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
-              <div>
-                <label style={labelStyle}>SERVICE TYPE</label>
-                <select value={form.service_type} onChange={e => setForm(p => ({ ...p, service_type: e.target.value }))}
-                  style={{ ...inputStyle, color: "#8BA5B8" }}>
-                  {SERVICE_TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
-                </select>
-              </div>
-              <div style={{ display: "flex", alignItems: "flex-end", paddingBottom: "10px" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer", color: "#8BA5B8", fontSize: "14px" }}>
-                  <input type="checkbox" checked={form.is_free} onChange={e => setForm(p => ({ ...p, is_free: e.target.checked }))}
-                    style={{ accentColor: "#4A90B8", width: "16px", height: "16px" }} />
-                  Free to use
-                </label>
-              </div>
+            <div style={{ marginBottom: "16px" }}>
+              <label style={labelStyle}>SERVICE TYPE</label>
+              <select value={form.service_type} onChange={e => setForm(p => ({ ...p, service_type: e.target.value }))}
+                style={{ ...inputStyle, color: "#8BA5B8" }}>
+                {SERVICE_TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
+              </select>
             </div>
 
             <div style={{ marginBottom: "24px" }}>

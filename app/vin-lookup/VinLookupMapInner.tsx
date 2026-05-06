@@ -46,7 +46,7 @@ export default function VinLookupMapInner({ services, height = 500 }: Props) {
     const withCoords = services.filter(s => s.latitude && s.longitude);
 
     withCoords.forEach(s => {
-      const color = s.is_free ? "#4AB87A" : "#4A90B8";
+      const color = "#4AB87A";
       const icon = L.divIcon({
         html: `<div style="width:14px;height:14px;background:${color};border:2px solid #fff;border-radius:50%;box-shadow:0 0 6px ${color}"></div>`,
         className: "",
@@ -61,7 +61,7 @@ export default function VinLookupMapInner({ services, height = 500 }: Props) {
           ${s.description ? `<p style="font-size:11px;color:#8BA5B8;margin:0 0 8px;line-height:1.5">${s.description}</p>` : ""}
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
             <span style="background:#0D1E36;color:#4A6A8A;padding:2px 8px;font-size:10px">${s.service_type}</span>
-            <span style="background:${s.is_free ? "#0D2A1A" : "#0D1E36"};color:${s.is_free ? "#4AB87A" : "#4A6A8A"};padding:2px 8px;font-size:10px">${s.is_free ? "FREE" : "PAID"}</span>
+            <span style="background:#0D2A1A;color:#4AB87A;padding:2px 8px;font-size:10px">FREE</span>
           </div>
           <a href="${s.service_url}" target="_blank" rel="noopener noreferrer" style="display:block;background:#4A90B8;color:#fff;padding:6px 12px;text-decoration:none;font-size:11px;text-align:center">
             Visit Service →
