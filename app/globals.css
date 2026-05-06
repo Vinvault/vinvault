@@ -55,6 +55,7 @@ details[open] > summary span:last-child::before { content: "−"; }
   top: 0;
   z-index: 100;
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   flex-wrap: wrap;
   gap: 8px;
 }
@@ -305,5 +306,10 @@ details[open] > summary span:last-child::before { content: "−"; }
   /* Make sure tables scroll */
   table {
     min-width: 480px;
+  }
+
+  /* Prevent iOS Safari from zooming in on focused inputs */
+  input, select, textarea {
+    font-size: 16px !important;
   }
 }

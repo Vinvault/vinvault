@@ -15,6 +15,14 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: '/supabase-proxy/:path*',
+        destination: 'http://supabase-kong-jfv9tg8856siubdjcfi7cwmb:8000/:path*',
+      },
+    ];
+  },
 };
 
 export default nextConfig;
