@@ -330,9 +330,24 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
       }),
     });
     if (res.ok) {
-      setModelMsg(`✓ Model "${full_model_name}" added`);
+      setModelMsg(`✓ Model "${full_model_name}" added — creating forum category…`);
       setNewModel({ make: "", model: "", production_start_year: "", production_end_year: "", body_style: "coupe" });
       fetch("/api/admin/models").then(r => r.ok ? r.json() : []).then(setModels);
+      try {
+        const forumRes = await fetch("/api/admin/create-forum-category", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ make_name: newModel.make, model_name: newModel.model }),
+        });
+        const forumData = await forumRes.json();
+        if (forumRes.ok) {
+          setModelMsg(`✓ Model "${full_model_name}" added + Forum category created`);
+        } else {
+          setModelMsg(`✓ Model "${full_model_name}" added (forum: ${forumData.error ?? "failed"})`);
+        }
+      } catch {
+        setModelMsg(`✓ Model "${full_model_name}" added (forum category skipped)`);
+      }
     } else { setModelMsg("Error saving model"); }
   }
 

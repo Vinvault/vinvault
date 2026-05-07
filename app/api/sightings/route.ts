@@ -149,6 +149,36 @@ export async function POST(request: NextRequest) {
   }
 
   const inserted = await insertRes.json();
+
+  // Notify admins if chassis is not in the vehicles registry
+  try {
+    const vehicleCheckRes = await fetch(
+      `${url}/rest/v1/vehicles?chassis_number=eq.${encodeURIComponent(chassis)}&limit=1`,
+      { headers: { apikey: key, Authorization: `Bearer ${key}` }, cache: "no-store" }
+    );
+    if (vehicleCheckRes.ok) {
+      const vehicles = await vehicleCheckRes.json();
+      if (vehicles.length === 0) {
+        await fetch(`${url}/rest/v1/submissions`, {
+          method: "POST",
+          headers: {
+            apikey: key,
+            Authorization: `Bearer ${key}`,
+            "Content-Type": "application/json",
+            Prefer: "return=minimal",
+          },
+          body: JSON.stringify({
+            chassis_number: chassis,
+            submitter_email: spotterEmail,
+            source: "unknown_spotted",
+            status: "needs_review",
+            provenance: `Spotted at ${locationName}, ${country} on ${spottedAt}`,
+          }),
+        });
+      }
+    }
+  } catch { /* non-fatal */ }
+
   return NextResponse.json({ success: true, sighting: inserted[0], confidence, status, auto_approved: status === "approved" }, { status: 201 });
 }
 
