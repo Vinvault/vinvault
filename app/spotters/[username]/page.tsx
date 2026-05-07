@@ -84,7 +84,7 @@ function computeBadges(profile: SpotterProfile, sightings: Sighting[]) {
   badges.push({
     id: "first_spotter",
     label: "First Spotter",
-    description: "First verified sighting of any chassis",
+    description: "First verified spotting of any chassis",
     earned: verified.length >= 1,
   });
   badges.push({
@@ -96,13 +96,13 @@ function computeBadges(profile: SpotterProfile, sightings: Sighting[]) {
   badges.push({
     id: "world_traveler",
     label: "World Traveler",
-    description: "Sightings in 5+ countries",
+    description: "Spottings in 5+ countries",
     earned: countries.size >= 5,
   });
   badges.push({
     id: "tifosi",
     label: "Tifosi",
-    description: "50+ Ferrari sightings",
+    description: "50+ Ferrari spottings",
     earned: profile.verified_sightings >= 50,
   });
   badges.push({

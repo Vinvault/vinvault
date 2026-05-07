@@ -59,10 +59,10 @@ interface Props {
 }
 
 const TRUST: Record<number, { label: string; color: string; description: string }> = {
-  1: { label: "New Spotter", color: "#4A6A8A", description: "All sightings go to manual review" },
+  1: { label: "New Spotter", color: "#4A6A8A", description: "All spottings go to manual review" },
   2: { label: "Regular", color: "#4A90B8", description: "Auto-publish at confidence 70+" },
-  3: { label: "Trusted", color: "#4AB87A", description: "All sightings auto-publish" },
-  4: { label: "Expert", color: "#E0C060", description: "Can verify others' sightings" },
+  3: { label: "Trusted", color: "#4AB87A", description: "All spottings auto-publish" },
+  4: { label: "Expert", color: "#E0C060", description: "Can verify others' spottings" },
 };
 
 const BADGE_ICONS: Record<string, string> = {
@@ -115,7 +115,7 @@ export default function ProfileClient({ profile, sightings, badges, countries }:
       {/* Stats */}
       <section style={{ background: "#0A1828", borderBottom: "1px solid #1E3A5A", padding: "20px 40px", display: "flex", gap: "48px", flexWrap: "wrap", maxWidth: "900px", margin: "0 auto" }}>
         {[
-          ["Total Sightings", profile.total_sightings || sightings.length],
+          ["Total Spottings", profile.total_sightings || sightings.length],
           ["Verified", profile.verified_sightings || sightings.filter(s => s.status === "approved" || s.status === "verified").length],
           ["Countries", countries.length],
           ["Points", profile.total_points || sightings.reduce((n, s) => n + (s.confidence_score || 0), 0)],
@@ -168,7 +168,7 @@ export default function ProfileClient({ profile, sightings, badges, countries }:
 
           {tab === "photos" && (
             sightings.length === 0 ? (
-              <div style={{ textAlign: "center", padding: "60px 0", color: "#4A6A8A" }}>No sightings yet.</div>
+              <div style={{ textAlign: "center", padding: "60px 0", color: "#4A6A8A" }}>No spottings yet.</div>
             ) : (
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "8px" }}>
                 {sightings.filter(s => s.photo_url).map(s => (

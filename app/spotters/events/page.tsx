@@ -18,6 +18,11 @@ interface SpotterEvent {
   event_date: string;
   event_time: string;
   organizer_email: string;
+  host_name: string;
+  host_url: string;
+  event_url: string;
+  expected_makes: string;
+  town: string;
   is_approved: boolean;
   created_at: string;
 }

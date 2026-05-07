@@ -177,7 +177,7 @@ export default function SpotForm() {
             <div style={{ fontSize: "48px", marginBottom: "24px", color: result.auto_approved ? "#4AB87A" : "#B8944A" }}>
               {result.auto_approved ? "✓" : "⏳"}
             </div>
-            <h1 style={{ fontSize: "26px", marginBottom: "16px" }}>Sighting Submitted!</h1>
+            <h1 style={{ fontSize: "26px", marginBottom: "16px" }}>Spotting Submitted!</h1>
             <div style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "20px 24px", marginBottom: "24px" }}>
               <p style={{ color: "#8BA5B8", fontSize: "13px", marginBottom: "8px" }}>CONFIDENCE SCORE</p>
               <p style={{ fontSize: "32px", fontWeight: "bold", color: result.confidence >= 70 ? "#4AB87A" : result.confidence >= 40 ? "#B8944A" : "#E07070" }}>{result.confidence}/100</p>
@@ -188,7 +188,7 @@ export default function SpotForm() {
               </p>
             </div>
             <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
-              <Link href="/sightings" style={{ background: "#4A90B8", color: "#fff", padding: "12px 24px", textDecoration: "none", fontSize: "13px" }}>View Sightings</Link>
+              <Link href="/sightings" style={{ background: "#4A90B8", color: "#fff", padding: "12px 24px", textDecoration: "none", fontSize: "13px" }}>View Spottings</Link>
               <Link href="/spot" style={{ border: "1px solid #4A90B8", color: "#4A90B8", padding: "12px 24px", textDecoration: "none", fontSize: "13px" }}>Submit Another</Link>
             </div>
           </div>
@@ -203,10 +203,10 @@ export default function SpotForm() {
       <AppHeader />
       <div className="vv-form-container">
         <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>CAR SPOTTER</p>
-        <h1 style={{ fontSize: "36px", fontWeight: "bold", marginBottom: "16px" }}>Submit a Sighting</h1>
+        <h1 style={{ fontSize: "36px", fontWeight: "bold", marginBottom: "16px" }}>Submit a Spotting</h1>
         <p style={{ color: "#8BA5B8", lineHeight: "1.7", marginBottom: "48px" }}>
-          Spotted a documented car in the wild? Log your sighting to build the global activity map.
-          A photo is required. Higher-confidence sightings are verified faster.
+          Spotted a documented car in the wild? Log your spotting to build the global activity map.
+          A photo is required. Higher-confidence spottings are verified faster.
         </p>
 
         {!userEmail && (
@@ -226,7 +226,7 @@ export default function SpotForm() {
             <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
               <button onClick={() => { setDupWarning(null); submit(true); }}
                 style={{ background: "#0D2A1A", color: "#4AB87A", border: "1px solid #4AB87A", padding: "10px 20px", fontSize: "13px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}>
-                Yes, this is a new sighting
+                Yes, this is a new spotting
               </button>
               <button onClick={() => setDupWarning(null)}
                 style={{ background: "none", border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "10px 20px", fontSize: "13px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}>
@@ -341,7 +341,7 @@ export default function SpotForm() {
 
           <button type="submit" disabled={loading || uploading}
             style={{ background: loading ? "#2A4A6A" : "#4A90B8", color: "#fff", padding: "16px 40px", fontSize: "15px", border: "none", cursor: loading ? "not-allowed" : "pointer", fontFamily: "Verdana, sans-serif", width: "100%", marginTop: "32px" }}>
-            {uploading ? "UPLOADING PHOTO..." : loading ? "SUBMITTING..." : "SUBMIT SIGHTING"}
+            {uploading ? "UPLOADING PHOTO..." : loading ? "SUBMITTING..." : "SUBMIT SPOTTING"}
           </button>
         </form>
       </div>

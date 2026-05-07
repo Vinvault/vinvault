@@ -4,7 +4,7 @@ import SpottersClient from "./SpottersClient";
 
 export const metadata: Metadata = {
   title: "Spotter Community — VinVault",
-  description: "The VinVault Spotter Community. Track rare car sightings worldwide, climb the leaderboard, and connect with fellow enthusiasts.",
+  description: "The VinVault Spotter Community. Track rare car spottings worldwide, climb the leaderboard, and connect with fellow enthusiasts.",
 };
 
 interface Sighting {

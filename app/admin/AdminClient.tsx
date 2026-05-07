@@ -461,7 +461,7 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
             OWNERSHIP CLAIMS ({claims.filter(c => c.status === "pending").length} pending)
           </button>
           <button style={tabStyle(tab === "sightings")} onClick={() => setTab("sightings")}>
-            SIGHTINGS
+            SPOTTINGS
           </button>
           <button style={tabStyle(tab === "vin-lookup")} onClick={() => setTab("vin-lookup")}>
             VIN LOOKUP
@@ -628,10 +628,10 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
         {/* Sightings tab */}
         {tab === "sightings" && (
           <>
-            <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>PENDING SIGHTINGS</p>
+            <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>PENDING SPOTTINGS</p>
             {pendingSightings.length === 0 ? (
               <div style={{ textAlign: "center", padding: "80px", color: "#4A6A8A" }}>
-                <p>No pending sightings.</p>
+                <p>No pending spottings.</p>
               </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -642,7 +642,7 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
                     <div key={s.id} style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "20px 24px" }}>
                       <div style={{ display: "flex", gap: "16px", alignItems: "flex-start" }}>
                         {s.photo_url && (
-                          <img src={s.photo_url} alt="sighting" style={{ width: "100px", height: "75px", objectFit: "cover", flexShrink: 0, border: "1px solid #1E3A5A" }} />
+                          <img src={s.photo_url} alt="spotting" style={{ width: "100px", height: "75px", objectFit: "cover", flexShrink: 0, border: "1px solid #1E3A5A" }} />
                         )}
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "8px", marginBottom: "8px" }}>

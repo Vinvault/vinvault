@@ -3,9 +3,9 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { name, description, location_name, country, event_date, event_time, organizer_email } = body;
+  const { name, description, location_name, country, event_date, event_time, organizer_email, host_name, host_url, event_url, expected_makes, town } = body;
 
-  if (!name || !location_name || !country || !event_date) {
+  if (!name || !location_name || !country || !event_date || !host_name) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       "Content-Type": "application/json",
       Prefer: "return=representation",
     },
-    body: JSON.stringify({ name, description, location_name, country, event_date, event_time, organizer_email, is_approved: false }),
+    body: JSON.stringify({ name, description, location_name, country, event_date, event_time, organizer_email, host_name, host_url, event_url, expected_makes, town, is_approved: false }),
   });
 
   if (!res.ok) {

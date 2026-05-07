@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import SightingsClient from "./SightingsClient";
 
 export const metadata: Metadata = {
-  title: "Global Sightings — VinVault",
-  description: "Track Ferrari 288 GTO sightings worldwide. Community-reported locations, photos, and spotter leaderboard.",
+  title: "Global Spottings — VinVault",
+  description: "Track Ferrari 288 GTO spottings worldwide. Community-reported locations, photos, and spotter leaderboard.",
 };
 
 interface Sighting {

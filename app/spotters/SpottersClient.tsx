@@ -101,12 +101,12 @@ export default function SpottersClient({ sightings, leaderboard }: Props) {
           The VinVault<br />Spotter Community
         </h1>
         <p style={{ color: "#8BA5B8", fontSize: "15px", maxWidth: "560px", lineHeight: "1.7", marginBottom: "32px" }}>
-          {sightings.length} sighting{sightings.length !== 1 ? "s" : ""} logged across {countries} countr{countries !== 1 ? "ies" : "y"}.
+          {sightings.length} spotting{sightings.length !== 1 ? "s" : ""} logged across {countries} countr{countries !== 1 ? "ies" : "y"}.
           Join the network tracking the world&apos;s rarest cars.
         </p>
         <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
           <Link href="/spot" style={{ background: "#4A90B8", color: "#fff", padding: "12px 24px", textDecoration: "none", fontSize: "13px", letterSpacing: "1px" }}>
-            + Submit a Sighting
+            + Submit a Spotting
           </Link>
           <Link href="/spotters/events" style={{ border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "12px 24px", textDecoration: "none", fontSize: "13px", letterSpacing: "1px" }}>
             Upcoming Events →
@@ -117,7 +117,7 @@ export default function SpottersClient({ sightings, leaderboard }: Props) {
       {/* Stats bar */}
       <section style={{ background: "#0A1828", borderBottom: "1px solid #1E3A5A", padding: "20px 40px", display: "flex", gap: "48px", flexWrap: "wrap" }}>
         {[
-          ["Total Sightings", sightings.length],
+          ["Total Spottings", sightings.length],
           ["Countries", countries],
           ["This Month", sightings.filter(s => s.spotted_at >= new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString()).length],
           ["Spotters", leaderboard.length],
@@ -131,7 +131,7 @@ export default function SpottersClient({ sightings, leaderboard }: Props) {
 
       {/* Tabs */}
       <section style={{ borderBottom: "1px solid #1E3A5A", padding: "0 40px", display: "flex", gap: "4px" }}>
-        {tab("feed", "Recent Sightings")}
+        {tab("feed", "Recent Spottings")}
         {tab("map", "Global Map")}
         {tab("leaderboard", "Leaderboard")}
       </section>
@@ -143,8 +143,8 @@ export default function SpottersClient({ sightings, leaderboard }: Props) {
           <div>
             {recent.length === 0 ? (
               <div style={{ textAlign: "center", padding: "80px 0", color: "#4A6A8A" }}>
-                <p style={{ fontSize: "15px", marginBottom: "16px" }}>No sightings yet — be the first.</p>
-                <Link href="/spot" style={{ color: "#4A90B8", textDecoration: "none" }}>Submit a Sighting →</Link>
+                <p style={{ fontSize: "15px", marginBottom: "16px" }}>No spottings yet — be the first.</p>
+                <Link href="/spot" style={{ color: "#4A90B8", textDecoration: "none" }}>Submit a Spotting →</Link>
               </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: "1px", background: "#1E3A5A" }}>
@@ -173,7 +173,7 @@ export default function SpottersClient({ sightings, leaderboard }: Props) {
             {sightings.length > 20 && (
               <div style={{ textAlign: "center", marginTop: "24px" }}>
                 <Link href="/sightings" style={{ color: "#4A90B8", textDecoration: "none", fontSize: "13px" }}>
-                  View all {sightings.length} sightings →
+                  View all {sightings.length} spottings →
                 </Link>
               </div>
             )}
@@ -198,7 +198,7 @@ export default function SpottersClient({ sightings, leaderboard }: Props) {
             </h2>
             {leaderboard.length === 0 ? (
               <div style={{ textAlign: "center", padding: "60px 0", color: "#4A6A8A" }}>
-                <p>No sightings this month yet.</p>
+                <p>No spottings this month yet.</p>
                 <Link href="/spot" style={{ color: "#4A90B8", textDecoration: "none", display: "block", marginTop: "12px" }}>Be the first →</Link>
               </div>
             ) : (
@@ -217,7 +217,7 @@ export default function SpottersClient({ sightings, leaderboard }: Props) {
                     <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
                       {trustBadge(entry.trust_level)}
                       <span style={{ color: "#E2EEF7", fontSize: "14px", fontWeight: "bold", minWidth: "30px", textAlign: "right" }}>{entry.count}</span>
-                      <span style={{ color: "#4A6A8A", fontSize: "11px" }}>sightings</span>
+                      <span style={{ color: "#4A6A8A", fontSize: "11px" }}>spottings</span>
                       <span style={{ color: "#4A90B8", fontSize: "12px", minWidth: "50px", textAlign: "right" }}>{entry.points} pts</span>
                     </div>
                   </div>

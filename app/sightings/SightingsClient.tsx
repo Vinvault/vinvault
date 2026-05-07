@@ -63,10 +63,10 @@ export default function SightingsClient({ sightings, spotterStats }: Props) {
       {/* Header */}
       <section className="vv-registry-header">
         <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>CAR SPOTTER NETWORK</p>
-        <h1 style={{ fontSize: "42px", fontWeight: "bold", marginBottom: "16px" }}>Global Sightings</h1>
+        <h1 style={{ fontSize: "42px", fontWeight: "bold", marginBottom: "16px" }}>Global Spottings</h1>
         <p style={{ color: "#8BA5B8", fontSize: "16px", maxWidth: "600px", lineHeight: "1.7" }}>
-          {sightings.length} sighting{sightings.length === 1 ? "" : "s"} logged across {countries.length} countr{countries.length === 1 ? "y" : "ies"}.
-          {" "}<Link href="/spot" style={{ color: "#4A90B8", textDecoration: "none" }}>Submit a sighting →</Link>
+          {sightings.length} spotting{sightings.length === 1 ? "" : "s"} logged across {countries.length} countr{countries.length === 1 ? "y" : "ies"}.
+          {" "}<Link href="/spot" style={{ color: "#4A90B8", textDecoration: "none" }}>Submit a spotting →</Link>
         </p>
       </section>
 
@@ -90,7 +90,7 @@ export default function SightingsClient({ sightings, spotterStats }: Props) {
         <input type="date" value={toDate} onChange={e => setToDate(e.target.value)}
           style={{ background: "#0D1E36", border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "10px 16px", fontSize: "14px", fontFamily: "Verdana, sans-serif", colorScheme: "dark" }} />
         <Link href="/spot" style={{ marginLeft: "auto", background: "#4A90B8", color: "#fff", padding: "10px 24px", textDecoration: "none", fontSize: "14px", whiteSpace: "nowrap" }}>
-          + Submit Sighting
+          + Submit Spotting
         </Link>
       </section>
 
@@ -98,9 +98,9 @@ export default function SightingsClient({ sightings, spotterStats }: Props) {
 
         {/* Sightings list */}
         <div>
-          <p style={{ color: "#4A6A8A", fontSize: "13px", marginBottom: "24px" }}>Showing {filtered.length} of {sightings.length} sightings</p>
+          <p style={{ color: "#4A6A8A", fontSize: "13px", marginBottom: "24px" }}>Showing {filtered.length} of {sightings.length} spottings</p>
           {filtered.length === 0 ? (
-            <p style={{ color: "#4A6A8A", padding: "40px 0" }}>No sightings match your filters.</p>
+            <p style={{ color: "#4A6A8A", padding: "40px 0" }}>No spottings match your filters.</p>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               {filtered.map(s => (
@@ -108,7 +108,7 @@ export default function SightingsClient({ sightings, spotterStats }: Props) {
                   onMouseEnter={e => (e.currentTarget.style.borderColor = "#4A90B8")}
                   onMouseLeave={e => (e.currentTarget.style.borderColor = "#1E3A5A")}>
                   {s.photo_url && (
-                    <img src={s.photo_url} alt="sighting" style={{ width: "80px", height: "60px", objectFit: "cover", flexShrink: 0, border: "1px solid #1E3A5A" }} />
+                    <img src={s.photo_url} alt="spotting" style={{ width: "80px", height: "60px", objectFit: "cover", flexShrink: 0, border: "1px solid #1E3A5A" }} />
                   )}
                   <div style={{ flex: 1 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px", flexWrap: "wrap", gap: "8px" }}>
@@ -133,9 +133,9 @@ export default function SightingsClient({ sightings, spotterStats }: Props) {
         {/* Spotter leaderboard */}
         <div>
           <h2 style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "20px" }}>SPOTTER LEADERBOARD</h2>
-          <p style={{ color: "#4A6A8A", fontSize: "11px", marginBottom: "16px" }}>MOST SIGHTINGS THIS MONTH</p>
+          <p style={{ color: "#4A6A8A", fontSize: "11px", marginBottom: "16px" }}>MOST SPOTTINGS THIS MONTH</p>
           {spotterStats.length === 0 ? (
-            <p style={{ color: "#4A6A8A", fontSize: "13px" }}>No sightings this month yet.</p>
+            <p style={{ color: "#4A6A8A", fontSize: "13px" }}>No spottings this month yet.</p>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               {spotterStats.slice(0, 10).map((st, i) => (
@@ -154,7 +154,7 @@ export default function SightingsClient({ sightings, spotterStats }: Props) {
 
           <div style={{ marginTop: "32px" }}>
             <Link href="/spot" style={{ display: "block", background: "#4A90B8", color: "#fff", padding: "12px 20px", textDecoration: "none", fontSize: "13px", textAlign: "center" }}>
-              + Submit a Sighting
+              + Submit a Spotting
             </Link>
           </div>
         </div>

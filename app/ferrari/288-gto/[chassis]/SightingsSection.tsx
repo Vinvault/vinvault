@@ -33,14 +33,14 @@ export default function SightingsSection({ chassis, initialSightings }: Props) {
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "12px" }}>
         <div>
-          <h2 style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "4px" }}>SIGHTINGS</h2>
+          <h2 style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "4px" }}>SPOTTINGS</h2>
           <p style={{ color: "#8BA5B8", fontSize: "13px" }}>
-            {verified.length === 0 ? "No sightings recorded yet" : `${verified.length} sighting${verified.length === 1 ? "" : "s"} recorded`}
+            {verified.length === 0 ? "No spottings recorded yet" : `${verified.length} spotting${verified.length === 1 ? "" : "s"} recorded`}
           </p>
         </div>
         <Link href={`/spot?chassis=${encodeURIComponent(chassis)}`}
           style={{ background: "#4A90B8", color: "#fff", padding: "10px 20px", textDecoration: "none", fontSize: "13px", letterSpacing: "1px" }}>
-          + Submit a Sighting
+          + Submit a Spotting
         </Link>
       </div>
 
@@ -70,7 +70,7 @@ export default function SightingsSection({ chassis, initialSightings }: Props) {
             {verified.slice(0, 5).map(s => (
               <div key={s.id} style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "14px 16px", display: "flex", gap: "12px", alignItems: "flex-start" }}>
                 {s.photo_url && (
-                  <img src={s.photo_url} alt="sighting" style={{ width: "56px", height: "44px", objectFit: "cover", flexShrink: 0, border: "1px solid #1E3A5A" }} />
+                  <img src={s.photo_url} alt="spotting" style={{ width: "56px", height: "44px", objectFit: "cover", flexShrink: 0, border: "1px solid #1E3A5A" }} />
                 )}
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ fontSize: "13px", fontWeight: "bold", marginBottom: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
@@ -87,7 +87,7 @@ export default function SightingsSection({ chassis, initialSightings }: Props) {
             ))}
             {verified.length > 5 && (
               <Link href={`/sightings?chassis=${chassis}`} style={{ color: "#4A90B8", fontSize: "13px", textDecoration: "none", textAlign: "center", padding: "10px" }}>
-                View all {verified.length} sightings →
+                View all {verified.length} spottings →
               </Link>
             )}
           </div>
@@ -95,11 +95,11 @@ export default function SightingsSection({ chassis, initialSightings }: Props) {
       ) : (
         <div style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "32px", textAlign: "center" }}>
           <p style={{ color: "#4A6A8A", fontSize: "14px", marginBottom: "16px" }}>
-            No sightings for this chassis yet. Be the first to log one!
+            No spottings for this chassis yet. Be the first to log one!
           </p>
           <Link href={`/spot?chassis=${encodeURIComponent(chassis)}`}
             style={{ background: "#4A90B8", color: "#fff", padding: "10px 24px", textDecoration: "none", fontSize: "13px" }}>
-            Submit First Sighting
+            Submit First Spotting
           </Link>
         </div>
       )}
