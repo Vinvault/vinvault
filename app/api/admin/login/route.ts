@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
   const token = createHash('sha256').update(adminPassword).digest('hex');
   const next = (formData.get('next') as string) || '/admin';
   const response = NextResponse.redirect(new URL(next, siteUrl), { status: 303 });
-  response.cookies.set('admin_auth', token, {
+  response.cookies.set('vv_admin', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
