@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 export const dynamic = "force-dynamic";
 
 function slugify(s: string) {
@@ -27,11 +28,6 @@ async function discoursePost(path: string, body: Record<string, unknown>) {
 }
 
 export async function POST(request: NextRequest) {
-  const cookie = request.headers.get("cookie") || "";
-  if (!cookie.includes("vv_admin=")) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   let body: Record<string, unknown>;
   try { body = await request.json(); } catch { return NextResponse.json({ error: "Bad request" }, { status: 400 }); }
 
