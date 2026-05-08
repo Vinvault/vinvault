@@ -65,6 +65,7 @@ export default function AppHeader({ adminBadge = false }: { adminBadge?: boolean
             <span style={{ color: "#4A90B8" }}>Vin</span><span style={{ color: "#E2EEF7" }}>Vault</span>
           </span>
           <span style={{ color: "#4A90B8", fontSize: "10px", letterSpacing: "4px" }}>REGISTRY</span>
+          <span style={{ color: "#E2EEF7", fontSize: "14px", fontFamily: "Verdana, sans-serif", fontWeight: "normal", letterSpacing: "0" }}>{VERSION}</span>
         </Link>
         {adminBadge && (
           <span style={{ color: "#E07070", fontSize: "10px", letterSpacing: "2px", marginLeft: "8px" }}>ADMIN</span>
@@ -83,7 +84,6 @@ export default function AppHeader({ adminBadge = false }: { adminBadge?: boolean
       </button>
 
       <nav className={`vv-nav${menuOpen ? " vv-nav-open" : ""}`} style={{ fontSize: "13px" }}>
-        <span style={{ color: "#4A6A8A", fontSize: "10px", letterSpacing: "1px", padding: "6px 8px" }}>{VERSION}</span>
         {NAV.map((item) => (
           <Link
             key={item.href}
