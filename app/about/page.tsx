@@ -1,7 +1,5 @@
 import Link from "next/link";
 import Breadcrumb from "@/app/components/Breadcrumb";
-import AppHeader from "@/app/components/AppHeader";
-import AppFooter from "@/app/components/AppFooter";
 
 export const metadata = {
   title: "About VinVault",
@@ -11,8 +9,6 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh' }}>
-      <AppHeader />
-
       <Breadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "About" }]} />
 
       <div className="vv-page-container">
@@ -130,8 +126,6 @@ export default function AboutPage() {
           </p>
         </div>
       </div>
-
-      <AppFooter />
     </main>
   );
 }

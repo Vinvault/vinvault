@@ -3,9 +3,6 @@ import Link from "next/link";
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
-import AppHeader from "@/app/components/AppHeader";
-import AppFooter from "@/app/components/AppFooter";
-
 export default function Login() {
   const searchParams = useSearchParams();
   const [mode, setMode] = useState<"login" | "register">(
@@ -76,8 +73,6 @@ export default function Login() {
 
   return (
     <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <AppHeader />
-
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px 20px' }}>
         <div style={{ width: '100%', maxWidth: '440px' }}>
           <div style={{ display: 'flex', marginBottom: '40px', borderBottom: '1px solid #1E3A5A' }}>
@@ -149,7 +144,6 @@ export default function Login() {
         </div>
       </div>
 
-      <AppFooter />
     </main>
   );
 }

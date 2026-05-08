@@ -1,7 +1,5 @@
 import Link from "next/link";
 import Breadcrumb from "@/app/components/Breadcrumb";
-import AppHeader from "@/app/components/AppHeader";
-import AppFooter from "@/app/components/AppFooter";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -116,8 +114,6 @@ const FAQS = [
 export default function FAQPage() {
   return (
     <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
-      <AppHeader />
-
       <Breadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "FAQ" }]} />
       <div className="vv-page-container" style={{ maxWidth: "900px" }}>
         <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>HELP</p>
@@ -173,7 +169,6 @@ export default function FAQPage() {
         </div>
       </div>
 
-      <AppFooter />
     </main>
   );
 }

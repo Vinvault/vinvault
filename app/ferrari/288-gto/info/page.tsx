@@ -1,7 +1,5 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import AppHeader from "@/app/components/AppHeader";
-import AppFooter from "@/app/components/AppFooter";
 
 export const metadata: Metadata = {
   title: "Ferrari 288 GTO — Specifications & History | VinVault",
@@ -39,8 +37,6 @@ const SPECS = [
 export default function Ferrari288GTOInfoPage() {
   return (
     <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
-      <AppHeader />
-
       {/* Breadcrumb */}
       <div style={{ padding: "14px 40px", background: "#0A1828", borderBottom: "1px solid #1E3A5A", fontSize: "12px", color: "#4A6A8A" }}>
         <Link href="/" style={{ color: "#4A6A8A", textDecoration: "none" }}>Home</Link>
@@ -125,7 +121,6 @@ export default function Ferrari288GTOInfoPage() {
         </div>
       </div>
 
-      <AppFooter />
     </main>
   );
 }

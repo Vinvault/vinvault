@@ -1,6 +1,4 @@
 import Link from "next/link";
-import AppHeader from "@/app/components/AppHeader";
-import AppFooter from "@/app/components/AppFooter";
 
 const cars = [
   { chassis: "ZFFPA16B000040001", year: 1984, color: "Rosso Corsa", market: "Italy", status: "documented" },
@@ -11,8 +9,6 @@ const cars = [
 export default function Ferrari288GTORegistry() {
   return (
     <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh'}}>
-
-      <AppHeader />
 
       {/* Page title */}
       <section style={{padding: '60px 40px 40px', borderBottom: '1px solid #1E3A5A'}}>
@@ -111,7 +107,7 @@ export default function Ferrari288GTORegistry() {
         </p>
       </section>
 
-      <AppFooter />
+
 
     </main>
   );

@@ -2,8 +2,6 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useState, useMemo } from "react";
-import AppHeader from "@/app/components/AppHeader";
-import AppFooter from "@/app/components/AppFooter";
 import "leaflet/dist/leaflet.css";
 
 const VinLookupMapInner = dynamic(() => import("./VinLookupMapInner"), {
@@ -86,8 +84,6 @@ export default function VinLookupClient({ services }: Props) {
 
   return (
     <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
-      <AppHeader />
-
       {/* Header */}
       <section className="vv-registry-header">
         <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>VEHICLE HISTORY RESOURCES</p>
@@ -236,7 +232,6 @@ export default function VinLookupClient({ services }: Props) {
         </div>
       </div>
 
-      <AppFooter />
     </main>
   );
 }

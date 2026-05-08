@@ -1,12 +1,8 @@
 import Link from 'next/link';
-import AppHeader from '@/app/components/AppHeader';
-import AppFooter from '@/app/components/AppFooter';
 
 export default function NotFound() {
   return (
     <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <AppHeader />
-
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 20px' }}>
         <div style={{ textAlign: 'center', maxWidth: '540px', width: '100%' }}>
           <p style={{ color: '#1E3A5A', fontSize: 'clamp(60px, 20vw, 120px)', fontWeight: 'bold', lineHeight: 1, marginBottom: '0', fontFamily: 'Verdana, sans-serif', letterSpacing: '-4px' }}>404</p>
@@ -40,7 +36,6 @@ export default function NotFound() {
         </div>
       </div>
 
-      <AppFooter />
     </main>
   );
 }

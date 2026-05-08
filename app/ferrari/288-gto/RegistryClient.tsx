@@ -1,9 +1,6 @@
 "use client";
 import Link from "next/link";
 import { useState, useMemo, useEffect } from "react";
-import AppHeader from "@/app/components/AppHeader";
-import AppFooter from "@/app/components/AppFooter";
-
 const TOTAL_PRODUCED = 272;
 
 interface Submission {
@@ -18,12 +15,6 @@ interface Submission {
   is_film_car?: boolean;
   is_music_video_car?: boolean;
 }
-
-const REGISTRY_NAV = [
-  { href: "/ferrari/288-gto", label: "Registry" },
-  { href: "/about", label: "About" },
-  { href: "/submit", label: "Submit", highlight: true as const },
-];
 
 const STATUS_STYLE: Record<string, { bg: string; color: string }> = {
   approved:  { bg: '#0D2A1A', color: '#4AB87A' },
@@ -71,8 +62,6 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
 
   return (
     <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh' }}>
-      <AppHeader nav={REGISTRY_NAV} />
-
       <section className="vv-registry-header">
         <p style={{ color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px' }}>WORLD REGISTRY</p>
         <h1 style={{ fontSize: '42px', fontWeight: 'bold', marginBottom: '16px' }}>Ferrari 288 GTO</h1>
@@ -266,7 +255,6 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
         </p>
       </section>
 
-      <AppFooter />
     </main>
   );
 }

@@ -9,16 +9,6 @@ export default async function LoginPage({
 
   return (
     <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <header style={{ background: '#0A1828', borderBottom: '1px solid #1E3A5A', padding: '20px 40px' }}>
-        <Link href="/" style={{ textDecoration: 'none' }}>
-          <span style={{ fontSize: '24px', fontWeight: 'bold' }}>
-            <span style={{ color: '#4A90B8' }}>Vin</span>
-            <span style={{ color: '#E2EEF7' }}>Vault</span>
-          </span>
-          <span style={{ color: '#4A90B8', fontSize: '10px', letterSpacing: '4px', marginLeft: '10px' }}>REGISTRY</span>
-        </Link>
-      </header>
-
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ width: '100%', maxWidth: '400px', padding: '0 24px' }}>
           <p style={{ color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '12px', textAlign: 'center' }}>ADMIN ACCESS</p>
@@ -74,9 +64,6 @@ export default async function LoginPage({
         </div>
       </div>
 
-      <footer style={{ borderTop: '1px solid #1E3A5A', padding: '28px 40px', textAlign: 'center', color: '#4A6A8A', fontSize: '13px' }}>
-        © 2026 <span style={{ color: '#4A90B8' }}>Vin</span>Vault — Curated Automotive Registry
-      </footer>
     </main>
   );
 }

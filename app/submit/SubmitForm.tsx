@@ -1,8 +1,6 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-import AppHeader from "@/app/components/AppHeader";
-import AppFooter from "@/app/components/AppFooter";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 
 export default function SubmitForm({ prefillChassis }: { prefillChassis?: string }) {
@@ -138,7 +136,6 @@ export default function SubmitForm({ prefillChassis }: { prefillChassis?: string
 
   return (
     <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh'}}>
-      <AppHeader />
       <nav style={{padding: '14px 40px', background: '#0A1828', borderBottom: '1px solid #1E3A5A', fontSize: '12px', color: '#4A6A8A', display: 'flex', gap: '6px', flexWrap: 'wrap'}}>
         <Link href="/" style={{color: '#4A6A8A', textDecoration: 'none'}}>Home</Link>
         <span style={{color: '#1E3A5A'}}>/</span>
@@ -252,7 +249,6 @@ export default function SubmitForm({ prefillChassis }: { prefillChassis?: string
           </button>
         </form>
       </div>
-      <AppFooter />
     </main>
   );
 }

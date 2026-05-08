@@ -2,8 +2,6 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import AppHeader from "@/app/components/AppHeader";
-import AppFooter from "@/app/components/AppFooter";
 import "leaflet/dist/leaflet.css";
 
 const SightingsMapInner = dynamic(
@@ -84,8 +82,6 @@ export default function ProfileClient({ profile, sightings, badges, countries }:
 
   return (
     <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
-      <AppHeader />
-
       {/* Profile header */}
       <section style={{ padding: "60px 40px 48px", borderBottom: "1px solid #1E3A5A", maxWidth: "900px", margin: "0 auto" }}>
         <p style={{ color: "#4A6A8A", fontSize: "11px", letterSpacing: "2px", marginBottom: "20px" }}>
@@ -195,7 +191,7 @@ export default function ProfileClient({ profile, sightings, badges, countries }:
         </section>
       </div>
 
-      <AppFooter />
+
     </main>
   );
 }

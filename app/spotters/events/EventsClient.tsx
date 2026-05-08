@@ -1,9 +1,6 @@
 "use client";
 import Link from "next/link";
 import { useState, useMemo } from "react";
-import AppHeader from "@/app/components/AppHeader";
-import AppFooter from "@/app/components/AppFooter";
-
 interface SpotterEvent {
   id: string;
   name: string;
@@ -188,8 +185,6 @@ export default function EventsClient({ upcoming, past }: Props) {
 
   return (
     <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
-      <AppHeader />
-
       {/* Header */}
       <section style={{ padding: "60px 40px 48px", borderBottom: "1px solid #1E3A5A" }}>
         <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>
@@ -333,7 +328,6 @@ export default function EventsClient({ upcoming, past }: Props) {
         )}
       </div>
 
-      <AppFooter />
     </main>
   );
 }

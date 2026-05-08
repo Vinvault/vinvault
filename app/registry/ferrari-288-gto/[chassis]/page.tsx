@@ -1,6 +1,4 @@
 import Link from "next/link";
-import AppHeader from "@/app/components/AppHeader";
-import AppFooter from "@/app/components/AppFooter";
 
 const carData: Record<string, any> = {
   "zffpa16b000040001": {
@@ -49,8 +47,6 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
 
   return (
     <main style={{background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh'}}>
-      <AppHeader />
-
       <section style={{padding: '60px 40px 40px', borderBottom: '1px solid #1E3A5A'}}>
         <p style={{color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px'}}>FERRARI 288 GTO · CHASSIS RECORD</p>
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
@@ -137,7 +133,6 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
         </div>
       </div>
 
-      <AppFooter />
     </main>
   );
 }

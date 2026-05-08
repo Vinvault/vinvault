@@ -415,25 +415,17 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
 
   return (
     <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
-      <header className="vv-header">
-        <Link href="/" style={{ textDecoration: "none" }}>
-          <span style={{ fontSize: "24px", fontWeight: "bold" }}>
-            <span style={{ color: "#4A90B8" }}>Vin</span><span style={{ color: "#E2EEF7" }}>Vault</span>
-          </span>
-          <span style={{ color: "#4A90B8", fontSize: "10px", letterSpacing: "4px", marginLeft: "10px" }}>REGISTRY</span>
+      <div style={{ background: "#060D18", borderBottom: "1px solid #2A0D0D", padding: "10px 40px", display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
+        <span style={{ color: "#E07070", fontSize: "11px", letterSpacing: "2px", fontFamily: "Verdana, sans-serif" }}>ADMIN PANEL</span>
+        <Link href="/admin/instagram-queue" style={{ color: "#8BA5B8", fontSize: "12px", textDecoration: "none", border: "1px solid #1E3A5A", padding: "4px 10px", fontFamily: "Verdana, sans-serif" }}>
+          Instagram Queue
         </Link>
-        <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
-          <div style={{ color: "#E07070", fontSize: "11px", letterSpacing: "2px" }}>ADMIN PANEL</div>
-          <Link href="/admin/instagram-queue" style={{ color: "#8BA5B8", fontSize: "12px", textDecoration: "none", border: "1px solid #1E3A5A", padding: "5px 12px" }}>
-            Instagram Queue
-          </Link>
-          <form action="/api/admin/logout" method="POST">
-            <button type="submit" style={{ background: "none", border: "1px solid #1E3A5A", color: "#4A6A8A", padding: "6px 14px", fontSize: "12px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}>
-              Sign out
-            </button>
-          </form>
-        </div>
-      </header>
+        <form action="/api/admin/logout" method="POST" style={{ marginLeft: "auto" }}>
+          <button type="submit" style={{ background: "none", border: "1px solid #1E3A5A", color: "#4A6A8A", padding: "4px 12px", fontSize: "12px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}>
+            Admin sign out
+          </button>
+        </form>
+      </div>
 
       <div className="vv-admin-container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 40px 0" }}>
         {/* Stats */}

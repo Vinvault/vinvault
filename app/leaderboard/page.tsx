@@ -2,8 +2,6 @@ export const revalidate = 120;
 import Link from "next/link";
 import type { Metadata } from "next";
 import Breadcrumb from "@/app/components/Breadcrumb";
-import AppHeader from "@/app/components/AppHeader";
-import AppFooter from "@/app/components/AppFooter";
 
 export const metadata: Metadata = {
   title: "Leaderboard — VinVault",
@@ -72,8 +70,6 @@ export default async function LeaderboardPage() {
 
   return (
     <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
-      <AppHeader />
-
       <Breadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "Leaderboard" }]} />
 
       <div className="vv-page-container" style={{ maxWidth: "800px" }}>
@@ -146,7 +142,6 @@ export default async function LeaderboardPage() {
         </div>
       </div>
 
-      <AppFooter />
     </main>
   );
 }

@@ -1,8 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import Breadcrumb from "@/app/components/Breadcrumb";
-import AppHeader from "@/app/components/AppHeader";
-import AppFooter from "@/app/components/AppFooter";
 
 export const metadata: Metadata = {
   title: "Terms of Service — VinVault",
@@ -21,8 +19,6 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 export default function TermsPage() {
   return (
     <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
-      <AppHeader />
-
       <Breadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "Terms of Service" }]} />
       <div className="vv-page-container">
         <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>LEGAL</p>
@@ -81,7 +77,6 @@ export default function TermsPage() {
         </Section>
       </div>
 
-      <AppFooter />
     </main>
   );
 }

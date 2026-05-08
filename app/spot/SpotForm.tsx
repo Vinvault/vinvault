@@ -1,8 +1,6 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-import AppHeader from "@/app/components/AppHeader";
-import AppFooter from "@/app/components/AppFooter";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 
 const COUNTRIES = [
@@ -171,7 +169,6 @@ export default function SpotForm() {
   if (submitted && result) {
     return (
       <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-        <AppHeader />
         <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "60px 20px" }}>
           <div style={{ textAlign: "center", maxWidth: "500px" }}>
             <div style={{ fontSize: "48px", marginBottom: "24px", color: result.auto_approved ? "#4AB87A" : "#B8944A" }}>
@@ -193,14 +190,12 @@ export default function SpotForm() {
             </div>
           </div>
         </div>
-        <AppFooter />
       </main>
     );
   }
 
   return (
     <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
-      <AppHeader />
       <div className="vv-form-container">
         <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>CAR SPOTTER</p>
         <h1 style={{ fontSize: "36px", fontWeight: "bold", marginBottom: "16px" }}>Submit a Spotting</h1>
@@ -345,7 +340,7 @@ export default function SpotForm() {
           </button>
         </form>
       </div>
-      <AppFooter />
+
     </main>
   );
 }

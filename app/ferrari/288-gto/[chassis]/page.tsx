@@ -6,8 +6,6 @@ import ChassisComments from "./ChassisComments";
 import ChassisPhotos from "./ChassisPhotos";
 import ClaimButton from "./ClaimButton";
 import WatchButton from "./WatchButton";
-import AppHeader from "@/app/components/AppHeader";
-import AppFooter from "@/app/components/AppFooter";
 import SightingsSection from "./SightingsSection";
 
 const BASE = "https://www.vinvault.net";
@@ -123,8 +121,6 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
   if (!car) {
     return (
       <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-        <AppHeader />
-
         {/* Breadcrumb */}
         <div style={{ padding: "16px 40px", background: "#0A1828", borderBottom: "1px solid #1E3A5A", fontSize: "12px", color: "#4A6A8A" }}>
           <Link href="/" style={{ color: "#4A6A8A", textDecoration: "none" }}>Home</Link>
@@ -152,7 +148,6 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
           </div>
         </div>
 
-        <AppFooter />
       </main>
     );
   }
@@ -165,8 +160,6 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       )}
-
-      <AppHeader />
 
       {/* Breadcrumb */}
       <div style={{ padding: "14px 40px", background: "#0A1828", borderBottom: "1px solid #1E3A5A", fontSize: "12px", color: "#4A6A8A", display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
@@ -366,7 +359,6 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
         </section>
       )}
 
-      <AppFooter />
     </main>
   );
 }

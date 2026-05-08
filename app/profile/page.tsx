@@ -2,9 +2,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
-import AppHeader from "@/app/components/AppHeader";
-import AppFooter from "@/app/components/AppFooter";
-
 interface Submission {
   id: string;
   chassis_number: string;
@@ -33,13 +30,6 @@ const CLAIM_STATUS: Record<string, { bg: string; color: string; label: string }>
   pending:  { bg: '#2A1A0D', color: '#B8944A', label: 'Pending Review' },
   rejected: { bg: '#2A0D0D', color: '#E07070', label: 'Rejected' },
 };
-
-const PROFILE_NAV = [
-  { href: "/ferrari/288-gto", label: "Registry" },
-  { href: "/about", label: "About" },
-  { href: "/faq", label: "FAQ" },
-  { href: "/submit", label: "Submit a Car", highlight: true as const },
-];
 
 export default function ProfilePage() {
   const [user, setUser] = useState<{ email: string } | null>(null);
@@ -90,8 +80,6 @@ export default function ProfilePage() {
 
   return (
     <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh' }}>
-      <AppHeader nav={PROFILE_NAV} />
-
       <nav aria-label="Breadcrumb" style={{ padding: '14px 40px', background: '#0A1828', borderBottom: '1px solid #1E3A5A', fontSize: '12px', color: '#4A6A8A', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
         <Link href="/" style={{ color: '#4A6A8A', textDecoration: 'none' }}>Home</Link>
         <span style={{ color: '#1E3A5A' }}>/</span>
@@ -248,7 +236,6 @@ export default function ProfilePage() {
         )}
       </div>
 
-      <AppFooter />
     </main>
   );
 }

@@ -3,9 +3,6 @@ import Link from "next/link";
 import { useState, useMemo } from "react";
 import CountUp from "./components/CountUp";
 import NewsletterForm from "./components/NewsletterForm";
-import AppHeader from "./components/AppHeader";
-import AppFooter from "./components/AppFooter";
-
 interface Registry {
   make: string;
   model: string;
@@ -58,13 +55,6 @@ export default function HomeClient({
 
   return (
     <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
-
-      <AppHeader nav={[
-        { href: "/ferrari/288-gto", label: "Registry" },
-        { href: "/about", label: "About" },
-        { href: "/faq", label: "FAQ" },
-        { href: "/submit", label: "Submit a Car", highlight: true },
-      ]} />
 
       {/* ── Hero ── */}
       <section className="vv-hero">
@@ -282,8 +272,6 @@ export default function HomeClient({
         </div>
       </section>
 
-      {/* ── Footer ── */}
-      <AppFooter />
     </main>
   );
 }

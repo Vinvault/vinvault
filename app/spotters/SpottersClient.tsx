@@ -2,8 +2,6 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useState, useMemo } from "react";
-import AppHeader from "@/app/components/AppHeader";
-import AppFooter from "@/app/components/AppFooter";
 import "leaflet/dist/leaflet.css";
 
 const GlobalMapInner = dynamic(() => import("../sightings/GlobalMapInner"), {
@@ -92,8 +90,6 @@ export default function SpottersClient({ sightings, leaderboard }: Props) {
 
   return (
     <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
-      <AppHeader />
-
       {/* Hero */}
       <section style={{ padding: "60px 40px 48px", borderBottom: "1px solid #1E3A5A" }}>
         <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>COMMUNITY</p>
@@ -242,7 +238,6 @@ export default function SpottersClient({ sightings, leaderboard }: Props) {
         </Link>
       </section>
 
-      <AppFooter />
     </main>
   );
 }

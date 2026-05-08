@@ -3,6 +3,8 @@ import "./globals.css";
 import CookieBanner from "./components/CookieBanner";
 import BackToTop from "./components/BackToTop";
 import GoogleAnalytics from "./components/GoogleAnalytics";
+import AppHeader from "./components/AppHeader";
+import AppFooter from "./components/AppFooter";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.vinvault.net'),
@@ -70,7 +72,9 @@ export default function RootLayout({
         <GoogleAnalytics />
       </head>
       <body className="min-h-full flex flex-col">
+        <AppHeader />
         {children}
+        <AppFooter />
         <CookieBanner />
         <BackToTop />
       </body>
