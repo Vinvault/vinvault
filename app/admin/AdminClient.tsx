@@ -126,7 +126,7 @@ interface SpotterProfile {
 export default function AdminClient({ submissions, claims }: { submissions: Submission[]; claims: Claim[] }) {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [tab, setTab] = useState<"submissions" | "claims" | "sightings" | "vin-lookup" | "events" | "makes-models" | "spotters" | "moderation">("submissions");
+  const [tab, setTab] = useState<"submissions" | "claims" | "sightings" | "vin-lookup" | "events" | "makes-models" | "spotters" | "moderation" | "model-suggestions">("submissions");
   const [claimProcessing, setClaimProcessing] = useState<string | null>(null);
   const [claimResults, setClaimResults] = useState<Record<string, string>>({});
   const [storageMsg, setStorageMsg] = useState("");
@@ -147,6 +147,9 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
   const [modelMsg, setModelMsg] = useState("");
   const [spotterProfiles, setSpotterProfiles] = useState<SpotterProfile[]>([]);
   const [spotterMsg, setSpotterMsg] = useState("");
+  interface ModelSuggestion { make: string; model: string; count: number; firstSpotter: string; firstDate: string; ids: string[] }
+  const [modelSuggestions, setModelSuggestions] = useState<ModelSuggestion[]>([]);
+  const [suggestionResults, setSuggestionResults] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (tab === "moderation") {
@@ -183,6 +186,12 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
       fetch("/api/admin/spotters")
         .then(r => r.ok ? r.json() : [])
         .then(setSpotterProfiles)
+        .catch(() => {});
+    }
+    if (tab === "model-suggestions") {
+      fetch("/api/admin/model-suggestions")
+        .then(r => r.ok ? r.json() : [])
+        .then(setModelSuggestions)
         .catch(() => {});
     }
   }, [tab]);
@@ -484,6 +493,9 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
           </button>
           <button style={tabStyle(tab === "moderation")} onClick={() => setTab("moderation")}>
             MODERATION
+          </button>
+          <button style={tabStyle(tab === "model-suggestions")} onClick={() => setTab("model-suggestions")}>
+            MODEL SUGGESTIONS {modelSuggestions.length > 0 && `(${modelSuggestions.length})`}
           </button>
         </div>
 
@@ -980,6 +992,84 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
           </>
         )}
       </div>
+
+      {/* Model Suggestions tab */}
+      {tab === "model-suggestions" && (
+        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 40px 60px" }}>
+          <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "20px" }}>NEW MODEL SUGGESTIONS</p>
+          {modelSuggestions.length === 0 ? (
+            <div style={{ textAlign: "center", padding: "80px", color: "#4A6A8A" }}>
+              <p>No pending model suggestions.</p>
+            </div>
+          ) : modelSuggestions.map(s => {
+            const key = `${s.make}|||${s.model}`;
+            const result = suggestionResults[key];
+            return (
+              <div key={key} style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "20px 24px", marginBottom: "12px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px" }}>
+                  <div>
+                    <p style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "4px" }}>
+                      {s.make !== "(known brand)" && <span style={{ color: "#B87AE0" }}>[NEW BRAND] </span>}
+                      {s.make !== "(known brand)" ? s.make : ""}{" "}
+                      <span style={{ color: "#E2EEF7" }}>{s.model}</span>
+                    </p>
+                    <p style={{ color: "#4A6A8A", fontSize: "12px" }}>
+                      {s.count} sighting{s.count !== 1 ? "s" : ""} · First: {s.firstSpotter} · {new Date(s.firstDate).toLocaleDateString()}
+                    </p>
+                  </div>
+                  {result ? (
+                    <span style={{ color: result === "approved" ? "#4AB87A" : result === "rejected" ? "#E07070" : "#B8944A", fontSize: "12px", letterSpacing: "1px" }}>
+                      {result.toUpperCase()}
+                    </span>
+                  ) : (
+                    <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                      <button
+                        onClick={async () => {
+                          const res = await fetch("/api/admin/model-suggestions", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ action: "approve", make: s.make, model: s.model, ids: s.ids, firstSpotter: s.firstSpotter }),
+                          });
+                          setSuggestionResults(prev => ({ ...prev, [key]: res.ok ? "approved" : "error" }));
+                        }}
+                        style={{ background: "#0D2A1A", color: "#4AB87A", border: "1px solid #4AB87A", padding: "7px 16px", fontSize: "12px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
+                      >
+                        Add to Database
+                      </button>
+                      <button
+                        onClick={async () => {
+                          const res = await fetch("/api/admin/model-suggestions", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ action: "mark_variant", make: s.make, model: s.model, ids: s.ids }),
+                          });
+                          setSuggestionResults(prev => ({ ...prev, [key]: res.ok ? "variant" : "error" }));
+                        }}
+                        style={{ background: "#0D1E2A", color: "#B8944A", border: "1px solid #B8944A", padding: "7px 16px", fontSize: "12px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
+                      >
+                        Mark as Variant
+                      </button>
+                      <button
+                        onClick={async () => {
+                          const res = await fetch("/api/admin/model-suggestions", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ action: "reject", make: s.make, model: s.model, ids: s.ids }),
+                          });
+                          setSuggestionResults(prev => ({ ...prev, [key]: res.ok ? "rejected" : "error" }));
+                        }}
+                        style={{ background: "#2A0D0D", color: "#E07070", border: "1px solid #8A2A2A", padding: "7px 16px", fontSize: "12px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       <footer style={{ borderTop: "1px solid #1E3A5A", padding: "28px 40px", textAlign: "center", color: "#4A6A8A", fontSize: "13px", marginTop: "60px" }}>
         © 2026 <span style={{ color: "#4A90B8" }}>Vin</span>Vault — Curated Automotive Registry

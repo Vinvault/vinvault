@@ -105,6 +105,9 @@ export async function POST(request: NextRequest) {
   }
   const submodel = sanitize(body.submodel);
   const chassis = sanitize(body.chassis_number);
+  const unverifiedMake = sanitize(body.unverified_make);
+  const unverifiedModel = sanitize(body.unverified_model);
+  const needsModelReview = Boolean(body.needs_model_review);
   const spotterEmail = sanitize(body.spotter_email);
   const spotterUsername = sanitize(body.spotter_username);
   const locationName = sanitize(body.location_name);
@@ -211,6 +214,9 @@ export async function POST(request: NextRequest) {
     is_duplicate_flag: false,
     points_awarded: pointsAwarded + (isFirstForChassis ? 100 : 0),
     registry_entry_id: registryEntryId,
+    unverified_make: unverifiedMake || null,
+    unverified_model: unverifiedModel || null,
+    needs_model_review: needsModelReview,
   };
 
   const insertRes = await fetch(`${url}/rest/v1/sightings`, {

@@ -93,6 +93,8 @@ export default function SpotForm() {
 
   // Brand select state
   const [selectedMake, setSelectedMake] = useState<Make | null>(null);
+  const [isOtherBrand, setIsOtherBrand] = useState(false);
+  const [customBrand, setCustomBrand] = useState("");
 
   // Model autocomplete state
   const [modelQuery, setModelQuery] = useState("");
@@ -235,7 +237,9 @@ export default function SpotForm() {
 
   async function doSubmit(override = false) {
     setError("");
-    if (!selectedMake) { setError("Please select a brand."); return; }
+    const effectiveBrand = isOtherBrand ? customBrand.trim() : selectedMake?.name || "";
+    if (!effectiveBrand) { setError("Please select or enter a brand."); return; }
+    if (isOtherBrand && !customBrand.trim()) { setError("Please enter the brand name."); return; }
     if (!modelQuery.trim()) { setError("Please enter a model name."); return; }
     if (photos.length === 0) { setError("At least one photo is required."); return; }
     if (!form.city.trim()) { setError("City / location is required."); return; }
@@ -256,9 +260,12 @@ export default function SpotForm() {
       ? { lat: parseFloat(form.latitude), lng: parseFloat(form.longitude) }
       : countryCoords[form.country] || { lat: 0, lng: 0 };
 
+    const modelIsNew = !selectedModelId && Boolean(modelQuery.trim());
+    const needsReview = modelIsNew || isOtherBrand;
+
     const payload = {
-      make_id: selectedMake.id || null,
-      make_name: selectedMake.name,
+      make_id: isOtherBrand ? null : (selectedMake?.id || null),
+      make_name: effectiveBrand,
       model_id: selectedModelId || null,
       model_name: modelQuery.trim(),
       submodel: form.submodel.trim() || null,
@@ -275,6 +282,9 @@ export default function SpotForm() {
       numberplate: form.numberplate.trim() || null,
       notes: form.notes.trim() || null,
       confirmed_duplicate: override,
+      unverified_make: isOtherBrand ? effectiveBrand : null,
+      unverified_model: needsReview ? modelQuery.trim() : null,
+      needs_model_review: needsReview,
     };
 
     try {
@@ -337,7 +347,7 @@ export default function SpotForm() {
               </Link>
               <button onClick={() => {
                 setSubmitted(false); setResult(null); setPhotos([]); setPhotoPreviews([]);
-                setSelectedMake(null); setModelQuery(""); setSelectedModelId(null);
+                setSelectedMake(null); setIsOtherBrand(false); setCustomBrand(""); setModelQuery(""); setSelectedModelId(null);
                 setForm({ city: "", country: "", latitude: "", longitude: "", numberplate: "", chassis_number: "", submodel: "", notes: "" });
               }}
                 style={{ border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "12px 24px", background: "none", cursor: "pointer", fontFamily: "Verdana, sans-serif", fontSize: "13px", letterSpacing: "1px" }}>
@@ -399,20 +409,38 @@ export default function SpotForm() {
               value={selectedMake?.name || ""}
               onChange={e => {
                 const name = e.target.value;
-                if (!name) { setSelectedMake(null); return; }
+                setModelQuery(""); setSelectedModelId(null);
+                if (!name) { setSelectedMake(null); setIsOtherBrand(false); setCustomBrand(""); return; }
+                if (name === "__other__") { setIsOtherBrand(true); setSelectedMake(null); setCustomBrand(""); return; }
+                setIsOtherBrand(false); setCustomBrand("");
                 const found = makes.find(m => m.name === name);
                 setSelectedMake(found || { id: null, name });
-                setModelQuery("");
-                setSelectedModelId(null);
               }}
-              style={{ ...inp, color: selectedMake ? "#E2EEF7" : "#4A6A8A" }}
+              style={{ ...inp, color: (selectedMake || isOtherBrand) ? "#E2EEF7" : "#4A6A8A" }}
             >
               <option value="">Select brand…</option>
               {makes.map(m => (
                 <option key={m.id ?? m.name} value={m.name}>{m.name}</option>
               ))}
+              <option value="__other__">Other / New Brand…</option>
             </select>
           </div>
+
+          {/* Custom brand input when "Other" selected */}
+          {isOtherBrand && (
+            <div style={{ marginBottom: "20px" }}>
+              <label style={lbl}>BRAND NAME *</label>
+              <input
+                type="text"
+                value={customBrand}
+                onChange={e => setCustomBrand(e.target.value)}
+                placeholder="Enter brand name e.g. Ultima, Factory Five…"
+                autoComplete="off"
+                style={inp}
+              />
+              <p style={{ ...hint, color: "#B8944A" }}>This brand will be reviewed and added to our database.</p>
+            </div>
+          )}
 
           {/* Model — text input with autocomplete */}
           <div style={{ marginBottom: "8px" }} ref={modelRef}>
@@ -443,7 +471,14 @@ export default function SpotForm() {
               )}
             </div>
           </div>
-          <p style={hint}>Enter the model name. Example: Agera, 288 GTO, Countach</p>
+          {!modelsLoading && modelQuery.trim() && !selectedModelId && (isOtherBrand || (selectedMake && !isOtherBrand)) && (
+            <p style={{ ...hint, color: "#B8944A", marginTop: "6px" }}>
+              Not in our database yet — submit anyway and we will review it.
+            </p>
+          )}
+          {(!modelQuery.trim() || selectedModelId) && (
+            <p style={hint}>Enter the model name. Example: Agera, 288 GTO, Countach</p>
+          )}
 
           {/* Submodel — optional */}
           <div style={{ marginBottom: "8px", marginTop: "20px" }}>

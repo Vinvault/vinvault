@@ -31,10 +31,13 @@ const CLAIM_STATUS: Record<string, { bg: string; color: string; label: string }>
   rejected: { bg: '#2A0D0D', color: '#E07070', label: 'Rejected' },
 };
 
+interface ProfileNotification { type: string; text: string; date: string }
+
 export default function ProfilePage() {
   const [user, setUser] = useState<{ email: string } | null>(null);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [claims, setClaims] = useState<Claim[]>([]);
+  const [notifications, setNotifications] = useState<ProfileNotification[]>([]);
   const [loading, setLoading] = useState(true);
   const supabase = createSupabaseBrowserClient();
 
@@ -73,6 +76,24 @@ export default function ProfilePage() {
         setClaims(Array.isArray(claimsData) ? claimsData : []);
       }
 
+      // Load pending notifications from spotter profile
+      const { data: profileData } = await supabase
+        .from("spotter_profiles")
+        .select("pending_notifications")
+        .eq("user_email", authUser.email!)
+        .limit(1)
+        .single();
+      if (profileData?.pending_notifications && Array.isArray(profileData.pending_notifications)) {
+        setNotifications(profileData.pending_notifications as ProfileNotification[]);
+        // Clear them after loading
+        if (profileData.pending_notifications.length > 0) {
+          await supabase
+            .from("spotter_profiles")
+            .update({ pending_notifications: [] })
+            .eq("user_email", authUser.email!);
+        }
+      }
+
       setLoading(false);
     }
     load();
@@ -104,6 +125,18 @@ export default function ProfilePage() {
           </div>
         ) : (
           <>
+            {/* Pending notifications */}
+            {notifications.length > 0 && (
+              <div style={{ marginBottom: '24px' }}>
+                {notifications.map((n, i) => (
+                  <div key={i} style={{ background: "#0D2A1A", border: "1px solid #1E5A3A", padding: "14px 20px", marginBottom: "8px", display: "flex", alignItems: "center", gap: "12px" }}>
+                    <span style={{ color: "#4AB87A", fontSize: "18px" }}>★</span>
+                    <p style={{ color: "#4AB87A", fontSize: "13px", lineHeight: "1.5" }}>{n.text}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+
             <div style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
               <div>
                 <p style={{ color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px' }}>YOUR ACCOUNT</p>
