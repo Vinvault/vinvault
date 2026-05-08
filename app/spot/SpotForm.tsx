@@ -3,8 +3,24 @@ import Link from "next/link";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 
-interface Make { id: string; name: string; }
+interface Make { id: string | null; name: string; }
 interface Model { id: string; model: string; make: string; }
+
+const MAKES_FALLBACK = [
+  "Abarth","AC Cars","Alfa Romeo","Alpine","Ariel","Arrinera","Aston Martin","Audi","BAC",
+  "Bentley","BMW","Brabham","Bugatti","Buick","Cadillac","Callaway","Caparo","Caterham",
+  "Chevrolet","Chrysler","Citroën","Corvette","Czinger","Dallara","Datsun","De Tomaso",
+  "Dodge","Donkervoort","Eagle","Elfin","Enzo Ferrari","Exige","Factory Five","Ferrari",
+  "Fiat","Ford","GMA","Hennessey","Honda","Huayra","Hypercars","Italdesign","Jaguar",
+  "Jeep","KTM","Koenigsegg","Lamborghini","Lancia","Land Rover","Lexus","Ligier",
+  "Lister","Local Motors","Lola","Lotus","Lykan","Maserati","Mazda","McClaren",
+  "McLaren","Mercedes-AMG","Mercedes-Benz","Mercury","MG","Mini","Mitsubishi",
+  "Morgan","Mosler","Nissan","Noble","Oldsmobile","Opel","Pagani","Panoz","Peugeot",
+  "Pininfarina","Plymouth","Pontiac","Porsche","Radical","RAM","Renault","Rimac",
+  "Rolls-Royce","Ruf","Saab","Saleen","Shelby","Singer","Spyker","SSC","Subaru",
+  "Suzuki","Talbot","Tesla","Toyota","TVR","Ultima","Vauxhall","Vector","Venturi",
+  "Volkswagen","Volvo","W Motors","Wiesmann","Zenvo","Zimmer",
+];
 
 const COUNTRIES = [
   "Argentina","Australia","Austria","Belgium","Brazil","Canada","Chile","China","Colombia",
@@ -110,8 +126,20 @@ export default function SpotForm() {
       }
     });
     fetch("/api/admin/makes").then(r => r.ok ? r.json() : [])
-      .then((ms: Make[]) => setMakes(ms.sort((a, b) => a.name.localeCompare(b.name))))
-      .catch(() => {});
+      .then((dbMakes: { id: string; name: string }[]) => {
+        const dbNames = new Set(dbMakes.map(m => m.name));
+        const fallbackEntries: Make[] = MAKES_FALLBACK
+          .filter(n => !dbNames.has(n))
+          .map(n => ({ id: null, name: n }));
+        const merged: Make[] = [
+          ...dbMakes.map(m => ({ id: m.id, name: m.name })),
+          ...fallbackEntries,
+        ].sort((a, b) => a.name.localeCompare(b.name));
+        setMakes(merged);
+      })
+      .catch(() => {
+        setMakes(MAKES_FALLBACK.map(n => ({ id: null, name: n })));
+      });
     fetch("/api/admin/models").then(r => r.ok ? r.json() : []).then(setAllModels).catch(() => {});
   }, []);
 
@@ -233,7 +261,8 @@ export default function SpotForm() {
       : countryCoords[form.country] || { lat: 0, lng: 0 };
 
     const payload = {
-      make_id: selectedMake.id,
+      make_id: selectedMake.id || null,
+      make_name: selectedMake.name,
       model_id: selectedModelId || null,
       model_name: modelQuery.trim(),
       submodel: form.submodel.trim() || null,
@@ -408,8 +437,7 @@ export default function SpotForm() {
                 onFocus={() => setModelOpen(true)}
                 placeholder="e.g. Agera"
                 autoComplete="off"
-                style={{ ...inp, opacity: selectedMake ? 1 : 0.6 }}
-                disabled={!selectedMake}
+                style={inp}
               />
               {modelOpen && filteredModels.length > 0 && (
                 <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: "#0A1828", border: "1px solid #1E3A5A", zIndex: 20, maxHeight: "220px", overflowY: "auto" }}>

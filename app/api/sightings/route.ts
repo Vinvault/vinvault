@@ -76,8 +76,33 @@ export async function POST(request: NextRequest) {
   let body: Record<string, unknown>;
   try { body = await request.json(); } catch { return NextResponse.json({ error: "Bad request" }, { status: 400 }); }
 
-  const makeId = sanitize(body.make_id);
+  let makeId = sanitize(body.make_id);
+  const makeName = sanitize(body.make_name);
   const modelId = sanitize(body.model_id);
+
+  // If no UUID for make, find or create it by name
+  if (!makeId && makeName) {
+    const lookupRes = await fetch(
+      `${url}/rest/v1/makes?name=eq.${encodeURIComponent(makeName)}&limit=1`,
+      { headers: { apikey: key, Authorization: `Bearer ${key}` }, cache: "no-store" }
+    );
+    if (lookupRes.ok) {
+      const existing = await lookupRes.json();
+      if (existing.length > 0) {
+        makeId = existing[0].id;
+      } else {
+        const createRes = await fetch(`${url}/rest/v1/makes`, {
+          method: "POST",
+          headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json", Prefer: "return=representation" },
+          body: JSON.stringify({ name: makeName }),
+        });
+        if (createRes.ok) {
+          const created = await createRes.json();
+          makeId = created[0]?.id || "";
+        }
+      }
+    }
+  }
   const submodel = sanitize(body.submodel);
   const chassis = sanitize(body.chassis_number);
   const spotterEmail = sanitize(body.spotter_email);
@@ -94,7 +119,7 @@ export async function POST(request: NextRequest) {
   const numberplate = sanitize(body.numberplate || body.numberplate_seen);
   const notes = sanitize(body.notes);
 
-  if (!makeId || !modelId) {
+  if ((!makeId && !makeName) || !modelId) {
     return NextResponse.json({ error: "Brand and model are required" }, { status: 400 });
   }
   if (!locationName || !country) {
