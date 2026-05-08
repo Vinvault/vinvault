@@ -7,6 +7,7 @@ import ChassisPhotos from "./ChassisPhotos";
 import ClaimButton from "./ClaimButton";
 import WatchButton from "./WatchButton";
 import SightingsSection from "./SightingsSection";
+import RegistryEnrichForm from "./RegistryEnrichForm";
 
 const BASE = "https://www.vinvault.net";
 
@@ -246,6 +247,16 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
             ))}
           </div>
         </div>
+
+        {/* Registry enrichment */}
+        {(() => {
+          const emptyFields = (["exterior_color","interior_color","original_market","production_date","engine_number","provenance"] as const).filter(f => !car[f]);
+          return emptyFields.length > 0 ? (
+            <div style={{ marginBottom: "32px" }}>
+              <RegistryEnrichForm chassis={car.chassis_number} emptyFields={emptyFields} />
+            </div>
+          ) : null;
+        })()}
 
         {/* Provenance */}
         {car.provenance && (

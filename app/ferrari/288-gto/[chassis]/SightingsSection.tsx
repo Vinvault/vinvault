@@ -68,22 +68,26 @@ export default function SightingsSection({ chassis, initialSightings }: Props) {
           {/* Sightings list */}
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {verified.slice(0, 5).map(s => (
-              <div key={s.id} style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "14px 16px", display: "flex", gap: "12px", alignItems: "flex-start" }}>
-                {s.photo_url && (
-                  <img src={s.photo_url} alt="spotting" style={{ width: "56px", height: "44px", objectFit: "cover", flexShrink: 0, border: "1px solid #1E3A5A" }} />
-                )}
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: "13px", fontWeight: "bold", marginBottom: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {s.location_name}, {s.country}
-                  </p>
-                  <p style={{ color: "#4A6A8A", fontSize: "12px" }}>
-                    {new Date(s.spotted_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
-                    {" · by "}
-                    {s.spotter_email?.split("@")[0] || "Anonymous"}
-                    {s.status === "pending_community" && <span style={{ marginLeft: "8px", color: "#B8944A", fontSize: "10px" }}>UNCONFIRMED</span>}
-                  </p>
+              <Link key={s.id} href={`/spottings/${s.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+                <div style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "14px 16px", display: "flex", gap: "12px", alignItems: "flex-start", cursor: "pointer" }}
+                  onMouseEnter={e => (e.currentTarget.style.borderColor = "#4A90B8")}
+                  onMouseLeave={e => (e.currentTarget.style.borderColor = "#1E3A5A")}>
+                  {s.photo_url && (
+                    <img src={s.photo_url} alt="spotting" style={{ width: "56px", height: "44px", objectFit: "cover", flexShrink: 0, border: "1px solid #1E3A5A" }} />
+                  )}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: "13px", fontWeight: "bold", marginBottom: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {s.location_name}, {s.country}
+                    </p>
+                    <p style={{ color: "#4A6A8A", fontSize: "12px" }}>
+                      {new Date(s.spotted_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                      {" · by "}
+                      {s.spotter_email?.split("@")[0] || "Anonymous"}
+                      {s.status === "pending_community" && <span style={{ marginLeft: "8px", color: "#B8944A", fontSize: "10px" }}>UNCONFIRMED</span>}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
             {verified.length > 5 && (
               <Link href={`/sightings?chassis=${chassis}`} style={{ color: "#4A90B8", fontSize: "13px", textDecoration: "none", textAlign: "center", padding: "10px" }}>

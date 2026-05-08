@@ -19,8 +19,25 @@ async function getApprovedChassis(): Promise<string[]> {
   }
 }
 
+async function getApprovedSightingIds(): Promise<string[]> {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_KEY;
+  if (!url || !key) return [];
+  try {
+    const res = await fetch(
+      `${url}/rest/v1/sightings?status=in.(approved,pending_community)&select=id&limit=500`,
+      { headers: { apikey: key, Authorization: `Bearer ${key}` }, cache: "no-store" }
+    );
+    if (!res.ok) return [];
+    const data: { id: string }[] = await res.json();
+    return data.map((d) => d.id).filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const chassis = await getApprovedChassis();
+  const [chassis, sightingIds] = await Promise.all([getApprovedChassis(), getApprovedSightingIds()]);
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: BASE, lastModified: new Date(), changeFrequency: "daily", priority: 1 },
@@ -43,5 +60,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticPages, ...chassisPages];
+  const spottingPages: MetadataRoute.Sitemap = sightingIds.map((id) => ({
+    url: `${BASE}/spottings/${id}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...chassisPages, ...spottingPages];
 }

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import SpotForm from "./SpotForm";
 
 export const metadata: Metadata = {
-  title: "Submit a Spotting — VinVault",
-  description: "Log a car spotting. Help build the global activity map for rare and collectible cars.",
+  title: "Spot a Car",
+  description: "Log a rare car sighting in 60 seconds. Earn points for photos, numberplates, and VIN identification.",
 };
 
 export default function SpotPage() {
