@@ -78,6 +78,7 @@ export async function POST(request: NextRequest) {
 
   const makeId = sanitize(body.make_id);
   const modelId = sanitize(body.model_id);
+  const submodel = sanitize(body.submodel);
   const chassis = sanitize(body.chassis_number);
   const spotterEmail = sanitize(body.spotter_email);
   const spotterUsername = sanitize(body.spotter_username);
@@ -176,6 +177,7 @@ export async function POST(request: NextRequest) {
     photo_url: photoUrls[0] || "",
     photo_urls: photoUrls,
     numberplate_seen: numberplate || null,
+    submodel: submodel || null,
     notes: notes || null,
     status,
     confidence_score: confidence,

@@ -3,48 +3,58 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 
-interface NavItem {
-  href: string;
-  label: string;
-  highlight?: boolean;
-}
-
-interface AppHeaderProps {
-  nav?: NavItem[];
-  adminBadge?: boolean;
-}
-
-const DEFAULT_NAV: NavItem[] = [
+const NAV = [
   { href: "/ferrari/288-gto", label: "Registry" },
   { href: "/spotters", label: "Spotters" },
-  { href: "/about", label: "About" },
   { href: "/faq", label: "FAQ" },
-  { href: "/submit", label: "Submit a Car", highlight: true },
+  { href: "/about", label: "About" },
 ];
 
-export default function AppHeader({ nav = DEFAULT_NAV, adminBadge = false }: AppHeaderProps) {
+export default function AppHeader({ adminBadge = false }: { adminBadge?: boolean }) {
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Defer client creation to useEffect so it never runs during static prerendering
   useEffect(() => {
     const supabase = createSupabaseBrowserClient();
-    supabase.auth.getUser().then(({ data: { user } }) => setUserEmail(user?.email ?? null));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUserEmail(session?.user?.email ?? null);
+
+    async function loadProfile(email: string) {
+      setUserEmail(email);
+      try {
+        const { data } = await supabase.from("spotter_profiles").select("username").eq("user_email", email).limit(1).single();
+        setUsername(data?.username ?? email.split("@")[0]);
+      } catch {
+        setUsername(email.split("@")[0]);
+      }
+    }
+
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user?.email) loadProfile(user.email);
     });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      const email = session?.user?.email ?? null;
+      if (email) { loadProfile(email); } else { setUserEmail(null); setUsername(null); }
+    });
+
     return () => subscription.unsubscribe();
   }, []);
 
-  const handleSignOut = async () => {
+  const handleSignOut = () => {
     createSupabaseBrowserClient().auth.signOut().then(() => { window.location.href = "/"; });
   };
 
-  const shortEmail = userEmail
-    ? userEmail.length > 22
-      ? userEmail.split("@")[0].slice(0, 14) + "…"
-      : userEmail
-    : null;
+  const authBtnStyle: React.CSSProperties = {
+    background: "none",
+    border: "1px solid #4A90B8",
+    color: "#4A90B8",
+    padding: "6px 14px",
+    fontSize: "13px",
+    cursor: "pointer",
+    fontFamily: "Verdana, sans-serif",
+    textDecoration: "none",
+    letterSpacing: "0.5px",
+  };
 
   return (
     <header className="vv-header">
@@ -60,7 +70,6 @@ export default function AppHeader({ nav = DEFAULT_NAV, adminBadge = false }: App
         )}
       </div>
 
-      {/* Hamburger - mobile only */}
       <button
         className="vv-hamburger"
         onClick={() => setMenuOpen(!menuOpen)}
@@ -73,61 +82,31 @@ export default function AppHeader({ nav = DEFAULT_NAV, adminBadge = false }: App
       </button>
 
       <nav className={`vv-nav${menuOpen ? " vv-nav-open" : ""}`} style={{ fontSize: "13px" }}>
-        {nav.map((item) => (
+        {NAV.map((item) => (
           <Link
             key={item.href}
             href={item.href}
             onClick={() => setMenuOpen(false)}
-            style={{
-              color: item.highlight ? "#4A90B8" : "#8BA5B8",
-              textDecoration: "none",
-              padding: "6px 12px",
-              ...(item.highlight ? { border: "1px solid #4A90B8" } : {}),
-            }}
+            style={{ color: "#8BA5B8", textDecoration: "none", padding: "6px 12px" }}
           >
             {item.label}
           </Link>
         ))}
 
         {userEmail ? (
-          <>
-            <Link
-              href="/profile"
-              onClick={() => setMenuOpen(false)}
-              style={{
-                color: "#8BA5B8",
-                textDecoration: "none",
-                padding: "6px 12px",
-                fontSize: "13px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                maxWidth: "200px",
-                whiteSpace: "nowrap",
-              }}
-              title={userEmail}
-            >
-              {shortEmail}
-            </Link>
-            <button
-              onClick={handleSignOut}
-              style={{
-                background: "none",
-                border: "1px solid #1E3A5A",
-                color: "#4A6A8A",
-                padding: "6px 14px",
-                fontSize: "13px",
-                cursor: "pointer",
-                fontFamily: "Verdana, sans-serif",
-              }}
-            >
-              Sign Out
-            </button>
-          </>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" }}>
+            <button onClick={handleSignOut} style={authBtnStyle}>Sign Out</button>
+            {username && (
+              <span style={{ color: "#E2EEF7", fontSize: "11px", letterSpacing: "0.5px" }}>
+                {username}
+              </span>
+            )}
+          </div>
         ) : (
           <Link
             href="/login"
             onClick={() => setMenuOpen(false)}
-            style={{ color: "#8BA5B8", textDecoration: "none", padding: "6px 12px" }}
+            style={authBtnStyle}
           >
             Sign In
           </Link>

@@ -106,12 +106,20 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
           </p>
         </div>
 
-        {/* Forum link */}
-        <div style={{ marginTop: '20px' }}>
+        {/* Action buttons */}
+        <div style={{ display: 'flex', gap: '12px', marginTop: '24px', flexWrap: 'wrap' }}>
+          <Link href="/submit"
+            style={{ background: '#4A90B8', color: '#fff', padding: '10px 24px', textDecoration: 'none', fontSize: '13px', letterSpacing: '2px' }}>
+            SUBMIT TO REGISTRY
+          </Link>
+          <Link href="/spot"
+            style={{ border: '1px solid #4A90B8', color: '#4A90B8', padding: '10px 24px', textDecoration: 'none', fontSize: '13px', letterSpacing: '2px' }}>
+            SUBMIT A SPOTTING
+          </Link>
           <a href="https://forum.vinvault.net/c/ferrari-288-gto" target="_blank" rel="noopener noreferrer"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#4A90B8', textDecoration: 'none', fontSize: '13px', border: '1px solid #1E3A5A', padding: '8px 16px', background: '#0A1828' }}>
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#8BA5B8', textDecoration: 'none', fontSize: '13px', border: '1px solid #1E3A5A', padding: '10px 16px', background: '#0A1828' }}>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#4A90B8" strokeWidth="1.5"/><path d="M4 5h6M4 7.5h4" stroke="#4A90B8" strokeWidth="1.2" strokeLinecap="round"/></svg>
-            Discuss on the VinVault Forum →
+            Forum →
           </a>
         </div>
       </section>

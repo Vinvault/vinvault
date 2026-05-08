@@ -93,6 +93,18 @@ export default function HomeClient({
             </svg>
           </div>
         </div>
+
+        {/* Hero CTAs */}
+        <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap", marginTop: "32px" }}>
+          <Link href="/submit"
+            style={{ background: "#4A90B8", color: "#fff", padding: "12px 28px", textDecoration: "none", fontSize: "13px", letterSpacing: "2px" }}>
+            SUBMIT TO REGISTRY
+          </Link>
+          <Link href="/spot"
+            style={{ border: "1px solid #4A90B8", color: "#4A90B8", padding: "12px 28px", textDecoration: "none", fontSize: "13px", letterSpacing: "2px" }}>
+            SUBMIT A SPOTTING
+          </Link>
+        </div>
       </section>
 
       {/* ── Stats bar ── */}

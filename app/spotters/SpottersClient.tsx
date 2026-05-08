@@ -112,6 +112,18 @@ export default function SpottersClient({ data }: { data: PageData }) {
           Your name stays on that chassis page forever.
         </p>
 
+        {/* Submit CTA */}
+        <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap", marginBottom: "40px" }}>
+          <Link href="/spot"
+            style={{ background: "#4A90B8", color: "#fff", padding: "13px 32px", textDecoration: "none", fontSize: "13px", letterSpacing: "2px" }}>
+            SUBMIT A SPOTTING
+          </Link>
+          <Link href="/spotters"
+            style={{ border: "1px solid #4A90B8", color: "#4A90B8", padding: "13px 32px", textDecoration: "none", fontSize: "13px", letterSpacing: "2px" }}>
+            VIEW LEADERBOARD
+          </Link>
+        </div>
+
         {/* Stats bar */}
         <div style={{ display: "flex", gap: "0", justifyContent: "center", flexWrap: "wrap", maxWidth: "760px", margin: "0 auto" }}>
           {[

@@ -49,9 +49,15 @@ const inp: React.CSSProperties = {
 const lbl: React.CSSProperties = {
   display: "block", color: "#8BA5B8", fontSize: "11px", letterSpacing: "2px", marginBottom: "8px",
 };
+const hint: React.CSSProperties = {
+  color: "#4A6A8A", fontSize: "11px", marginTop: "6px",
+};
 const section: React.CSSProperties = {
   color: "#4A90B8", fontSize: "11px", letterSpacing: "3px",
   borderBottom: "1px solid #1E3A5A", paddingBottom: "12px", marginBottom: "24px", marginTop: "40px",
+};
+const dropRow: React.CSSProperties = {
+  padding: "10px 16px", cursor: "pointer", fontSize: "13px",
 };
 
 export default function SpotForm() {
@@ -66,52 +72,88 @@ export default function SpotForm() {
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [result, setResult] = useState<{ points: number; id: string; hasVin: boolean; firstBonus: boolean } | null>(null);
-  const [dupWarning, setDupWarning] = useState<{ message: string; nearby_location: string } | null>(null);
+  const [dupWarning, setDupWarning] = useState<{ message: string } | null>(null);
+
+  // Brand combobox state
+  const [brandQuery, setBrandQuery] = useState("");
+  const [brandOpen, setBrandOpen] = useState(false);
+  const [selectedMake, setSelectedMake] = useState<Make | null>(null);
+  const brandRef = useRef<HTMLDivElement>(null);
+
+  // Model autocomplete state
+  const [modelQuery, setModelQuery] = useState("");
+  const [modelOpen, setModelOpen] = useState(false);
+  const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
+  const modelRef = useRef<HTMLDivElement>(null);
 
   const [form, setForm] = useState({
-    make_id: "",
-    model_id: "",
     city: "",
     country: "",
     latitude: "",
     longitude: "",
     numberplate: "",
     chassis_number: "",
+    submodel: "",
     notes: "",
   });
 
-  const photoRef = useRef<HTMLInputElement>(null);
   const supabase = createSupabaseBrowserClient();
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user?.email) return;
       try {
-        const res = await fetch(`/api/admin/spotters?email=${encodeURIComponent(user.email)}`);
-        const profiles = res.ok ? await res.json() : [];
-        setUser({ email: user.email, username: profiles[0]?.username });
+        const { data } = await supabase.from("spotter_profiles").select("username").eq("user_email", user.email).limit(1).single();
+        setUser({ email: user.email, username: data?.username });
       } catch {
         setUser({ email: user.email });
       }
     });
-    fetch("/api/admin/makes").then(r => r.ok ? r.json() : []).then(setMakes).catch(() => {});
+    fetch("/api/admin/makes").then(r => r.ok ? r.json() : [])
+      .then((ms: Make[]) => setMakes(ms.sort((a, b) => a.name.localeCompare(b.name))))
+      .catch(() => {});
     fetch("/api/admin/models").then(r => r.ok ? r.json() : []).then(setAllModels).catch(() => {});
   }, []);
 
-  const filteredModels = form.make_id
+  // Close dropdowns on outside click
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (brandRef.current && !brandRef.current.contains(e.target as Node)) setBrandOpen(false);
+      if (modelRef.current && !modelRef.current.contains(e.target as Node)) setModelOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  const filteredMakes = brandQuery.trim()
+    ? makes.filter(m => m.name.toLowerCase().includes(brandQuery.trim().toLowerCase()))
+    : makes;
+
+  const filteredModels = selectedMake
     ? allModels.filter(m => {
-        const selectedMake = makes.find(mk => mk.id === form.make_id);
-        return selectedMake && m.make === selectedMake.name;
+        const nameMatch = modelQuery.trim()
+          ? m.model.toLowerCase().includes(modelQuery.trim().toLowerCase())
+          : true;
+        return m.make === selectedMake.name && nameMatch;
       })
     : [];
 
+  const selectMake = (make: Make) => {
+    setSelectedMake(make);
+    setBrandQuery(make.name);
+    setBrandOpen(false);
+    setModelQuery("");
+    setSelectedModelId(null);
+  };
+
+  const selectModel = (model: Model) => {
+    setModelQuery(model.model);
+    setSelectedModelId(model.id);
+    setModelOpen(false);
+  };
+
   const handle = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setForm(f => {
-      const next = { ...f, [name]: value };
-      if (name === "make_id") next.model_id = "";
-      return next;
-    });
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
   };
 
   const detectGPS = useCallback(() => {
@@ -127,18 +169,26 @@ export default function SpotForm() {
     );
   }, []);
 
-  const handlePhotos = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    const valid = files.filter(f =>
+  const handlePhotos = (files: FileList | null) => {
+    const arr = Array.from(files || []);
+    const valid = arr.filter(f =>
       f.size <= 10 * 1024 * 1024 && ["image/jpeg", "image/png", "image/webp"].includes(f.type)
     ).slice(0, 10);
-    if (valid.length < files.length) setError("Some photos were skipped (max 10 MB each, JPEG/PNG/WebP only).");
+    if (valid.length < arr.length) setError("Some photos were skipped (max 10 MB each, JPEG/PNG/WebP only).");
     else setError("");
     setPhotos(valid);
     Promise.all(valid.map(f => new Promise<string>(resolve => {
-      const r = new FileReader();
-      r.onload = ev => resolve(ev.target?.result as string);
-      r.readAsDataURL(f);
+      const r = new FileReader(); r.onload = ev => resolve(ev.target?.result as string); r.readAsDataURL(f);
+    }))).then(setPhotoPreviews);
+  };
+
+  const addPhotos = (files: FileList | null) => {
+    const arr = Array.from(files || []);
+    const valid = arr.filter(f => f.size <= 10 * 1024 * 1024 && ["image/jpeg","image/png","image/webp"].includes(f.type));
+    const combined = [...photos, ...valid].slice(0, 10);
+    setPhotos(combined);
+    Promise.all(combined.map(f => new Promise<string>(resolve => {
+      const r = new FileReader(); r.onload = ev => resolve(ev.target?.result as string); r.readAsDataURL(f);
     }))).then(setPhotoPreviews);
   };
 
@@ -161,8 +211,8 @@ export default function SpotForm() {
 
   async function doSubmit(override = false) {
     setError("");
-    if (!form.make_id) { setError("Please select a brand."); return; }
-    if (!form.model_id) { setError("Please select a model."); return; }
+    if (!selectedMake) { setError("Please select a brand."); return; }
+    if (!modelQuery.trim()) { setError("Please enter a model name."); return; }
     if (photos.length === 0) { setError("At least one photo is required."); return; }
     if (!form.city.trim()) { setError("City / location is required."); return; }
     if (!form.country) { setError("Country is required."); return; }
@@ -183,8 +233,10 @@ export default function SpotForm() {
       : countryCoords[form.country] || { lat: 0, lng: 0 };
 
     const payload = {
-      make_id: form.make_id,
-      model_id: form.model_id,
+      make_id: selectedMake.id,
+      model_id: selectedModelId || null,
+      model_name: modelQuery.trim(),
+      submodel: form.submodel.trim() || null,
       chassis_number: form.chassis_number.trim().toUpperCase() || null,
       spotter_email: user?.email || "anonymous",
       spotter_username: user?.username || null,
@@ -208,14 +260,14 @@ export default function SpotForm() {
       });
       const data = await res.json();
       if (res.status === 409 && data.duplicate_warning) {
-        setDupWarning({ message: data.message, nearby_location: data.nearby_location });
+        setDupWarning({ message: data.message });
         setLoading(false); return;
       }
       if (!res.ok) { setError(data.error || "Submission failed."); setLoading(false); return; }
       setResult({
         points: data.points_awarded || 10,
         id: data.sighting?.id || "",
-        hasVin: hasVin,
+        hasVin,
         firstBonus: data.first_spotting_bonus || false,
       });
       setSubmitted(true);
@@ -235,16 +287,16 @@ export default function SpotForm() {
             <div style={{ background: "#0A1828", border: "1px solid #1E5A3A", padding: "20px 24px", marginBottom: "24px" }}>
               <p style={{ color: "#8BA5B8", fontSize: "11px", letterSpacing: "2px", marginBottom: "8px" }}>POINTS EARNED</p>
               <p style={{ fontSize: "40px", fontWeight: "bold", color: "#4AB87A", marginBottom: "4px" }}>+{result.points}</p>
-              {result.firstBonus && (
-                <p style={{ color: "#B8944A", fontSize: "12px" }}>Includes +100 first-spotting bonus!</p>
-              )}
+              {result.firstBonus && <p style={{ color: "#B8944A", fontSize: "12px" }}>Includes +100 first-spotting bonus!</p>}
             </div>
             {!result.hasVin && (
               <div style={{ background: "#1A1200", border: "1px solid #8A6A00", padding: "16px 20px", marginBottom: "24px" }}>
                 <p style={{ color: "#E0C060", fontSize: "13px", lineHeight: "1.6" }}>
-                  VIN unknown — {result.id
+                  VIN unknown —{" "}
+                  {result.id
                     ? <Link href={`/spottings/${result.id}`} style={{ color: "#4A90B8", textDecoration: "underline" }}>be the first to identify it</Link>
-                    : "be the first to identify it"} and earn 50 more points.
+                    : "be the first to identify it"}{" "}
+                  and earn 50 more points.
                 </p>
               </div>
             )}
@@ -258,7 +310,11 @@ export default function SpotForm() {
               <Link href="/spotters" style={{ border: "1px solid #4A90B8", color: "#4A90B8", padding: "12px 24px", textDecoration: "none", fontSize: "13px", letterSpacing: "1px" }}>
                 LEADERBOARD
               </Link>
-              <button onClick={() => { setSubmitted(false); setResult(null); setPhotos([]); setPhotoPreviews([]); setForm({ make_id: "", model_id: "", city: "", country: "", latitude: "", longitude: "", numberplate: "", chassis_number: "", notes: "" }); }}
+              <button onClick={() => {
+                setSubmitted(false); setResult(null); setPhotos([]); setPhotoPreviews([]);
+                setBrandQuery(""); setSelectedMake(null); setModelQuery(""); setSelectedModelId(null);
+                setForm({ city: "", country: "", latitude: "", longitude: "", numberplate: "", chassis_number: "", submodel: "", notes: "" });
+              }}
                 style={{ border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "12px 24px", background: "none", cursor: "pointer", fontFamily: "Verdana, sans-serif", fontSize: "13px", letterSpacing: "1px" }}>
                 SUBMIT ANOTHER
               </button>
@@ -308,25 +364,84 @@ export default function SpotForm() {
 
         <form onSubmit={e => { e.preventDefault(); doSubmit(false); }}>
 
-          {/* BRAND & MODEL */}
+          {/* THE CAR */}
           <h2 style={section}>THE CAR</h2>
 
-          <div style={{ marginBottom: "20px" }}>
+          {/* Brand — searchable combobox */}
+          <div style={{ marginBottom: "20px" }} ref={brandRef}>
             <label style={lbl}>BRAND *</label>
-            <select name="make_id" value={form.make_id} onChange={handle} required style={{ ...inp, color: form.make_id ? "#E2EEF7" : "#4A6A8A" }}>
-              <option value="">Select brand...</option>
-              {makes.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
-            </select>
+            <div style={{ position: "relative" }}>
+              <input
+                type="text"
+                value={brandQuery}
+                onChange={e => { setBrandQuery(e.target.value); setSelectedMake(null); setModelQuery(""); setSelectedModelId(null); setBrandOpen(true); }}
+                onFocus={() => setBrandOpen(true)}
+                placeholder="Type to search brands… e.g. Ferrari, Koenigsegg"
+                autoComplete="off"
+                style={inp}
+              />
+              {brandOpen && filteredMakes.length > 0 && (
+                <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: "#0A1828", border: "1px solid #1E3A5A", zIndex: 20, maxHeight: "220px", overflowY: "auto" }}>
+                  {filteredMakes.map(m => (
+                    <div key={m.id}
+                      onMouseDown={() => selectMake(m)}
+                      style={dropRow}
+                      onMouseEnter={e => (e.currentTarget.style.background = "#1E3A5A")}
+                      onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+                    >
+                      {m.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
-          <div style={{ marginBottom: "32px" }}>
+          {/* Model — text input with autocomplete */}
+          <div style={{ marginBottom: "8px" }} ref={modelRef}>
             <label style={lbl}>MODEL *</label>
-            <select name="model_id" value={form.model_id} onChange={handle} required disabled={!form.make_id}
-              style={{ ...inp, color: form.model_id ? "#E2EEF7" : "#4A6A8A", opacity: form.make_id ? 1 : 0.5, cursor: form.make_id ? "pointer" : "not-allowed" }}>
-              <option value="">{form.make_id ? "Select model..." : "Select brand first"}</option>
-              {filteredModels.map(m => <option key={m.id} value={m.id}>{m.model}</option>)}
-            </select>
+            <div style={{ position: "relative" }}>
+              <input
+                type="text"
+                value={modelQuery}
+                onChange={e => { setModelQuery(e.target.value); setSelectedModelId(null); setModelOpen(true); }}
+                onFocus={() => setModelOpen(true)}
+                placeholder="e.g. Agera"
+                autoComplete="off"
+                style={{ ...inp, opacity: selectedMake ? 1 : 0.6 }}
+                disabled={!selectedMake}
+              />
+              {modelOpen && filteredModels.length > 0 && (
+                <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: "#0A1828", border: "1px solid #1E3A5A", zIndex: 20, maxHeight: "220px", overflowY: "auto" }}>
+                  {filteredModels.map(m => (
+                    <div key={m.id}
+                      onMouseDown={() => selectModel(m)}
+                      style={dropRow}
+                      onMouseEnter={e => (e.currentTarget.style.background = "#1E3A5A")}
+                      onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+                    >
+                      {m.model}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
+          <p style={hint}>Enter the model name. Example: Agera, 288 GTO, Countach</p>
+
+          {/* Submodel — optional */}
+          <div style={{ marginBottom: "8px", marginTop: "20px" }}>
+            <label style={lbl}>VARIANT / EDITION <span style={{ color: "#4A6A8A", fontWeight: "normal" }}>(optional)</span></label>
+            <input
+              type="text"
+              name="submodel"
+              value={form.submodel}
+              onChange={handle}
+              placeholder="e.g. RS Edition Ghost"
+              style={inp}
+            />
+          </div>
+          <p style={{ ...hint, marginBottom: "24px" }}>Optional: enter specific variant or edition. Example: RS Edition Ghost, Spyder, Competition</p>
 
           {/* PHOTOS */}
           <h2 style={section}>PHOTOS *</h2>
@@ -335,10 +450,9 @@ export default function SpotForm() {
             <label style={{ ...lbl, marginBottom: "12px" }}>
               {photos.length === 0 ? "Add up to 10 photos" : `${photos.length} photo${photos.length === 1 ? "" : "s"} selected`}
             </label>
-
             <label style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "#0A1828", border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "12px 24px", fontSize: "13px", cursor: "pointer", marginBottom: "16px" }}>
               + Add photos
-              <input ref={photoRef} type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={handlePhotos} style={{ display: "none" }} />
+              <input type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={e => handlePhotos(e.target.files)} style={{ display: "none" }} />
             </label>
 
             {photoPreviews.length > 0 && (
@@ -347,7 +461,7 @@ export default function SpotForm() {
                   <div key={i} style={{ position: "relative" }}>
                     <img src={src} alt={`Photo ${i + 1}`} style={{ width: "90px", height: "70px", objectFit: "cover", border: "1px solid #1E3A5A" }} />
                     <button type="button" onClick={() => removePhoto(i)}
-                      style={{ position: "absolute", top: "2px", right: "2px", background: "#2A0D0D", border: "none", color: "#E07070", width: "18px", height: "18px", fontSize: "10px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1 }}>
+                      style={{ position: "absolute", top: "2px", right: "2px", background: "#2A0D0D", border: "none", color: "#E07070", width: "18px", height: "18px", fontSize: "10px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
                       ×
                     </button>
                   </div>
@@ -355,14 +469,7 @@ export default function SpotForm() {
                 {photos.length < 10 && (
                   <label style={{ width: "90px", height: "70px", border: "1px dashed #1E3A5A", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#4A6A8A", fontSize: "22px" }}>
                     +
-                    <input type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={e => {
-                      const newFiles = Array.from(e.target.files || []).filter(f => f.size <= 10 * 1024 * 1024 && ["image/jpeg","image/png","image/webp"].includes(f.type));
-                      const combined = [...photos, ...newFiles].slice(0, 10);
-                      setPhotos(combined);
-                      Promise.all(combined.map(f => new Promise<string>(resolve => {
-                        const r = new FileReader(); r.onload = ev => resolve(ev.target?.result as string); r.readAsDataURL(f);
-                      }))).then(setPhotoPreviews);
-                    }} style={{ display: "none" }} />
+                    <input type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={e => addPhotos(e.target.files)} style={{ display: "none" }} />
                   </label>
                 )}
               </div>
@@ -376,19 +483,13 @@ export default function SpotForm() {
             <label style={lbl}>CITY / LOCATION *</label>
             <div style={{ display: "flex", gap: "8px" }}>
               <input type="text" name="city" value={form.city} onChange={handle} placeholder="e.g. Monaco, Circuit de Monaco" required style={{ ...inp, flex: 1 }} />
-              <button type="button" onClick={detectGPS} title="Detect my GPS location"
+              <button type="button" onClick={detectGPS} title="Detect GPS location"
                 style={{ background: gpsStatus === "ok" ? "#0D2A1A" : "#0A1828", border: `1px solid ${gpsStatus === "ok" ? "#4AB87A" : gpsStatus === "denied" ? "#8A2A2A" : "#1E3A5A"}`, color: gpsStatus === "ok" ? "#4AB87A" : gpsStatus === "denied" ? "#E07070" : "#8BA5B8", padding: "12px 14px", cursor: "pointer", fontFamily: "Verdana, sans-serif", fontSize: "16px", flexShrink: 0, minWidth: "48px" }}>
                 {gpsStatus === "loading" ? "…" : "📍"}
               </button>
             </div>
-            {gpsStatus === "ok" && (
-              <p style={{ color: "#4AB87A", fontSize: "11px", marginTop: "6px" }}>
-                GPS captured: {parseFloat(form.latitude).toFixed(4)}, {parseFloat(form.longitude).toFixed(4)}
-              </p>
-            )}
-            {gpsStatus === "denied" && (
-              <p style={{ color: "#8BA5B8", fontSize: "11px", marginTop: "6px" }}>GPS unavailable — country location will be used.</p>
-            )}
+            {gpsStatus === "ok" && <p style={{ color: "#4AB87A", fontSize: "11px", marginTop: "6px" }}>GPS: {parseFloat(form.latitude).toFixed(4)}, {parseFloat(form.longitude).toFixed(4)}</p>}
+            {gpsStatus === "denied" && <p style={{ color: "#8BA5B8", fontSize: "11px", marginTop: "6px" }}>GPS unavailable — country location will be used.</p>}
           </div>
 
           <div style={{ marginBottom: "32px" }}>
@@ -403,17 +504,13 @@ export default function SpotForm() {
           <h2 style={section}>EARN MORE POINTS <span style={{ color: "#4A6A8A", fontWeight: "normal" }}>(optional)</span></h2>
 
           <div style={{ marginBottom: "20px" }}>
-            <label style={lbl}>
-              NUMBERPLATE <span style={{ color: "#4AB87A", fontWeight: "bold" }}>+15 pts</span>
-            </label>
+            <label style={lbl}>NUMBERPLATE <span style={{ color: "#4AB87A", fontWeight: "bold" }}>+15 pts</span></label>
             <input type="text" name="numberplate" value={form.numberplate} onChange={handle}
               placeholder="e.g. GTO 288 — add a plate to earn +15 points" style={inp} />
           </div>
 
-          <div style={{ marginBottom: "20px" }}>
-            <label style={lbl}>
-              VIN / CHASSIS NUMBER <span style={{ color: "#4AB87A", fontWeight: "bold" }}>+30 pts</span>
-            </label>
+          <div style={{ marginBottom: "32px" }}>
+            <label style={lbl}>VIN / CHASSIS NUMBER <span style={{ color: "#4AB87A", fontWeight: "bold" }}>+30 pts</span></label>
             <input type="text" name="chassis_number" value={form.chassis_number} onChange={handle}
               placeholder="e.g. ZFFPA16B000040099 — add VIN to earn +30 points"
               style={{ ...inp, fontFamily: "monospace", letterSpacing: "0.5px" }} />
@@ -454,7 +551,7 @@ export default function SpotForm() {
   );
 }
 
-function Pill({ earned, label }: { earned: boolean; label: string }) {
+function Pill({ earned, label }: { earned?: boolean; label: string }) {
   return (
     <span style={{ padding: "3px 10px", fontSize: "11px", background: earned ? "#0D2A1A" : "#0D1E36", color: earned ? "#4AB87A" : "#4A6A8A", border: `1px solid ${earned ? "#1E5A3A" : "#1E3A5A"}` }}>
       {earned ? "✓ " : ""}{label}
