@@ -80,6 +80,7 @@ export default function SpotForm() {
   const [user, setUser] = useState<{ email: string; username?: string } | null>(null);
   const [makes, setMakes] = useState<Make[]>(MAKES_FALLBACK.map(n => ({ id: null, name: n })));
   const [allModels, setAllModels] = useState<Model[]>([]);
+  const [modelsLoading, setModelsLoading] = useState(false);
   const [photos, setPhotos] = useState<File[]>([]);
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
   const [gpsStatus, setGpsStatus] = useState<"idle" | "loading" | "ok" | "denied">("idle");
@@ -137,8 +138,19 @@ export default function SpotForm() {
       .catch(() => {
         setMakes(MAKES_FALLBACK.map(n => ({ id: null, name: n })));
       });
-    fetch("/api/admin/models").then(r => r.ok ? r.json() : []).then(setAllModels).catch(() => {});
+    // Models are loaded on-demand when a brand is selected
   }, []);
+
+  // Load models when brand is selected
+  useEffect(() => {
+    if (!selectedMake) { setAllModels([]); return; }
+    setModelsLoading(true);
+    fetch(`/api/admin/models?make=${encodeURIComponent(selectedMake.name)}`)
+      .then(r => r.ok ? r.json() : [])
+      .then(setAllModels)
+      .catch(() => setAllModels([]))
+      .finally(() => setModelsLoading(false));
+  }, [selectedMake?.name]);
 
   // Close model dropdown on outside click
   useEffect(() => {
@@ -411,7 +423,7 @@ export default function SpotForm() {
                 value={modelQuery}
                 onChange={e => { setModelQuery(e.target.value); setSelectedModelId(null); setModelOpen(true); }}
                 onFocus={() => setModelOpen(true)}
-                placeholder="e.g. Agera"
+                placeholder={modelsLoading ? "Loading models…" : selectedMake ? "Type model name…" : "e.g. 488, Agera, 911"}
                 autoComplete="off"
                 style={inp}
               />

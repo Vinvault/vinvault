@@ -7,10 +7,12 @@ const supaHeaders = () => ({
   "Content-Type": "application/json",
 });
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const url = process.env.SUPABASE_URL;
   if (!url) return NextResponse.json([]);
-  const res = await fetch(`${url}/rest/v1/models?order=make.asc,model.asc&limit=200`, { headers: supaHeaders() });
+  const make = new URL(req.url).searchParams.get("make");
+  const filter = make ? `&make=eq.${encodeURIComponent(make)}` : "";
+  const res = await fetch(`${url}/rest/v1/models?order=model.asc&limit=500${filter}`, { headers: supaHeaders() });
   return NextResponse.json(res.ok ? await res.json() : []);
 }
 
