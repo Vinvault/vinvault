@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import type { MetadataRoute } from "next";
 
 const BASE = "https://www.vinvault.net";
@@ -25,7 +26,7 @@ async function getApprovedSightingIds(): Promise<string[]> {
   if (!url || !key) return [];
   try {
     const res = await fetch(
-      `${url}/rest/v1/sightings?status=in.(approved,pending_community)&select=id&limit=500`,
+      `${url}/rest/v1/sightings?status=in.(approved,pending_community,verified)&select=id&limit=500`,
       { headers: { apikey: key, Authorization: `Bearer ${key}` }, cache: "no-store" }
     );
     if (!res.ok) return [];
