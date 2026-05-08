@@ -312,4 +312,9 @@ details[open] > summary span:last-child::before { content: "−"; }
   input, select, textarea {
     font-size: 16px !important;
   }
+
+  /* Spotters two-column → single column */
+  .vv-spotters-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
