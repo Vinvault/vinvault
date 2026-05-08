@@ -5,8 +5,8 @@ import AppFooter from "@/app/components/AppFooter";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "FAQ — VinVault Classic Car Registry",
-  description: "Frequently asked questions about how VinVault works, how to submit a car, how verification works, and what happens after submission.",
+  title: "FAQ",
+  description: "Frequently asked questions about VinVault registry, how to submit cars, claim ownership, and contribute to the community.",
 };
 
 const FAQS = [

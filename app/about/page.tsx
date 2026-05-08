@@ -4,8 +4,8 @@ import AppHeader from "@/app/components/AppHeader";
 import AppFooter from "@/app/components/AppFooter";
 
 export const metadata = {
-  title: "About — VinVault Classic Car Registry",
-  description: "Learn how VinVault works and how you can contribute to the world's most complete classic car registry.",
+  title: "About VinVault",
+  description: "VinVault is a community-verified registry for the world's most special automobiles. Learn how we document and preserve automotive history.",
 };
 
 export default function AboutPage() {

@@ -20,13 +20,19 @@ async function getApprovedClaims(): Promise<string[]> {
 }
 
 export const metadata: Metadata = {
-  title: "Ferrari 288 GTO World Registry — VinVault",
-  description: "Complete Ferrari 288 GTO chassis registry. 272 cars produced 1984–1985. Community-verified records of every chassis — history, color, market, and provenance.",
+  title: "Ferrari 288 GTO World Registry",
+  description: "Complete registry of all 272 Ferrari 288 GTO chassis ever produced. Community-verified records, ownership history, provenance documentation.",
   openGraph: {
     title: "Ferrari 288 GTO World Registry",
-    description: "272 cars produced 1984–1985. Browse and contribute to the complete chassis registry.",
+    description: "Complete registry of all 272 Ferrari 288 GTO chassis ever produced. Community-verified records, ownership history, provenance documentation.",
     siteName: "VinVault Registry",
     type: "website",
+    images: [{
+      url: '/og-image.jpg',
+      width: 1200,
+      height: 630,
+      alt: 'Ferrari 288 GTO World Registry — VinVault',
+    }],
   },
 };
 
