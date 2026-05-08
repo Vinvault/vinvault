@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 
+const VERSION = "v001";
+
 const NAV = [
   { href: "/ferrari/288-gto", label: "Registry" },
   { href: "/spotters", label: "Spotters" },
@@ -64,6 +66,7 @@ export default function AppHeader({ adminBadge = false }: { adminBadge?: boolean
             <span style={{ color: "#4A90B8" }}>Vin</span><span style={{ color: "#E2EEF7" }}>Vault</span>
           </span>
           <span style={{ color: "#4A90B8", fontSize: "10px", letterSpacing: "4px" }}>REGISTRY</span>
+          <span style={{ color: "#1E3A5A", fontSize: "9px", letterSpacing: "1px", marginLeft: "4px" }}>{VERSION}</span>
         </Link>
         {adminBadge && (
           <span style={{ color: "#E07070", fontSize: "10px", letterSpacing: "2px", marginLeft: "8px" }}>ADMIN</span>

@@ -412,7 +412,7 @@ export default function SpotForm() {
               {brandOpen && filteredMakes.length > 0 && (
                 <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: "#0A1828", border: "1px solid #1E3A5A", zIndex: 20, maxHeight: "220px", overflowY: "auto" }}>
                   {filteredMakes.map(m => (
-                    <div key={m.id}
+                    <div key={m.id ?? m.name}
                       onMouseDown={() => selectMake(m)}
                       style={dropRow}
                       onMouseEnter={e => (e.currentTarget.style.background = "#1E3A5A")}
