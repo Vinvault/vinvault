@@ -78,7 +78,7 @@ const dropRow: React.CSSProperties = {
 
 export default function SpotForm() {
   const [user, setUser] = useState<{ email: string; username?: string } | null>(null);
-  const [makes, setMakes] = useState<Make[]>([]);
+  const [makes, setMakes] = useState<Make[]>(MAKES_FALLBACK.map(n => ({ id: null, name: n })));
   const [allModels, setAllModels] = useState<Model[]>([]);
   const [photos, setPhotos] = useState<File[]>([]);
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
@@ -90,11 +90,8 @@ export default function SpotForm() {
   const [result, setResult] = useState<{ points: number; id: string; hasVin: boolean; firstBonus: boolean } | null>(null);
   const [dupWarning, setDupWarning] = useState<{ message: string } | null>(null);
 
-  // Brand combobox state
-  const [brandQuery, setBrandQuery] = useState("");
-  const [brandOpen, setBrandOpen] = useState(false);
+  // Brand select state
   const [selectedMake, setSelectedMake] = useState<Make | null>(null);
-  const brandRef = useRef<HTMLDivElement>(null);
 
   // Model autocomplete state
   const [modelQuery, setModelQuery] = useState("");
@@ -143,19 +140,14 @@ export default function SpotForm() {
     fetch("/api/admin/models").then(r => r.ok ? r.json() : []).then(setAllModels).catch(() => {});
   }, []);
 
-  // Close dropdowns on outside click
+  // Close model dropdown on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (brandRef.current && !brandRef.current.contains(e.target as Node)) setBrandOpen(false);
       if (modelRef.current && !modelRef.current.contains(e.target as Node)) setModelOpen(false);
     }
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
-
-  const filteredMakes = brandQuery.trim()
-    ? makes.filter(m => m.name.toLowerCase().includes(brandQuery.trim().toLowerCase()))
-    : makes;
 
   const filteredModels = selectedMake
     ? allModels.filter(m => {
@@ -165,14 +157,6 @@ export default function SpotForm() {
         return m.make === selectedMake.name && nameMatch;
       })
     : [];
-
-  const selectMake = (make: Make) => {
-    setSelectedMake(make);
-    setBrandQuery(make.name);
-    setBrandOpen(false);
-    setModelQuery("");
-    setSelectedModelId(null);
-  };
 
   const selectModel = (model: Model) => {
     setModelQuery(model.model);
@@ -341,7 +325,7 @@ export default function SpotForm() {
               </Link>
               <button onClick={() => {
                 setSubmitted(false); setResult(null); setPhotos([]); setPhotoPreviews([]);
-                setBrandQuery(""); setSelectedMake(null); setModelQuery(""); setSelectedModelId(null);
+                setSelectedMake(null); setModelQuery(""); setSelectedModelId(null);
                 setForm({ city: "", country: "", latitude: "", longitude: "", numberplate: "", chassis_number: "", submodel: "", notes: "" });
               }}
                 style={{ border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "12px 24px", background: "none", cursor: "pointer", fontFamily: "Verdana, sans-serif", fontSize: "13px", letterSpacing: "1px" }}>
@@ -396,34 +380,26 @@ export default function SpotForm() {
           {/* THE CAR */}
           <h2 style={section}>THE CAR</h2>
 
-          {/* Brand — searchable combobox */}
-          <div style={{ marginBottom: "20px" }} ref={brandRef}>
+          {/* Brand — plain select */}
+          <div style={{ marginBottom: "20px" }}>
             <label style={lbl}>BRAND *</label>
-            <div style={{ position: "relative" }}>
-              <input
-                type="text"
-                value={brandQuery}
-                onChange={e => { setBrandQuery(e.target.value); setSelectedMake(null); setModelQuery(""); setSelectedModelId(null); setBrandOpen(true); }}
-                onFocus={() => setBrandOpen(true)}
-                placeholder="Type to search brands… e.g. Ferrari, Koenigsegg"
-                autoComplete="off"
-                style={inp}
-              />
-              {brandOpen && filteredMakes.length > 0 && (
-                <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: "#0A1828", border: "1px solid #1E3A5A", zIndex: 20, maxHeight: "220px", overflowY: "auto" }}>
-                  {filteredMakes.map(m => (
-                    <div key={m.id ?? m.name}
-                      onMouseDown={() => selectMake(m)}
-                      style={dropRow}
-                      onMouseEnter={e => (e.currentTarget.style.background = "#1E3A5A")}
-                      onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
-                    >
-                      {m.name}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <select
+              value={selectedMake?.name || ""}
+              onChange={e => {
+                const name = e.target.value;
+                if (!name) { setSelectedMake(null); return; }
+                const found = makes.find(m => m.name === name);
+                setSelectedMake(found || { id: null, name });
+                setModelQuery("");
+                setSelectedModelId(null);
+              }}
+              style={{ ...inp, color: selectedMake ? "#E2EEF7" : "#4A6A8A" }}
+            >
+              <option value="">Select brand…</option>
+              {makes.map(m => (
+                <option key={m.id ?? m.name} value={m.name}>{m.name}</option>
+              ))}
+            </select>
           </div>
 
           {/* Model — text input with autocomplete */}

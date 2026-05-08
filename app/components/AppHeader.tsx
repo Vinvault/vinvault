@@ -2,8 +2,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
-
-const VERSION = "v001";
+import { VERSION } from "@/app/version";
 
 const NAV = [
   { href: "/ferrari/288-gto", label: "Registry" },
@@ -66,7 +65,6 @@ export default function AppHeader({ adminBadge = false }: { adminBadge?: boolean
             <span style={{ color: "#4A90B8" }}>Vin</span><span style={{ color: "#E2EEF7" }}>Vault</span>
           </span>
           <span style={{ color: "#4A90B8", fontSize: "10px", letterSpacing: "4px" }}>REGISTRY</span>
-          <span style={{ color: "#1E3A5A", fontSize: "9px", letterSpacing: "1px", marginLeft: "4px" }}>{VERSION}</span>
         </Link>
         {adminBadge && (
           <span style={{ color: "#E07070", fontSize: "10px", letterSpacing: "2px", marginLeft: "8px" }}>ADMIN</span>
@@ -85,6 +83,7 @@ export default function AppHeader({ adminBadge = false }: { adminBadge?: boolean
       </button>
 
       <nav className={`vv-nav${menuOpen ? " vv-nav-open" : ""}`} style={{ fontSize: "13px" }}>
+        <span style={{ color: "#4A6A8A", fontSize: "10px", letterSpacing: "1px", padding: "6px 8px" }}>{VERSION}</span>
         {NAV.map((item) => (
           <Link
             key={item.href}
