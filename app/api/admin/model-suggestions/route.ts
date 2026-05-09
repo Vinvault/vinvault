@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isAdminAuthed } from "@/lib/admin-auth";
 export const dynamic = "force-dynamic";
 
 const h = () => ({
@@ -7,9 +8,7 @@ const h = () => ({
   "Content-Type": "application/json",
 });
 
-function isAdmin(req: NextRequest) {
-  return (req.headers.get("cookie") || "").includes("vv_admin=");
-}
+function isAdmin(req: NextRequest) { return isAdminAuthed(req); }
 
 export async function GET(req: NextRequest) {
   if (!isAdmin(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

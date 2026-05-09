@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isAdminAuthed } from "@/lib/admin-auth";
 export const dynamic = "force-dynamic";
 
 const EARTH_RADIUS_KM = 6371;
@@ -309,8 +310,7 @@ export async function PATCH(request: NextRequest) {
   const key = process.env.SUPABASE_SERVICE_KEY;
   if (!url || !key) return NextResponse.json({ error: "Config" }, { status: 500 });
 
-  const cookie = request.headers.get("cookie") || "";
-  if (!cookie.includes("vv_admin=")) {
+  if (!isAdminAuthed(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
