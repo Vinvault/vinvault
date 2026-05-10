@@ -8,6 +8,7 @@ import ClaimButton from "./ClaimButton";
 import WatchButton from "./WatchButton";
 import SightingsSection from "./SightingsSection";
 import RegistryEnrichForm from "./RegistryEnrichForm";
+import { colors } from "@/app/components/ui/tokens";
 
 const BASE = "https://www.vinvault.net";
 
@@ -119,30 +120,47 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
     },
   } : null;
 
+  const sectionLabel: React.CSSProperties = {
+    color: colors.accent,
+    fontSize: "11px",
+    letterSpacing: "3px",
+    marginBottom: "16px",
+    fontFamily: "Verdana, sans-serif",
+    textTransform: "uppercase",
+    fontWeight: "normal",
+  };
+
+  const fieldRow: React.CSSProperties = {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "12px 0",
+    borderBottom: `1px solid ${colors.borderLight}`,
+    gap: "12px",
+  };
+
   if (!car) {
     return (
-      <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-        {/* Breadcrumb */}
-        <div style={{ padding: "16px 40px", background: "#0A1828", borderBottom: "1px solid #1E3A5A", fontSize: "12px", color: "#4A6A8A" }}>
-          <Link href="/" style={{ color: "#4A6A8A", textDecoration: "none" }}>Home</Link>
+      <main style={{ background: colors.bg, color: colors.textPrimary, fontFamily: "Georgia, serif", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+        <div style={{ padding: "16px 40px", background: colors.surface, borderBottom: `1px solid ${colors.border}`, fontSize: "12px", color: colors.textMuted, fontFamily: "Verdana, sans-serif" }}>
+          <Link href="/" style={{ color: colors.textMuted, textDecoration: "none" }}>Home</Link>
           {" / "}
-          <Link href="/ferrari/288-gto" style={{ color: "#4A6A8A", textDecoration: "none" }}>Ferrari 288 GTO</Link>
+          <Link href="/ferrari/288-gto" style={{ color: colors.textMuted, textDecoration: "none" }}>Ferrari 288 GTO</Link>
           {" / "}
-          <span style={{ color: "#8BA5B8", fontFamily: "monospace" }}>{chassis}</span>
+          <span style={{ color: colors.textSecondary, fontFamily: "monospace" }}>{chassis}</span>
         </div>
 
         <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "60px 20px" }}>
           <div style={{ textAlign: "center", maxWidth: "520px" }}>
-            <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>NOT YET DOCUMENTED</p>
-            <h1 style={{ fontSize: "28px", marginBottom: "8px", fontFamily: "monospace", letterSpacing: "2px" }}>{chassis.toUpperCase()}</h1>
-            <p style={{ color: "#8BA5B8", fontSize: "15px", lineHeight: "1.7", marginBottom: "32px" }}>
+            <p style={{ color: colors.accent, letterSpacing: "3px", fontSize: "11px", marginBottom: "16px", fontFamily: "Verdana, sans-serif", textTransform: "uppercase" }}>Not Yet Documented</p>
+            <h1 style={{ fontSize: "28px", marginBottom: "8px", fontFamily: "monospace", letterSpacing: "2px", color: colors.textPrimary }}>{chassis.toUpperCase()}</h1>
+            <p style={{ color: colors.textSecondary, fontSize: "15px", lineHeight: "1.7", marginBottom: "32px", fontFamily: "Georgia, serif" }}>
               This Ferrari 288 GTO chassis has not yet been documented in the registry. If you have information about this car, please submit it and help complete the historical record.
             </p>
             <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
-              <Link href={`/submit?chassis=${encodeURIComponent(chassis)}`} style={{ background: "#4A90B8", color: "#fff", padding: "12px 28px", textDecoration: "none", fontSize: "13px", letterSpacing: "2px" }}>
-                SUBMIT THIS CAR
+              <Link href={`/submit?chassis=${encodeURIComponent(chassis)}`} style={{ background: colors.accentNavy, color: "#FFFDF8", padding: "12px 28px", textDecoration: "none", fontSize: "11px", letterSpacing: "2px", fontFamily: "Verdana, sans-serif", textTransform: "uppercase" }}>
+                Submit This Car
               </Link>
-              <Link href="/ferrari/288-gto" style={{ border: "1px solid #4A90B8", color: "#4A90B8", padding: "12px 28px", textDecoration: "none", fontSize: "13px" }}>
+              <Link href="/ferrari/288-gto" style={{ border: `1px solid ${colors.border}`, color: colors.textSecondary, padding: "12px 28px", textDecoration: "none", fontSize: "11px", letterSpacing: "1px", fontFamily: "Verdana, sans-serif", textTransform: "uppercase" }}>
                 Back to Registry
               </Link>
             </div>
@@ -154,7 +172,7 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
   }
 
   return (
-    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
+    <main style={{ background: colors.bg, color: colors.textPrimary, fontFamily: "Georgia, serif", minHeight: "100vh" }}>
       {jsonLd && (
         <script
           type="application/ld+json"
@@ -163,42 +181,42 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
       )}
 
       {/* Breadcrumb */}
-      <div style={{ padding: "14px 40px", background: "#0A1828", borderBottom: "1px solid #1E3A5A", fontSize: "12px", color: "#4A6A8A", display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
-        <Link href="/" style={{ color: "#4A6A8A", textDecoration: "none" }}>Home</Link>
-        <span>/</span>
-        <Link href="/ferrari/288-gto" style={{ color: "#4A6A8A", textDecoration: "none" }}>Ferrari 288 GTO</Link>
-        <span>/</span>
-        <span style={{ color: "#8BA5B8", fontFamily: "monospace" }}>{car.chassis_number}</span>
+      <div style={{ padding: "14px 40px", background: colors.surface, borderBottom: `1px solid ${colors.border}`, fontSize: "12px", color: colors.textMuted, display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap", fontFamily: "Verdana, sans-serif" }}>
+        <Link href="/" style={{ color: colors.textMuted, textDecoration: "none" }}>Home</Link>
+        <span style={{ color: colors.border }}>/</span>
+        <Link href="/ferrari/288-gto" style={{ color: colors.textMuted, textDecoration: "none" }}>Ferrari 288 GTO</Link>
+        <span style={{ color: colors.border }}>/</span>
+        <span style={{ color: colors.textSecondary, fontFamily: "monospace" }}>{car.chassis_number}</span>
       </div>
 
       {/* Hero */}
-      <section className="vv-chassis-hero" style={{ padding: "48px 40px 36px", borderBottom: "1px solid #1E3A5A" }}>
+      <section className="vv-chassis-hero" style={{ padding: "48px 40px 36px", borderBottom: `1px solid ${colors.border}`, background: colors.surface }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "16px" }}>
           <div>
-            <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>FERRARI 288 GTO · CHASSIS RECORD</p>
-            <h1 style={{ fontSize: "clamp(24px, 5vw, 36px)", fontWeight: "bold", marginBottom: "8px", fontFamily: "monospace", letterSpacing: "2px" }}>{car.chassis_number}</h1>
-            <p style={{ color: "#8BA5B8" }}>
+            <p style={{ ...sectionLabel, marginBottom: "16px" }}>Ferrari 288 GTO · Chassis Record</p>
+            <h1 style={{ fontSize: "clamp(24px, 5vw, 36px)", fontWeight: "bold", marginBottom: "8px", fontFamily: "monospace", letterSpacing: "2px", color: colors.textPrimary }}>{car.chassis_number}</h1>
+            <p style={{ color: colors.textSecondary, fontFamily: "Georgia, serif" }}>
               {car.production_date ? `Produced ${car.production_date}` : ""}
               {car.production_date && car.original_market ? " · " : ""}
               {car.original_market ? `${car.original_market} market` : ""}
             </p>
           </div>
-          <div style={{ display: "flex", gap: "12px", alignItems: "flex-start", flexWrap: "wrap" }}>
-            <span style={{ background: "#0D2A1A", color: "#4AB87A", padding: "8px 20px", fontSize: "12px", letterSpacing: "2px" }}>APPROVED</span>
+          <div style={{ display: "flex", gap: "8px", alignItems: "flex-start", flexWrap: "wrap" }}>
+            <span style={{ background: "#E8F4EC", color: colors.success, padding: "8px 20px", fontSize: "10px", letterSpacing: "2px", fontFamily: "Verdana, sans-serif", textTransform: "uppercase" }}>Approved</span>
             {ownerClaim && (
-              <span style={{ background: "#0D1E36", color: "#4A90B8", padding: "8px 20px", fontSize: "12px", letterSpacing: "2px", border: "1px solid #4A90B8" }}>OWNER VERIFIED</span>
+              <span style={{ background: "#E8F0FA", color: colors.accentBlue, padding: "8px 20px", fontSize: "10px", letterSpacing: "2px", border: `1px solid #A8C8E8`, fontFamily: "Verdana, sans-serif", textTransform: "uppercase" }}>Owner Verified</span>
             )}
             {car.is_one_off && (
-              <span style={{ background: "#1A0D2A", color: "#B87AE0", padding: "8px 20px", fontSize: "12px", letterSpacing: "2px", border: "1px solid #5A2A8A" }}>ONE-OFF</span>
+              <span style={{ background: "#F0E8FA", color: "#7A4AB8", padding: "8px 20px", fontSize: "10px", letterSpacing: "2px", border: "1px solid #C8A8E8", fontFamily: "Verdana, sans-serif", textTransform: "uppercase" }}>One-Off</span>
             )}
             {car.is_prototype && (
-              <span style={{ background: "#2A1A0D", color: "#E0B87A", padding: "8px 20px", fontSize: "12px", letterSpacing: "2px", border: "1px solid #8A5A2A" }}>PROTOTYPE</span>
+              <span style={{ background: "#FBF3E0", color: "#8A6A1A", padding: "8px 20px", fontSize: "10px", letterSpacing: "2px", border: "1px solid #E8C878", fontFamily: "Verdana, sans-serif", textTransform: "uppercase" }}>Prototype</span>
             )}
             {car.is_film_car && (
-              <span style={{ background: "#0D1A2A", color: "#7AB8E0", padding: "8px 20px", fontSize: "12px", letterSpacing: "2px", border: "1px solid #2A5A8A" }}>FILM CAR</span>
+              <span style={{ background: "#E8F0FA", color: "#1A5A8A", padding: "8px 20px", fontSize: "10px", letterSpacing: "2px", border: "1px solid #A8C8E8", fontFamily: "Verdana, sans-serif", textTransform: "uppercase" }}>Film Car</span>
             )}
             {car.is_music_video_car && (
-              <span style={{ background: "#1A0D1A", color: "#E07AB8", padding: "8px 20px", fontSize: "12px", letterSpacing: "2px", border: "1px solid #8A2A5A" }}>MUSIC VIDEO</span>
+              <span style={{ background: "#FAE8F0", color: "#8A1A5A", padding: "8px 20px", fontSize: "10px", letterSpacing: "2px", border: "1px solid #E8A8C8", fontFamily: "Verdana, sans-serif", textTransform: "uppercase" }}>Music Video</span>
             )}
             <WatchButton chassis={car.chassis_number} />
             <ClaimButton chassis={car.chassis_number} />
@@ -213,7 +231,7 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "40px", marginBottom: "40px" }}>
           {/* Identity */}
           <div>
-            <h2 style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "20px" }}>IDENTITY</h2>
+            <h2 style={sectionLabel}>Identity</h2>
             {[
               ["Chassis Number", car.chassis_number, true],
               ["Engine Number", car.engine_number, true],
@@ -222,16 +240,16 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
               ["Original Market", car.original_market, false],
               ["Matching Numbers", car.matching_numbers, false],
             ].filter(([, v]) => v).map(([l, v, mono]) => (
-              <div key={l as string} style={{ display: "flex", justifyContent: "space-between", padding: "12px 0", borderBottom: "1px solid #0D1E36", gap: "12px" }}>
-                <span style={{ color: "#8BA5B8", fontSize: "14px", flexShrink: 0 }}>{l}</span>
-                <span style={{ fontSize: "14px", fontFamily: mono ? "monospace" : "Verdana", textAlign: "right" }}>{String(v)}</span>
+              <div key={l as string} style={fieldRow}>
+                <span style={{ color: colors.textMuted, fontSize: "14px", flexShrink: 0, fontFamily: "Verdana, sans-serif" }}>{l}</span>
+                <span style={{ fontSize: "14px", fontFamily: mono ? "monospace" : "Georgia, serif", textAlign: "right", color: colors.textPrimary }}>{String(v)}</span>
               </div>
             ))}
           </div>
 
           {/* Condition */}
           <div>
-            <h2 style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "20px" }}>CONDITION & SPEC</h2>
+            <h2 style={sectionLabel}>Condition &amp; Spec</h2>
             {[
               ["Exterior Color", car.exterior_color],
               ["Interior Color", car.interior_color],
@@ -240,9 +258,9 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
               ["Books Present", car.has_books],
               ["Toolkit Present", car.has_toolkit],
             ].filter(([, v]) => v).map(([l, v]) => (
-              <div key={l as string} style={{ display: "flex", justifyContent: "space-between", padding: "12px 0", borderBottom: "1px solid #0D1E36", gap: "12px" }}>
-                <span style={{ color: "#8BA5B8", fontSize: "14px", flexShrink: 0 }}>{l}</span>
-                <span style={{ fontSize: "14px", textAlign: "right" }}>{String(v)}</span>
+              <div key={l as string} style={fieldRow}>
+                <span style={{ color: colors.textMuted, fontSize: "14px", flexShrink: 0, fontFamily: "Verdana, sans-serif" }}>{l}</span>
+                <span style={{ fontSize: "14px", textAlign: "right", color: colors.textPrimary, fontFamily: "Georgia, serif" }}>{String(v)}</span>
               </div>
             ))}
           </div>
@@ -261,33 +279,33 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
         {/* Provenance */}
         {car.provenance && (
           <div style={{ marginBottom: "32px" }}>
-            <h2 style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "16px" }}>PROVENANCE & HISTORY</h2>
-            <p style={{ color: "#8BA5B8", lineHeight: "1.8", background: "#0A1828", padding: "20px 24px", border: "1px solid #1E3A5A", fontSize: "15px" }}>{car.provenance}</p>
+            <h2 style={sectionLabel}>Provenance &amp; History</h2>
+            <p style={{ color: colors.textSecondary, lineHeight: "1.8", background: colors.surface, padding: "20px 24px", border: `1px solid ${colors.border}`, fontSize: "15px", fontFamily: "Georgia, serif" }}>{car.provenance}</p>
           </div>
         )}
 
         {/* Source */}
         {car.source && (
           <div style={{ marginBottom: "32px" }}>
-            <h2 style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "16px" }}>SOURCE</h2>
-            <p style={{ color: "#8BA5B8", background: "#0A1828", padding: "20px 24px", border: "1px solid #1E3A5A" }}>{car.source}</p>
+            <h2 style={sectionLabel}>Source</h2>
+            <p style={{ color: colors.textSecondary, background: colors.surface, padding: "20px 24px", border: `1px solid ${colors.border}`, fontFamily: "Georgia, serif" }}>{car.source}</p>
           </div>
         )}
 
         {/* Special designations */}
         {(car.is_film_car || car.is_music_video_car) && (
           <div style={{ marginBottom: "32px" }}>
-            <h2 style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "16px" }}>SPECIAL DESIGNATIONS</h2>
+            <h2 style={sectionLabel}>Special Designations</h2>
             {car.is_film_car && car.film_details && (
-              <div style={{ background: "#0A1828", border: "1px solid #2A5A8A", padding: "20px 24px", marginBottom: "12px" }}>
-                <p style={{ color: "#7AB8E0", fontSize: "11px", letterSpacing: "2px", marginBottom: "8px" }}>FILM CAR</p>
-                <p style={{ color: "#8BA5B8", lineHeight: "1.7" }}>{car.film_details}</p>
+              <div style={{ background: "#E8F0FA", border: "1px solid #A8C8E8", padding: "20px 24px", marginBottom: "12px" }}>
+                <p style={{ color: "#1A5A8A", fontSize: "11px", letterSpacing: "2px", marginBottom: "8px", fontFamily: "Verdana, sans-serif", textTransform: "uppercase" }}>Film Car</p>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.7", fontFamily: "Georgia, serif" }}>{car.film_details}</p>
               </div>
             )}
             {car.is_music_video_car && car.music_video_details && (
-              <div style={{ background: "#0A1828", border: "1px solid #8A2A5A", padding: "20px 24px" }}>
-                <p style={{ color: "#E07AB8", fontSize: "11px", letterSpacing: "2px", marginBottom: "8px" }}>MUSIC VIDEO CAR</p>
-                <p style={{ color: "#8BA5B8", lineHeight: "1.7" }}>{car.music_video_details}</p>
+              <div style={{ background: "#FAE8F0", border: "1px solid #E8A8C8", padding: "20px 24px" }}>
+                <p style={{ color: "#8A1A5A", fontSize: "11px", letterSpacing: "2px", marginBottom: "8px", fontFamily: "Verdana, sans-serif", textTransform: "uppercase" }}>Music Video Car</p>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.7", fontFamily: "Georgia, serif" }}>{car.music_video_details}</p>
               </div>
             )}
           </div>
@@ -295,71 +313,67 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
 
         {/* Auction History placeholder */}
         <div style={{ marginBottom: "32px" }}>
-          <h2 style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "16px" }}>AUCTION HISTORY</h2>
-          <div style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "24px", color: "#4A6A8A", fontSize: "14px" }}>
-            <p>No auction records on file. If you know of auction appearances for this chassis, <Link href="/submit" style={{ color: "#4A90B8", textDecoration: "none" }}>submit an update</Link>.</p>
+          <h2 style={sectionLabel}>Auction History</h2>
+          <div style={{ background: colors.surface, border: `1px solid ${colors.border}`, padding: "24px", color: colors.textMuted, fontSize: "14px", fontFamily: "Georgia, serif", fontStyle: "italic" }}>
+            <p>No auction records on file. If you know of auction appearances for this chassis, <Link href="/submit" style={{ color: colors.accentBlue, textDecoration: "none" }}>submit an update</Link>.</p>
           </div>
         </div>
 
         {/* Meta */}
         <div style={{ marginTop: "24px", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "8px" }}>
-          <p style={{ color: "#4A6A8A", fontSize: "12px" }}>
+          <p style={{ color: colors.textMuted, fontSize: "12px", fontFamily: "Verdana, sans-serif" }}>
             Submitted {new Date(car.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
           </p>
-          <Link href="/ferrari/288-gto" style={{ color: "#4A90B8", fontSize: "13px", textDecoration: "none" }}>← Back to Registry</Link>
+          <Link href="/ferrari/288-gto" style={{ color: colors.accentBlue, fontSize: "13px", textDecoration: "none", fontFamily: "Verdana, sans-serif" }}>← Back to Registry</Link>
         </div>
 
         {/* Photos */}
-        <div style={{ marginTop: "48px", borderTop: "1px solid #1E3A5A", paddingTop: "40px" }}>
+        <div style={{ marginTop: "48px", borderTop: `1px solid ${colors.border}`, paddingTop: "40px" }}>
           <ChassisPhotos chassis={car.chassis_number} />
         </div>
 
         {/* Comments */}
-        <div style={{ borderTop: "1px solid #1E3A5A", paddingTop: "40px" }}>
+        <div style={{ borderTop: `1px solid ${colors.border}`, paddingTop: "40px" }}>
           <ChassisComments chassis={car.chassis_number} />
         </div>
 
         {/* Forum / Discussions */}
-        <div style={{ borderTop: "1px solid #1E3A5A", paddingTop: "40px", marginTop: "8px" }}>
-          <h2 style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "16px" }}>DISCUSSIONS</h2>
-          <div style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "24px" }}>
-            <p style={{ color: "#8BA5B8", fontSize: "14px", lineHeight: "1.7", marginBottom: "16px" }}>
+        <div style={{ borderTop: `1px solid ${colors.border}`, paddingTop: "40px", marginTop: "8px" }}>
+          <h2 style={sectionLabel}>Discussions</h2>
+          <div style={{ background: colors.surface, border: `1px solid ${colors.border}`, padding: "24px" }}>
+            <p style={{ color: colors.textSecondary, fontSize: "14px", lineHeight: "1.7", marginBottom: "16px", fontFamily: "Georgia, serif" }}>
               Join the discussion about chassis {car.chassis_number} on the VinVault Forum.
             </p>
             <a
               href={`https://forum.vinvault.net/t/ferrari-288-gto-${encodeURIComponent(car.chassis_number.toLowerCase())}`}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ display: "inline-flex", alignItems: "center", gap: "8px", color: "#4A90B8", textDecoration: "none", fontSize: "13px", border: "1px solid #1E3A5A", padding: "10px 20px", background: "#080F1A" }}
+              style={{ display: "inline-flex", alignItems: "center", gap: "8px", color: colors.accentBlue, textDecoration: "none", fontSize: "12px", border: `1px solid ${colors.border}`, padding: "10px 20px", background: colors.bg, fontFamily: "Verdana, sans-serif", letterSpacing: "0.5px" }}
             >
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#4A90B8" strokeWidth="1.5"/><path d="M4 5h6M4 7.5h4" stroke="#4A90B8" strokeWidth="1.2" strokeLinecap="round"/></svg>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke={colors.accent} strokeWidth="1.5"/><path d="M4 5h6M4 7.5h4" stroke={colors.accent} strokeWidth="1.2" strokeLinecap="round"/></svg>
               Discuss this chassis on the forum →
             </a>
           </div>
         </div>
 
         {/* Sightings */}
-        <div style={{ borderTop: "1px solid #1E3A5A", paddingTop: "40px", marginTop: "8px" }}>
+        <div style={{ borderTop: `1px solid ${colors.border}`, paddingTop: "40px", marginTop: "8px" }}>
           <SightingsSection chassis={car.chassis_number} initialSightings={sightings} />
         </div>
       </div>
 
       {/* Similar cars */}
       {similar.length > 0 && (
-        <section style={{ borderTop: "1px solid #1E3A5A", padding: "48px 40px" }}>
+        <section style={{ borderTop: `1px solid ${colors.border}`, padding: "48px 40px", background: colors.surface }}>
           <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-            <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "8px" }}>BROWSE</p>
-            <h2 style={{ fontSize: "22px", fontWeight: "bold", marginBottom: "24px" }}>Other Documented 288 GTOs</h2>
+            <p style={{ color: colors.accent, letterSpacing: "3px", fontSize: "11px", marginBottom: "8px", fontFamily: "Verdana, sans-serif", textTransform: "uppercase" }}>Browse</p>
+            <h2 style={{ fontSize: "22px", fontWeight: "bold", marginBottom: "24px", fontFamily: "Georgia, serif", color: colors.textPrimary }}>Other Documented 288 GTOs</h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "16px" }}>
               {similar.map((s: any) => (
                 <Link key={s.id} href={`/ferrari/288-gto/${s.chassis_number}`} style={{ textDecoration: "none", color: "inherit" }}>
-                  <div
-                    style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "20px 24px" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.borderColor = "#4A90B8")}
-                    onMouseLeave={(e) => (e.currentTarget.style.borderColor = "#1E3A5A")}
-                  >
-                    <p style={{ fontFamily: "monospace", fontSize: "14px", letterSpacing: "1px", marginBottom: "6px" }}>{s.chassis_number}</p>
-                    <p style={{ color: "#4A6A8A", fontSize: "12px" }}>
+                  <div className="vv-card" style={{ background: colors.bg, border: `1px solid ${colors.border}`, padding: "20px 24px" }}>
+                    <p style={{ fontFamily: "monospace", fontSize: "14px", letterSpacing: "1px", marginBottom: "6px", color: colors.textPrimary }}>{s.chassis_number}</p>
+                    <p style={{ color: colors.textMuted, fontSize: "12px", fontFamily: "Verdana, sans-serif" }}>
                       {[s.exterior_color, s.original_market].filter(Boolean).join(" · ") || "Ferrari 288 GTO"}
                     </p>
                   </div>
