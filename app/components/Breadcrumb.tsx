@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { colors } from "./ui/tokens";
 
 interface Crumb {
   label: string;
@@ -11,25 +12,26 @@ export default function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
       aria-label="Breadcrumb"
       style={{
         padding: "14px 40px",
-        background: "#0A1828",
-        borderBottom: "1px solid #1E3A5A",
+        background: colors.surface,
+        borderBottom: `1px solid ${colors.border}`,
         fontSize: "12px",
-        color: "#4A6A8A",
+        color: colors.textMuted,
         display: "flex",
         alignItems: "center",
         gap: "6px",
         flexWrap: "wrap",
+        fontFamily: "Verdana, sans-serif",
       }}
     >
       {crumbs.map((crumb, i) => (
         <span key={crumb.label} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          {i > 0 && <span style={{ color: "#1E3A5A" }}>/</span>}
+          {i > 0 && <span style={{ color: colors.border }}>/</span>}
           {crumb.href ? (
-            <Link href={crumb.href} style={{ color: "#4A6A8A", textDecoration: "none" }}>
+            <Link href={crumb.href} style={{ color: colors.textMuted, textDecoration: "none" }}>
               {crumb.label}
             </Link>
           ) : (
-            <span style={{ color: "#8BA5B8" }}>{crumb.label}</span>
+            <span style={{ color: colors.textSecondary }}>{crumb.label}</span>
           )}
         </span>
       ))}

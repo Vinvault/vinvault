@@ -2,6 +2,7 @@ export const revalidate = 120;
 import Link from "next/link";
 import type { Metadata } from "next";
 import Breadcrumb from "@/app/components/Breadcrumb";
+import { colors } from "@/app/components/ui/tokens";
 
 export const metadata: Metadata = {
   title: "Leaderboard — VinVault",
@@ -18,10 +19,10 @@ interface LeaderEntry {
 }
 
 function badge(points: number): { label: string; color: string; bg: string } {
-  if (points >= 1000) return { label: "Expert", color: "#F0C040", bg: "#2A1F00" };
-  if (points >= 500) return { label: "Gold", color: "#C8A000", bg: "#1A1400" };
-  if (points >= 100) return { label: "Silver", color: "#A0B0C0", bg: "#141820" };
-  return { label: "Bronze", color: "#C87840", bg: "#1A1000" };
+  if (points >= 1000) return { label: "Expert", color: colors.accent, bg: "#FBF3E0" };
+  if (points >= 500) return { label: "Gold", color: "#8A6A1A", bg: "#FBF3E0" };
+  if (points >= 100) return { label: "Silver", color: colors.textSecondary, bg: colors.surfaceAlt };
+  return { label: "Bronze", color: "#8A5A2A", bg: "#F4EDE8" };
 }
 
 function computePoints(entry: Omit<LeaderEntry, "points">): number {
@@ -69,35 +70,35 @@ export default async function LeaderboardPage() {
   const leaders = await getLeaderboard();
 
   return (
-    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
+    <main style={{ background: colors.bg, color: colors.textPrimary, fontFamily: "Georgia, serif", minHeight: "100vh" }}>
       <Breadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "Leaderboard" }]} />
 
       <div className="vv-page-container" style={{ maxWidth: "800px" }}>
-        <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>COMMUNITY</p>
-        <h1 style={{ fontSize: "36px", fontWeight: "bold", marginBottom: "16px" }}>Top Contributors</h1>
-        <p style={{ color: "#8BA5B8", fontSize: "15px", lineHeight: "1.7", marginBottom: "32px" }}>
+        <p style={{ color: colors.accent, letterSpacing: "3px", fontSize: "11px", marginBottom: "16px", fontFamily: "Verdana, sans-serif", textTransform: "uppercase" }}>Community</p>
+        <h1 style={{ fontSize: "36px", fontWeight: "bold", marginBottom: "16px", fontFamily: "Georgia, serif", color: colors.textPrimary }}>Top Contributors</h1>
+        <p style={{ color: colors.textSecondary, fontSize: "15px", lineHeight: "1.7", marginBottom: "32px", fontFamily: "Georgia, serif" }}>
           Points are earned by submitting cars and getting them verified. Earn 10 points per submission, +50 when it's approved.
         </p>
 
         {/* Badge legend */}
         <div style={{ display: "flex", gap: "12px", marginBottom: "40px", flexWrap: "wrap" }}>
           {[
-            { label: "Bronze", pts: "0–99", color: "#C87840", bg: "#1A1000" },
-            { label: "Silver", pts: "100–499", color: "#A0B0C0", bg: "#141820" },
-            { label: "Gold", pts: "500–999", color: "#C8A000", bg: "#1A1400" },
-            { label: "Expert", pts: "1000+", color: "#F0C040", bg: "#2A1F00" },
+            { label: "Bronze", pts: "0–99", color: "#8A5A2A", bg: "#F4EDE8" },
+            { label: "Silver", pts: "100–499", color: colors.textSecondary, bg: colors.surfaceAlt },
+            { label: "Gold", pts: "500–999", color: "#8A6A1A", bg: "#FBF3E0" },
+            { label: "Expert", pts: "1000+", color: colors.accent, bg: "#FBF3E0" },
           ].map(b => (
-            <span key={b.label} style={{ background: b.bg, color: b.color, padding: "4px 12px", fontSize: "11px", letterSpacing: "1px", border: `1px solid ${b.color}40` }}>
+            <span key={b.label} style={{ background: b.bg, color: b.color, padding: "4px 12px", fontSize: "11px", letterSpacing: "1px", border: `1px solid ${b.color}40`, fontFamily: "Verdana, sans-serif" }}>
               {b.label} · {b.pts} pts
             </span>
           ))}
         </div>
 
         {leaders.length === 0 ? (
-          <div style={{ border: "1px solid #1E3A5A", padding: "48px", textAlign: "center" }}>
-            <p style={{ color: "#4A6A8A", fontSize: "15px", marginBottom: "20px" }}>No contributors yet. Be the first!</p>
-            <Link href="/submit" style={{ background: "#4A90B8", color: "#fff", padding: "12px 28px", textDecoration: "none", fontSize: "13px", letterSpacing: "2px" }}>
-              SUBMIT A CAR
+          <div style={{ border: `1px solid ${colors.border}`, padding: "48px", textAlign: "center" }}>
+            <p style={{ color: colors.textMuted, fontSize: "15px", marginBottom: "20px", fontFamily: "Georgia, serif", fontStyle: "italic" }}>No contributors yet. Be the first!</p>
+            <Link href="/submit" style={{ background: colors.accentNavy, color: "#FFFDF8", padding: "12px 28px", textDecoration: "none", fontSize: "11px", letterSpacing: "2px", fontFamily: "Verdana, sans-serif", textTransform: "uppercase" }}>
+              Submit a Car
             </Link>
           </div>
         ) : (
@@ -107,23 +108,23 @@ export default async function LeaderboardPage() {
               return (
                 <div key={entry.email} style={{
                   display: "flex", justifyContent: "space-between", alignItems: "center",
-                  padding: "18px 0", borderBottom: "1px solid #0D1E36", gap: "12px", flexWrap: "wrap",
+                  padding: "18px 0", borderBottom: `1px solid ${colors.borderLight}`, gap: "12px", flexWrap: "wrap",
                 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-                    <span style={{ color: "#1E3A5A", fontSize: "20px", fontWeight: "bold", width: "32px", textAlign: "right", flexShrink: 0 }}>
+                    <span style={{ color: colors.border, fontSize: "20px", fontWeight: "bold", width: "32px", textAlign: "right", flexShrink: 0, fontFamily: "Georgia, serif" }}>
                       {i + 1}
                     </span>
                     <div>
-                      <p style={{ fontSize: "14px", marginBottom: "4px", fontFamily: "monospace" }}>{maskEmail(entry.email)}</p>
+                      <p style={{ fontSize: "14px", marginBottom: "4px", fontFamily: "monospace", color: colors.textPrimary }}>{maskEmail(entry.email)}</p>
                       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                        <span style={{ background: b.bg, color: b.color, padding: "2px 8px", fontSize: "10px", letterSpacing: "1px" }}>{b.label.toUpperCase()}</span>
-                        <span style={{ color: "#4A6A8A", fontSize: "12px" }}>{entry.approved} approved · {entry.total} total</span>
+                        <span style={{ background: b.bg, color: b.color, padding: "2px 8px", fontSize: "10px", letterSpacing: "1px", fontFamily: "Verdana, sans-serif" }}>{b.label.toUpperCase()}</span>
+                        <span style={{ color: colors.textMuted, fontSize: "12px", fontFamily: "Verdana, sans-serif" }}>{entry.approved} approved · {entry.total} total</span>
                       </div>
                     </div>
                   </div>
                   <div style={{ textAlign: "right" }}>
-                    <p style={{ fontSize: "22px", fontWeight: "bold", color: "#4A90B8" }}>{entry.points}</p>
-                    <p style={{ color: "#4A6A8A", fontSize: "11px", letterSpacing: "1px" }}>PTS</p>
+                    <p style={{ fontSize: "22px", fontWeight: "bold", color: colors.accent, fontFamily: "Georgia, serif" }}>{entry.points}</p>
+                    <p style={{ color: colors.textMuted, fontSize: "11px", letterSpacing: "1px", fontFamily: "Verdana, sans-serif" }}>PTS</p>
                   </div>
                 </div>
               );
@@ -131,13 +132,13 @@ export default async function LeaderboardPage() {
           </div>
         )}
 
-        <div style={{ marginTop: "40px", background: "#0A1828", border: "1px solid #1E3A5A", padding: "24px" }}>
-          <p style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "2px", marginBottom: "8px" }}>HOW POINTS WORK</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: "6px", color: "#8BA5B8", fontSize: "14px" }}>
-            <p>Submit a car: <strong style={{ color: "#E2EEF7" }}>+10 pts</strong></p>
-            <p>Submission approved: <strong style={{ color: "#4AB87A" }}>+50 pts</strong> bonus</p>
-            <p>Submission rejected: <strong style={{ color: "#E07070" }}>-5 pts</strong></p>
-            <p>First submission ever: <strong style={{ color: "#4A90B8" }}>+25 pts</strong> bonus (coming soon)</p>
+        <div style={{ marginTop: "40px", background: colors.surface, border: `1px solid ${colors.border}`, padding: "24px" }}>
+          <p style={{ color: colors.accent, fontSize: "11px", letterSpacing: "2px", marginBottom: "12px", fontFamily: "Verdana, sans-serif", textTransform: "uppercase" }}>How Points Work</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px", color: colors.textSecondary, fontSize: "14px", fontFamily: "Georgia, serif" }}>
+            <p>Submit a car: <strong style={{ color: colors.textPrimary }}>+10 pts</strong></p>
+            <p>Submission approved: <strong style={{ color: colors.success }}>+50 pts</strong> bonus</p>
+            <p>Submission rejected: <strong style={{ color: colors.error }}>-5 pts</strong></p>
+            <p>First submission ever: <strong style={{ color: colors.accentBlue }}>+25 pts</strong> bonus (coming soon)</p>
           </div>
         </div>
       </div>
