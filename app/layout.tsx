@@ -5,6 +5,7 @@ import BackToTop from "./components/BackToTop";
 import GoogleAnalytics from "./components/GoogleAnalytics";
 import AppHeader from "./components/AppHeader";
 import AppFooter from "./components/AppFooter";
+import BottomNav from "./components/BottomNav";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.vinvault.net'),
@@ -71,10 +72,11 @@ export default function RootLayout({
       <head>
         <GoogleAnalytics />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col" style={{ fontFamily: 'Georgia, serif', background: 'var(--color-bg)', color: 'var(--color-text-primary)' }}>
         <AppHeader />
         {children}
         <AppFooter />
+        <BottomNav />
         <CookieBanner />
         <BackToTop />
       </body>

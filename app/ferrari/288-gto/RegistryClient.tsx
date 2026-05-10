@@ -1,6 +1,9 @@
 "use client";
 import Link from "next/link";
 import { useState, useMemo, useEffect } from "react";
+import { SkeletonRow } from "@/app/components/ui/Skeleton";
+import { colors } from "@/app/components/ui/tokens";
+
 const TOTAL_PRODUCED = 272;
 
 interface Submission {
@@ -17,26 +20,43 @@ interface Submission {
 }
 
 const STATUS_STYLE: Record<string, { bg: string; color: string }> = {
-  approved:  { bg: '#0D2A1A', color: '#4AB87A' },
-  pending:   { bg: '#2A1A0D', color: '#B8944A' },
-  rejected:  { bg: '#2A0D0D', color: '#E07070' },
+  approved: { bg: '#E8F4EC', color: colors.success },
+  pending:  { bg: '#FBF3E0', color: '#8A6A1A' },
+  rejected: { bg: '#F4E8E8', color: colors.error },
 };
 
 type FlagFilter = "all" | "one_off" | "prototype" | "film_car" | "music_video";
 
+const inputStyle: React.CSSProperties = {
+  background: colors.surface,
+  border: `1px solid ${colors.border}`,
+  color: colors.textPrimary,
+  padding: "10px 16px",
+  fontSize: "14px",
+  fontFamily: "Georgia, serif",
+  outline: "none",
+  borderRadius: "2px",
+};
+
+const selectStyle: React.CSSProperties = {
+  ...inputStyle,
+  color: colors.textSecondary,
+};
+
 export default function RegistryClient({ cars, ownedChassis = new Set<string>() }: { cars: Submission[]; ownedChassis?: Set<string> }) {
   const [query, setQuery] = useState('');
   const [thumbnails, setThumbnails] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(true);
+  const [market, setMarket] = useState('');
+  const [status, setStatus] = useState('');
+  const [flagFilter, setFlagFilter] = useState<FlagFilter>('all');
 
   useEffect(() => {
     fetch('/api/chassis-thumbnails')
       .then(r => r.ok ? r.json() : {})
-      .then(setThumbnails)
-      .catch(() => {});
+      .then((data) => { setThumbnails(data); setLoading(false); })
+      .catch(() => setLoading(false));
   }, []);
-  const [market, setMarket] = useState('');
-  const [status, setStatus] = useState('');
-  const [flagFilter, setFlagFilter] = useState<FlagFilter>('all');
 
   const markets = useMemo(() => {
     const s = new Set(cars.map(c => c.original_market).filter(Boolean));
@@ -61,13 +81,18 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
   const pctBar = Math.min(100, (documented / TOTAL_PRODUCED) * 100);
 
   return (
-    <main style={{ background: '#080F1A', color: '#E2EEF7', fontFamily: 'Verdana, sans-serif', minHeight: '100vh' }}>
-      <section className="vv-registry-header">
-        <p style={{ color: '#4A90B8', letterSpacing: '3px', fontSize: '11px', marginBottom: '16px' }}>WORLD REGISTRY</p>
-        <h1 style={{ fontSize: '42px', fontWeight: 'bold', marginBottom: '16px' }}>Ferrari 288 GTO</h1>
-        <p style={{ color: '#8BA5B8', fontSize: '16px', maxWidth: '600px', lineHeight: '1.7' }}>
+    <main style={{ background: colors.bg, color: colors.textPrimary, fontFamily: 'Georgia, serif', minHeight: '100vh' }}>
+      {/* Registry header */}
+      <section className="vv-registry-header" style={{ background: colors.surface }}>
+        <p style={{ color: colors.accent, letterSpacing: '3px', fontSize: '11px', marginBottom: '16px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>
+          World Registry
+        </p>
+        <h1 style={{ fontSize: '42px', fontWeight: 'bold', marginBottom: '16px', fontFamily: 'Georgia, serif', color: colors.textPrimary }}>
+          Ferrari 288 GTO
+        </h1>
+        <p style={{ color: colors.textSecondary, fontSize: '16px', maxWidth: '600px', lineHeight: '1.7', fontFamily: 'Georgia, serif' }}>
           {TOTAL_PRODUCED} cars were produced between 1984 and 1985. This registry aims to document every single chassis — its history, ownership, and current status.{' '}
-          <Link href="/ferrari/288-gto/info" style={{ color: '#4A90B8', textDecoration: 'none' }}>Full specifications →</Link>
+          <Link href="/ferrari/288-gto/info" style={{ color: colors.accentBlue, textDecoration: 'none' }}>Full specifications →</Link>
         </p>
 
         {/* Stats row */}
@@ -79,8 +104,8 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
             { n: `${pct}%`, l: 'Complete' },
           ].map(s => (
             <div key={s.l}>
-              <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#4A90B8' }}>{s.n}</div>
-              <div style={{ color: '#8BA5B8', fontSize: '12px', letterSpacing: '1px', marginTop: '4px' }}>{s.l}</div>
+              <div style={{ fontSize: '28px', fontWeight: 'bold', color: colors.accent, fontFamily: 'Georgia, serif' }}>{s.n}</div>
+              <div style={{ color: colors.textMuted, fontSize: '11px', letterSpacing: '1px', marginTop: '4px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>{s.l}</div>
             </div>
           ))}
         </div>
@@ -88,94 +113,133 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
         {/* Progress bar */}
         <div style={{ marginTop: '28px', maxWidth: '600px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <span style={{ color: '#8BA5B8', fontSize: '12px', letterSpacing: '1px' }}>REGISTRY COMPLETION</span>
-            <span style={{ color: '#4A90B8', fontSize: '12px', fontWeight: 'bold' }}>{documented} of {TOTAL_PRODUCED} documented</span>
+            <span style={{ color: colors.textMuted, fontSize: '11px', letterSpacing: '1px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>Registry Completion</span>
+            <span style={{ color: colors.accent, fontSize: '12px', fontWeight: 'bold', fontFamily: 'Verdana, sans-serif' }}>{documented} of {TOTAL_PRODUCED}</span>
           </div>
-          <div style={{ background: '#0D1E36', height: '8px', borderRadius: '4px', overflow: 'hidden' }}>
+          <div style={{ background: colors.surfaceAlt, height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
             <div style={{
-              background: 'linear-gradient(90deg, #2A6A9A, #4A90B8)',
-              height: '8px',
+              background: `linear-gradient(90deg, ${colors.accentDark}, ${colors.accent})`,
+              height: '6px',
               width: `${pctBar}%`,
-              borderRadius: '4px',
+              borderRadius: '3px',
               transition: 'width 0.5s ease',
               minWidth: pctBar > 0 ? '4px' : '0',
             }} />
           </div>
-          <p style={{ color: '#4A6A8A', fontSize: '11px', marginTop: '6px' }}>
-            {TOTAL_PRODUCED - documented} chassis still to be documented — <Link href="/submit" style={{ color: '#4A90B8', textDecoration: 'none' }}>submit a car</Link> to help complete the record.
+          <p style={{ color: colors.textMuted, fontSize: '11px', marginTop: '6px', fontFamily: 'Verdana, sans-serif' }}>
+            {TOTAL_PRODUCED - documented} chassis still to be documented — <Link href="/submit" style={{ color: colors.accentBlue, textDecoration: 'none' }}>submit a car</Link> to help complete the record.
           </p>
         </div>
 
         {/* Action buttons */}
         <div style={{ display: 'flex', gap: '12px', marginTop: '24px', flexWrap: 'wrap' }}>
-          <Link href="/submit"
-            style={{ background: '#4A90B8', color: '#fff', padding: '10px 24px', textDecoration: 'none', fontSize: '13px', letterSpacing: '2px' }}>
-            SUBMIT TO REGISTRY
+          <Link href="/submit" style={{
+            background: colors.accentNavy,
+            color: '#FFFDF8',
+            padding: '10px 24px',
+            textDecoration: 'none',
+            fontSize: '11px',
+            letterSpacing: '2px',
+            fontFamily: 'Verdana, sans-serif',
+            textTransform: 'uppercase',
+          }}>
+            Submit to Registry
           </Link>
-          <Link href="/spot"
-            style={{ border: '1px solid #4A90B8', color: '#4A90B8', padding: '10px 24px', textDecoration: 'none', fontSize: '13px', letterSpacing: '2px' }}>
-            SUBMIT A SPOTTING
+          <Link href="/spot" style={{
+            border: `1px solid ${colors.accentNavy}`,
+            color: colors.textPrimary,
+            padding: '10px 24px',
+            textDecoration: 'none',
+            fontSize: '11px',
+            letterSpacing: '2px',
+            fontFamily: 'Verdana, sans-serif',
+            textTransform: 'uppercase',
+          }}>
+            Submit a Spotting
           </Link>
           <a href="https://forum.vinvault.net/c/ferrari-288-gto" target="_blank" rel="noopener noreferrer"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#8BA5B8', textDecoration: 'none', fontSize: '13px', border: '1px solid #1E3A5A', padding: '10px 16px', background: '#0A1828' }}>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#4A90B8" strokeWidth="1.5"/><path d="M4 5h6M4 7.5h4" stroke="#4A90B8" strokeWidth="1.2" strokeLinecap="round"/></svg>
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              color: colors.textSecondary,
+              textDecoration: 'none',
+              fontSize: '11px',
+              border: `1px solid ${colors.border}`,
+              padding: '10px 16px',
+              background: colors.surfaceAlt,
+              fontFamily: 'Verdana, sans-serif',
+              letterSpacing: '1px',
+            }}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <circle cx="7" cy="7" r="6" stroke={colors.accent} strokeWidth="1.5"/>
+              <path d="M4 5h6M4 7.5h4" stroke={colors.accent} strokeWidth="1.2" strokeLinecap="round"/>
+            </svg>
             Forum →
           </a>
         </div>
       </section>
 
-      <section className="vv-registry-filters">
+      {/* Filters */}
+      <section className="vv-registry-filters" style={{ background: colors.bg }}>
         <input
           value={query}
           onChange={e => setQuery(e.target.value)}
           placeholder="Search chassis number..."
-          style={{ background: '#0D1E36', border: '1px solid #1E3A5A', color: '#E2EEF7', padding: '10px 16px', fontSize: '14px', width: '240px', maxWidth: '100%', fontFamily: 'Verdana, sans-serif', outline: 'none' }}
+          style={{ ...inputStyle, width: '240px', maxWidth: '100%' }}
         />
-        <select
-          value={market}
-          onChange={e => setMarket(e.target.value)}
-          style={{ background: '#0D1E36', border: '1px solid #1E3A5A', color: '#8BA5B8', padding: '10px 16px', fontSize: '14px', fontFamily: 'Verdana, sans-serif' }}
-        >
+        <select value={market} onChange={e => setMarket(e.target.value)} style={{ ...selectStyle }}>
           <option value="">All Markets</option>
           {markets.map(m => <option key={m} value={m}>{m}</option>)}
         </select>
-        <select
-          value={status}
-          onChange={e => setStatus(e.target.value)}
-          style={{ background: '#0D1E36', border: '1px solid #1E3A5A', color: '#8BA5B8', padding: '10px 16px', fontSize: '14px', fontFamily: 'Verdana, sans-serif' }}
-        >
+        <select value={status} onChange={e => setStatus(e.target.value)} style={{ ...selectStyle }}>
           <option value="">All Status</option>
           <option value="approved">Approved</option>
           <option value="pending">Pending</option>
           <option value="rejected">Rejected</option>
         </select>
-        <Link href="/submit" style={{ marginLeft: 'auto', background: '#4A90B8', color: '#fff', padding: '10px 24px', textDecoration: 'none', fontSize: '14px', whiteSpace: 'nowrap' }}>
+        <Link href="/submit" style={{
+          marginLeft: 'auto',
+          background: colors.accent,
+          color: colors.accentNavy,
+          padding: '10px 24px',
+          textDecoration: 'none',
+          fontSize: '11px',
+          whiteSpace: 'nowrap',
+          fontFamily: 'Verdana, sans-serif',
+          textTransform: 'uppercase',
+          letterSpacing: '1px',
+          fontWeight: 'bold',
+        }}>
           + Submit a Car
         </Link>
       </section>
 
       {/* Flag filters */}
-      <section style={{ padding: '12px 40px', borderBottom: '1px solid #0D1E36', display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-        <span style={{ color: '#4A6A8A', fontSize: '11px', letterSpacing: '2px', marginRight: '4px' }}>FILTER:</span>
+      <section style={{ padding: '12px 40px', borderBottom: `1px solid ${colors.border}`, display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center', background: colors.bg }}>
+        <span style={{ color: colors.textMuted, fontSize: '11px', letterSpacing: '2px', marginRight: '4px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>Filter:</span>
         {([
           { key: 'all', label: 'All Cars' },
-          { key: 'one_off', label: 'One-Off', color: '#B87AE0' },
-          { key: 'prototype', label: 'Prototypes', color: '#E0B87A' },
-          { key: 'film_car', label: 'Film Cars', color: '#7AB8E0' },
-          { key: 'music_video', label: 'Music Video', color: '#E07AB8' },
+          { key: 'one_off', label: 'One-Off', color: '#7A4AB8' },
+          { key: 'prototype', label: 'Prototypes', color: '#8A6A1A' },
+          { key: 'film_car', label: 'Film Cars', color: '#1A5A8A' },
+          { key: 'music_video', label: 'Music Video', color: '#8A1A5A' },
         ] as { key: FlagFilter; label: string; color?: string }[]).map(f => (
           <button
             key={f.key}
             onClick={() => setFlagFilter(f.key)}
             style={{
-              background: flagFilter === f.key ? (f.color ? `${f.color}22` : '#1E3A5A') : 'none',
-              border: `1px solid ${flagFilter === f.key ? (f.color || '#4A90B8') : '#1E3A5A'}`,
-              color: flagFilter === f.key ? (f.color || '#4A90B8') : '#4A6A8A',
+              background: flagFilter === f.key ? (f.color ? `${f.color}18` : colors.surfaceAlt) : 'none',
+              border: `1px solid ${flagFilter === f.key ? (f.color || colors.accent) : colors.border}`,
+              color: flagFilter === f.key ? (f.color || colors.accent) : colors.textMuted,
               padding: '5px 14px',
-              fontSize: '12px',
+              fontSize: '11px',
               cursor: 'pointer',
               fontFamily: 'Verdana, sans-serif',
               letterSpacing: '1px',
+              textTransform: 'uppercase',
+              borderRadius: '2px',
+              transition: 'all 150ms ease',
             }}
           >
             {f.label}
@@ -183,31 +247,49 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
         ))}
       </section>
 
-      <section className="vv-registry-body">
+      {/* Registry table */}
+      <section className="vv-registry-body" style={{ background: colors.bg }}>
         <div className="vv-table-scroll">
           <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '24px', minWidth: '560px' }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid #1E3A5A', color: '#4A90B8', fontSize: '11px', letterSpacing: '2px', textAlign: 'left' }}>
-                <th style={{ padding: '16px 12px' }}>#</th>
+              <tr style={{ borderBottom: `1px solid ${colors.border}`, color: colors.textMuted, fontSize: '11px', letterSpacing: '2px', textAlign: 'left' }}>
+                <th style={{ padding: '16px 12px', fontFamily: 'Verdana, sans-serif', fontWeight: 'normal', textTransform: 'uppercase' }}>#</th>
                 <th style={{ padding: '16px 8px', width: '44px' }}></th>
-                <th style={{ padding: '16px 12px' }}>CHASSIS NUMBER</th>
-                <th style={{ padding: '16px 12px' }}>COLOR</th>
-                <th style={{ padding: '16px 12px' }}>MARKET</th>
-                <th style={{ padding: '16px 12px' }}>STATUS</th>
+                <th style={{ padding: '16px 12px', fontFamily: 'Verdana, sans-serif', fontWeight: 'normal', textTransform: 'uppercase' }}>Chassis Number</th>
+                <th style={{ padding: '16px 12px', fontFamily: 'Verdana, sans-serif', fontWeight: 'normal', textTransform: 'uppercase' }}>Color</th>
+                <th style={{ padding: '16px 12px', fontFamily: 'Verdana, sans-serif', fontWeight: 'normal', textTransform: 'uppercase' }}>Market</th>
+                <th style={{ padding: '16px 12px', fontFamily: 'Verdana, sans-serif', fontWeight: 'normal', textTransform: 'uppercase' }}>Status</th>
                 <th style={{ padding: '16px 12px' }}></th>
               </tr>
             </thead>
             <tbody>
-              {filtered.length === 0 ? (
-                <tr><td colSpan={7} style={{ padding: '48px', textAlign: 'center', color: '#4A6A8A' }}>No entries match your filters.</td></tr>
+              {loading ? (
+                Array.from({ length: 6 }).map((_, i) => (
+                  <tr key={i}>
+                    <td colSpan={7} style={{ padding: '0' }}>
+                      <SkeletonRow />
+                    </td>
+                  </tr>
+                ))
+              ) : filtered.length === 0 ? (
+                <tr>
+                  <td colSpan={7} style={{ padding: '48px', textAlign: 'center', color: colors.textMuted, fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
+                    No entries match your filters.
+                  </td>
+                </tr>
               ) : filtered.map((car, i) => {
                 const st = STATUS_STYLE[car.status] ?? STATUS_STYLE.pending;
                 return (
-                  <tr key={car.id} style={{ borderBottom: '1px solid #0D1E36' }}>
-                    <td style={{ padding: '18px 12px', color: '#4A6A8A', fontSize: '13px' }}>{i + 1}</td>
+                  <tr
+                    key={car.id}
+                    style={{ borderBottom: `1px solid ${colors.borderLight}`, transition: 'background 150ms ease' }}
+                    onMouseEnter={e => (e.currentTarget.style.background = colors.surface)}
+                    onMouseLeave={e => (e.currentTarget.style.background = '')}
+                  >
+                    <td style={{ padding: '18px 12px', color: colors.textMuted, fontSize: '13px', fontFamily: 'Verdana, sans-serif' }}>{i + 1}</td>
                     <td style={{ padding: '8px 8px', width: '44px' }}>
                       {thumbnails[car.chassis_number] ? (
-                        <div style={{ width: '36px', height: '28px', overflow: 'hidden', background: '#0A1828', border: '1px solid #1E3A5A' }}>
+                        <div style={{ width: '36px', height: '28px', overflow: 'hidden', background: colors.surfaceAlt, border: `1px solid ${colors.border}` }}>
                           <img
                             src={thumbnails[car.chassis_number]}
                             alt=""
@@ -216,38 +298,38 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
                           />
                         </div>
                       ) : (
-                        <div style={{ width: '36px', height: '28px', background: '#0A1828', border: '1px solid #0D1E36' }} />
+                        <div style={{ width: '36px', height: '28px', background: colors.surfaceAlt, border: `1px solid ${colors.border}` }} />
                       )}
                     </td>
-                    <td style={{ padding: '18px 12px', fontFamily: 'monospace', fontSize: '14px', letterSpacing: '1px' }}>
+                    <td style={{ padding: '18px 12px', fontFamily: 'monospace', fontSize: '14px', letterSpacing: '1px', color: colors.textPrimary }}>
                       {car.chassis_number}
                       {ownedChassis.has(car.chassis_number) && (
-                        <span style={{ marginLeft: '8px', background: '#0D1E36', color: '#4A90B8', padding: '2px 8px', fontSize: '10px', letterSpacing: '1px', verticalAlign: 'middle' }}>
+                        <span style={{ marginLeft: '8px', background: colors.surfaceAlt, color: colors.accentBlue, padding: '2px 8px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', fontFamily: 'Verdana, sans-serif', border: `1px solid ${colors.border}` }}>
                           OWNER
                         </span>
                       )}
                       {car.is_one_off && (
-                        <span title="One-Off" style={{ marginLeft: '6px', background: '#1A0D2A', color: '#B87AE0', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #5A2A8A' }}>1-OFF</span>
+                        <span title="One-Off" style={{ marginLeft: '6px', background: '#F0E8FA', color: '#7A4AB8', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #C8A8E8', fontFamily: 'Verdana, sans-serif' }}>1-OFF</span>
                       )}
                       {car.is_prototype && (
-                        <span title="Prototype" style={{ marginLeft: '6px', background: '#2A1A0D', color: '#E0B87A', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #8A5A2A' }}>PROTO</span>
+                        <span title="Prototype" style={{ marginLeft: '6px', background: '#FBF3E0', color: '#8A6A1A', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #E8C878', fontFamily: 'Verdana, sans-serif' }}>PROTO</span>
                       )}
                       {car.is_film_car && (
-                        <span title="Film Car" style={{ marginLeft: '6px', background: '#0D1A2A', color: '#7AB8E0', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #2A5A8A' }}>FILM</span>
+                        <span title="Film Car" style={{ marginLeft: '6px', background: '#E8F0FA', color: '#1A5A8A', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #A8C8E8', fontFamily: 'Verdana, sans-serif' }}>FILM</span>
                       )}
                       {car.is_music_video_car && (
-                        <span title="Music Video Car" style={{ marginLeft: '6px', background: '#1A0D1A', color: '#E07AB8', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #8A2A5A' }}>MV</span>
+                        <span title="Music Video Car" style={{ marginLeft: '6px', background: '#FAE8F0', color: '#8A1A5A', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #E8A8C8', fontFamily: 'Verdana, sans-serif' }}>MV</span>
                       )}
                     </td>
-                    <td style={{ padding: '18px 12px', color: '#8BA5B8' }}>{car.exterior_color || '—'}</td>
-                    <td style={{ padding: '18px 12px', color: '#8BA5B8' }}>{car.original_market || '—'}</td>
+                    <td style={{ padding: '18px 12px', color: colors.textSecondary, fontFamily: 'Georgia, serif' }}>{car.exterior_color || '—'}</td>
+                    <td style={{ padding: '18px 12px', color: colors.textSecondary, fontFamily: 'Georgia, serif' }}>{car.original_market || '—'}</td>
                     <td style={{ padding: '18px 12px' }}>
-                      <span style={{ background: st.bg, color: st.color, padding: '4px 12px', fontSize: '11px', letterSpacing: '1px' }}>
+                      <span style={{ background: st.bg, color: st.color, padding: '4px 12px', fontSize: '10px', letterSpacing: '1px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>
                         {car.status.toUpperCase()}
                       </span>
                     </td>
                     <td style={{ padding: '18px 12px' }}>
-                      <Link href={`/ferrari/288-gto/${car.chassis_number}`} style={{ color: '#4A90B8', fontSize: '13px', textDecoration: 'none' }}>
+                      <Link href={`/ferrari/288-gto/${car.chassis_number}`} style={{ color: colors.accentBlue, fontSize: '12px', textDecoration: 'none', fontFamily: 'Verdana, sans-serif', letterSpacing: '0.5px' }}>
                         View →
                       </Link>
                     </td>
@@ -257,12 +339,11 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
             </tbody>
           </table>
         </div>
-        <p style={{ color: '#4A6A8A', fontSize: '13px', marginTop: '32px', textAlign: 'center' }}>
+        <p style={{ color: colors.textMuted, fontSize: '13px', marginTop: '32px', textAlign: 'center', fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
           Showing {filtered.length} of {cars.length} submitted chassis.{' '}
-          Help us complete the registry — <Link href="/submit" style={{ color: '#4A90B8' }}>submit a car</Link>.
+          Help us complete the registry — <Link href="/submit" style={{ color: colors.accentBlue }}>submit a car</Link>.
         </p>
       </section>
-
     </main>
   );
 }

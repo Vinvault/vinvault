@@ -1,14 +1,37 @@
 @import "tailwindcss";
 
 :root {
-  --background: #080F1A;
-  --foreground: #E2EEF7;
+  --color-bg: #F8F6F1;
+  --color-surface: #FFFDF8;
+  --color-surface-alt: #F0EBE0;
+  --color-border: #E8E2D8;
+  --color-border-light: #F0EBE8;
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #6A5A4A;
+  --color-text-muted: #9A8A7A;
+  --color-accent: #C9A84C;
+  --color-accent-dark: #A88A3A;
+  --color-accent-navy: #1A1A1A;
+  --color-accent-blue: #1A3A5A;
+  --color-success: #2A7A4A;
+  --color-warning: #C9A84C;
+  --color-error: #8A2A2A;
+  --color-header-bg: #FFFDF8;
+  --color-footer-bg: #1A1A1A;
+
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Verdana, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: Georgia, serif;
 }
 
 html {
@@ -17,12 +40,12 @@ html {
 
 /* ── Skeleton loading animation ── */
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 .vv-skeleton {
-  background: linear-gradient(90deg, #0D1E36 25%, #1E3A5A 50%, #0D1E36 75%);
+  background: linear-gradient(90deg, #F0EBE0 25%, #FAF6EE 50%, #F0EBE0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 2px;
@@ -42,22 +65,27 @@ details > summary::-webkit-details-marker { display: none; }
 details[open] summary span:last-child { content: "−"; }
 details[open] > summary span:last-child::before { content: "−"; }
 
-/* ── Responsive layout utilities ── */
-
+/* ── Header styles ── */
 .vv-header {
-  background: #0A1828;
-  border-bottom: 1px solid #1E3A5A;
-  padding: 18px 40px;
+  background: var(--color-header-bg);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: sticky;
   top: 0;
   z-index: 100;
+  height: 64px;
+  transition: height 200ms ease, box-shadow 200ms ease, background 200ms ease;
+}
+
+.vv-header.vv-header-scrolled {
+  height: 48px;
+  background: rgba(255, 253, 248, 0.95);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  flex-wrap: wrap;
-  gap: 8px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
 }
 
 .vv-nav {
@@ -66,7 +94,7 @@ details[open] > summary span:last-child::before { content: "−"; }
   align-items: center;
 }
 
-/* ── Hamburger menu (AppHeader) ── */
+/* ── Hamburger menu ── */
 .vv-hamburger {
   display: none;
   flex-direction: column;
@@ -83,7 +111,7 @@ details[open] > summary span:last-child::before { content: "−"; }
   display: block;
   width: 22px;
   height: 2px;
-  background: #8BA5B8;
+  background: var(--color-accent);
   transition: transform 0.2s ease, opacity 0.2s ease;
   transform-origin: center;
 }
@@ -92,10 +120,33 @@ details[open] > summary span:last-child::before { content: "−"; }
 .vv-hline-open-2 { opacity: 0; }
 .vv-hline-open-3 { transform: translateY(-7px) rotate(-45deg); }
 
+/* ── Mobile overlay menu ── */
+.vv-mobile-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 26, 26, 0.95);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 32px;
+  transform: translateY(-100%);
+  transition: transform 300ms ease;
+}
+
+.vv-mobile-overlay.vv-mobile-overlay-open {
+  transform: translateY(0);
+}
+
+/* ── Bottom nav ── */
+.vv-bottom-nav {
+  display: none;
+}
+
+/* ── Hero ── */
 .vv-hero {
   text-align: center;
   padding: 90px 40px 72px;
-  border-bottom: 1px solid #1E3A5A;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .vv-h1-hero {
@@ -104,11 +155,12 @@ details[open] > summary span:last-child::before { content: "−"; }
   line-height: 1.1;
   margin: 0 auto 20px;
   max-width: 760px;
+  font-family: Georgia, serif;
 }
 
 .vv-stats-bar {
-  background: #0A1828;
-  border-bottom: 1px solid #1E3A5A;
+  background: var(--color-surface-alt);
+  border-bottom: 1px solid var(--color-border);
   padding: 28px 40px;
   display: flex;
   justify-content: center;
@@ -123,7 +175,7 @@ details[open] > summary span:last-child::before { content: "−"; }
 }
 
 .vv-section-full {
-  border-top: 1px solid #1E3A5A;
+  border-top: 1px solid var(--color-border);
   padding: 64px 40px;
 }
 
@@ -140,12 +192,12 @@ details[open] > summary span:last-child::before { content: "−"; }
 
 .vv-registry-header {
   padding: 60px 40px 40px;
-  border-bottom: 1px solid #1E3A5A;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .vv-registry-filters {
   padding: 24px 40px;
-  border-bottom: 1px solid #1E3A5A;
+  border-bottom: 1px solid var(--color-border);
   display: flex;
   gap: 16px;
   align-items: center;
@@ -157,22 +209,24 @@ details[open] > summary span:last-child::before { content: "−"; }
 }
 
 .vv-progress-bar-wrap {
-  background: #0D1E36;
+  background: var(--color-surface-alt);
   height: 6px;
   border-radius: 3px;
   margin-top: 28px;
 }
 
+/* ── Footer ── */
 .vv-footer {
-  border-top: 1px solid #1E3A5A;
-  padding: 28px 40px;
+  background: var(--color-footer-bg);
+  border-top: none;
+  padding: 48px 40px 32px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  color: #4A6A8A;
-  font-size: 13px;
-  flex-wrap: wrap;
-  gap: 12px;
+  gap: 24px;
+  color: #9A8A7A;
+  font-size: 12px;
+  font-family: Verdana, sans-serif;
 }
 
 .vv-form-container {
@@ -187,10 +241,26 @@ details[open] > summary span:last-child::before { content: "−"; }
   padding: 60px 40px;
 }
 
+/* ── Card hover animations ── */
+.vv-card {
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+  border-radius: 0;
+}
+
+.vv-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  border-color: var(--color-accent) !important;
+}
+
 @media (max-width: 768px) {
   .vv-header {
-    padding: 14px 16px;
-    gap: 0;
+    padding: 0 16px;
+    height: 52px !important;
+  }
+
+  .vv-header.vv-header-scrolled {
+    height: 52px !important;
   }
 
   .vv-hamburger {
@@ -199,28 +269,10 @@ details[open] > summary span:last-child::before { content: "−"; }
 
   .vv-nav {
     display: none;
-    width: 100%;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
-    border-top: 1px solid #1E3A5A;
-    margin-top: 8px;
-    padding-top: 8px;
-    padding-bottom: 4px;
   }
 
-  .vv-nav.vv-nav-open {
+  .vv-bottom-nav {
     display: flex;
-  }
-
-  .vv-nav a, .vv-nav button {
-    padding: 10px 4px !important;
-    border: none !important;
-    border-bottom: 1px solid #0D1E36 !important;
-    width: 100%;
-    text-align: left;
-    font-size: 14px !important;
-    display: block;
   }
 
   .vv-hero {
@@ -263,7 +315,7 @@ details[open] > summary span:last-child::before { content: "−"; }
   }
 
   .vv-footer {
-    padding: 24px 16px;
+    padding: 40px 16px 100px;
     justify-content: center;
     text-align: center;
   }
@@ -276,61 +328,54 @@ details[open] > summary span:last-child::before { content: "−"; }
     padding: 40px 16px;
   }
 
-  /* Car detail page on mobile */
   .vv-car-detail {
     padding: 24px 16px !important;
   }
 
-  /* Hero section on mobile */
   .vv-chassis-hero {
     padding: 32px 16px 24px !important;
   }
 
-  /* Admin container */
   .vv-admin-container {
     padding: 24px 16px 0 !important;
   }
 
-  /* Breadcrumb responsive */
   nav[aria-label="Breadcrumb"],
   div[style*="14px 40px"] {
     padding-left: 16px !important;
     padding-right: 16px !important;
   }
 
-  /* Ensure images don't overflow */
   img {
     max-width: 100%;
   }
 
-  /* Make sure tables scroll */
   table {
     min-width: 480px;
   }
 
-  /* Prevent iOS Safari from zooming in on focused inputs */
   input, select, textarea {
     font-size: 16px !important;
   }
 
-  /* Spotters two-column → single column */
   .vv-spotters-grid {
     grid-template-columns: 1fr !important;
   }
 
-  /* Spotting detail two-column → single column */
   .vv-spotting-detail-grid {
     grid-template-columns: 1fr !important;
   }
 
-  /* Spotting breadcrumb padding */
   .vv-spotting-breadcrumb {
     padding-left: 16px !important;
     padding-right: 16px !important;
   }
 
-  /* Spotting detail page padding */
   .vv-spotting-page {
     padding: 32px 16px !important;
+  }
+
+  body {
+    padding-bottom: 56px;
   }
 }

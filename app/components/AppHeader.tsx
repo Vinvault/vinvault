@@ -1,8 +1,10 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 import { VERSION } from "@/app/version";
+import { colors } from "./ui/tokens";
 
 const NAV = [
   { href: "/ferrari/288-gto", label: "Registry" },
@@ -14,7 +16,9 @@ const NAV = [
 export default function AppHeader({ adminBadge = false }: { adminBadge?: boolean }) {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const supabase = createSupabaseBrowserClient();
@@ -41,79 +45,186 @@ export default function AppHeader({ adminBadge = false }: { adminBadge?: boolean
     return () => subscription.unsubscribe();
   }, []);
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
+
   const handleSignOut = () => {
     createSupabaseBrowserClient().auth.signOut().then(() => { window.location.href = "/"; });
   };
 
+  const navLinkStyle = (href: string): React.CSSProperties => ({
+    fontFamily: 'Verdana, sans-serif',
+    fontSize: '11px',
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
+    color: pathname === href || pathname.startsWith(href + '/') ? colors.accent : colors.textSecondary,
+    textDecoration: 'none',
+    padding: '4px 12px',
+    borderBottom: pathname === href || pathname.startsWith(href + '/') ? `2px solid ${colors.accent}` : '2px solid transparent',
+    transition: 'color 150ms ease, border-color 150ms ease',
+  });
+
   const authBtnStyle: React.CSSProperties = {
     background: "none",
-    border: "1px solid #4A90B8",
-    color: "#4A90B8",
-    padding: "6px 14px",
-    fontSize: "13px",
+    border: `1px solid ${colors.accentNavy}`,
+    color: colors.accentNavy,
+    padding: "7px 18px",
+    fontSize: "10px",
     cursor: "pointer",
     fontFamily: "Verdana, sans-serif",
     textDecoration: "none",
-    letterSpacing: "0.5px",
+    letterSpacing: "1px",
+    textTransform: "uppercase",
+    borderRadius: 0,
   };
 
   return (
-    <header className="vv-header">
-      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "baseline", gap: "10px" }}>
-          <span style={{ fontSize: "24px", fontWeight: "bold" }}>
-            <span style={{ color: "#4A90B8" }}>Vin</span><span style={{ color: "#E2EEF7" }}>Vault</span>
+    <>
+      <header className={`vv-header${scrolled ? " vv-header-scrolled" : ""}`}>
+        {/* Logo */}
+        <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "baseline", gap: "8px" }}>
+          <span style={{
+            fontSize: scrolled ? "16px" : "20px",
+            fontFamily: "Georgia, serif",
+            fontWeight: "bold",
+            transition: "font-size 200ms ease",
+          }}>
+            <span style={{ color: colors.accent }}>Vin</span>
+            <span style={{ color: colors.textPrimary }}>Vault</span>
           </span>
-          <span style={{ color: "#4A90B8", fontSize: "10px", letterSpacing: "4px" }}>REGISTRY</span>
-          <span style={{ color: "#E2EEF7", fontSize: "14px", fontFamily: "Verdana, sans-serif", fontWeight: "normal", letterSpacing: "0" }}>{VERSION}</span>
+          <span style={{
+            color: colors.textMuted,
+            fontSize: "9px",
+            fontFamily: "Verdana, sans-serif",
+            letterSpacing: "3px",
+            textTransform: "uppercase",
+          }}>
+            REGISTRY · {VERSION}
+          </span>
+          {adminBadge && (
+            <span style={{ color: colors.error, fontSize: "9px", letterSpacing: "2px", fontFamily: "Verdana, sans-serif" }}>ADMIN</span>
+          )}
         </Link>
-        {adminBadge && (
-          <span style={{ color: "#E07070", fontSize: "10px", letterSpacing: "2px", marginLeft: "8px" }}>ADMIN</span>
-        )}
+
+        {/* Desktop nav */}
+        <nav className="vv-nav" style={{ fontSize: "13px" }}>
+          {NAV.map((item) => (
+            <Link key={item.href} href={item.href} style={navLinkStyle(item.href)}>
+              {item.label}
+            </Link>
+          ))}
+
+          {userEmail ? (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "2px", marginLeft: "8px" }}>
+              <button onClick={handleSignOut} style={authBtnStyle}>Sign Out</button>
+              {username && (
+                <span style={{ color: colors.textMuted, fontSize: "10px", fontFamily: "Verdana, sans-serif" }}>
+                  {username}
+                </span>
+              )}
+            </div>
+          ) : (
+            <Link href="/login" style={{ ...authBtnStyle, marginLeft: "8px" }}>Sign In</Link>
+          )}
+        </nav>
+
+        {/* Mobile hamburger */}
+        <button
+          className="vv-hamburger"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Toggle menu"
+          aria-expanded={mobileOpen}
+        >
+          <span className={`vv-hline${mobileOpen ? " vv-hline-open-1" : ""}`} />
+          <span className={`vv-hline${mobileOpen ? " vv-hline-open-2" : ""}`} />
+          <span className={`vv-hline${mobileOpen ? " vv-hline-open-3" : ""}`} />
+        </button>
+      </header>
+
+      {/* Mobile overlay */}
+      <div className={`vv-mobile-overlay${mobileOpen ? " vv-mobile-overlay-open" : ""}`} aria-hidden={!mobileOpen}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "48px" }}>
+          <span style={{ fontFamily: "Georgia, serif", fontSize: "20px", fontWeight: "bold" }}>
+            <span style={{ color: colors.accent }}>Vin</span>
+            <span style={{ color: "#FFFDF8" }}>Vault</span>
+          </span>
+          <button
+            onClick={() => setMobileOpen(false)}
+            style={{ background: "none", border: "none", cursor: "pointer", color: "#FFFDF8", fontSize: "28px", lineHeight: 1, padding: "4px 8px" }}
+            aria-label="Close menu"
+          >
+            ×
+          </button>
+        </div>
+
+        <nav style={{ display: "flex", flexDirection: "column", gap: "8px", flex: 1 }}>
+          {NAV.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setMobileOpen(false)}
+              style={{
+                fontFamily: "Georgia, serif",
+                fontSize: "24px",
+                color: pathname === item.href || pathname.startsWith(item.href + '/') ? colors.accent : "#FFFDF8",
+                textDecoration: "none",
+                padding: "12px 0",
+                borderBottom: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+              {item.label}
+            </Link>
+          ))}
+          <Link
+            href="/spot"
+            onClick={() => setMobileOpen(false)}
+            style={{
+              fontFamily: "Georgia, serif",
+              fontSize: "24px",
+              color: pathname === "/spot" ? colors.accent : "#FFFDF8",
+              textDecoration: "none",
+              padding: "12px 0",
+              borderBottom: "1px solid rgba(255,255,255,0.08)",
+            }}
+          >
+            Spot a Car
+          </Link>
+        </nav>
+
+        <div style={{ marginTop: "auto", paddingTop: "32px" }}>
+          {userEmail ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <span style={{ color: colors.textMuted, fontSize: "12px", fontFamily: "Verdana, sans-serif" }}>{username}</span>
+              <button
+                onClick={() => { handleSignOut(); setMobileOpen(false); }}
+                style={{ ...authBtnStyle, border: `1px solid ${colors.accent}`, color: colors.accent, width: "100%", textAlign: "center" }}
+              >
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              onClick={() => setMobileOpen(false)}
+              style={{ ...authBtnStyle, display: "block", textAlign: "center", border: `1px solid ${colors.accent}`, color: colors.accent }}
+            >
+              Sign In
+            </Link>
+          )}
+        </div>
       </div>
-
-      <button
-        className="vv-hamburger"
-        onClick={() => setMenuOpen(!menuOpen)}
-        aria-label="Toggle menu"
-        aria-expanded={menuOpen}
-      >
-        <span className={`vv-hline${menuOpen ? " vv-hline-open-1" : ""}`} />
-        <span className={`vv-hline${menuOpen ? " vv-hline-open-2" : ""}`} />
-        <span className={`vv-hline${menuOpen ? " vv-hline-open-3" : ""}`} />
-      </button>
-
-      <nav className={`vv-nav${menuOpen ? " vv-nav-open" : ""}`} style={{ fontSize: "13px" }}>
-        {NAV.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            onClick={() => setMenuOpen(false)}
-            style={{ color: "#8BA5B8", textDecoration: "none", padding: "6px 12px" }}
-          >
-            {item.label}
-          </Link>
-        ))}
-
-        {userEmail ? (
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" }}>
-            <button onClick={handleSignOut} style={authBtnStyle}>Sign Out</button>
-            {username && (
-              <span style={{ color: "#E2EEF7", fontSize: "11px", letterSpacing: "0.5px" }}>
-                {username}
-              </span>
-            )}
-          </div>
-        ) : (
-          <Link
-            href="/login"
-            onClick={() => setMenuOpen(false)}
-            style={authBtnStyle}
-          >
-            Sign In
-          </Link>
-        )}
-      </nav>
-    </header>
+    </>
   );
 }
