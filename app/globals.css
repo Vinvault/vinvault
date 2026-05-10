@@ -253,6 +253,62 @@ details[open] > summary span:last-child::before { content: "−"; }
   border-color: var(--color-accent) !important;
 }
 
+@media (hover: none) and (pointer: coarse) {
+  .vv-card:active {
+    transform: scale(0.98);
+    transition: transform 100ms ease;
+  }
+  .vv-card {
+    transition: transform 150ms ease, box-shadow 200ms ease, border-color 200ms ease;
+  }
+}
+
+/* ── Live ticker ── */
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.vv-ticker-inner {
+  display: flex;
+  width: max-content;
+  animation: ticker 30s linear infinite;
+  white-space: nowrap;
+}
+
+.vv-ticker-inner:hover {
+  animation-play-state: paused;
+}
+
+/* ── Progress bar transition ── */
+.vv-progress-fill {
+  transition: width 800ms ease-out;
+}
+
+/* ── Homepage responsive grids ── */
+.vv-hero-grid {
+  grid-template-columns: 1fr 340px !important;
+}
+
+.vv-split-grid {
+  grid-template-columns: 1fr 1fr !important;
+}
+
+@media (max-width: 900px) {
+  .vv-hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+
+  .vv-hero-grid > div:first-child {
+    padding-right: 0 !important;
+  }
+
+  .vv-split-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 @media (max-width: 768px) {
   .vv-header {
     padding: 0 16px;
