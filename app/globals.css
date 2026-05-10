@@ -285,6 +285,20 @@ details[open] > summary span:last-child::before { content: "−"; }
   transition: width 800ms ease-out;
 }
 
+/* ── Swipe action row ── */
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.vv-swipe-actions {
+  animation: slideInRight 200ms ease forwards;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .vv-swipe-hint { display: block !important; }
+}
+
 /* ── Homepage responsive grids ── */
 .vv-hero-grid {
   grid-template-columns: 1fr 340px !important;

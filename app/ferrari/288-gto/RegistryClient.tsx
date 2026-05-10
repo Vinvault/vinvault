@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { SkeletonRow } from "@/app/components/ui/Skeleton";
 import { colors } from "@/app/components/ui/tokens";
 
@@ -43,6 +43,175 @@ const selectStyle: React.CSSProperties = {
   color: colors.textSecondary,
 };
 
+/* ── Per-row component so hooks can be called legally ── */
+function RegistryRow({
+  car, index, thumbnails, ownedChassis, onSave, saved,
+}: {
+  car: Submission;
+  index: number;
+  thumbnails: Record<string, string>;
+  ownedChassis: Set<string>;
+  onSave: (c: string) => void;
+  saved: boolean;
+}) {
+  const [swipeOpen, setSwipeOpen] = useState(false);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+  const st = STATUS_STYLE[car.status] ?? STATUS_STYLE.pending;
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const dx = touchStartX.current - e.changedTouches[0].clientX;
+    const dy = Math.abs(touchStartY.current - e.changedTouches[0].clientY);
+    if (dx > 60 && dy < 40) setSwipeOpen(true);
+    else if (dx < -20) setSwipeOpen(false);
+  };
+
+  return (
+    <>
+      <tr
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        style={{
+          borderBottom: swipeOpen ? 'none' : `1px solid ${colors.borderLight}`,
+          borderLeft: swipeOpen ? `3px solid ${colors.accent}` : '3px solid transparent',
+          transition: 'background 150ms ease, border-color 150ms ease',
+        }}
+        onMouseEnter={e => (e.currentTarget.style.background = colors.surface)}
+        onMouseLeave={e => (e.currentTarget.style.background = '')}
+      >
+        <td style={{ padding: '18px 12px', color: colors.textMuted, fontSize: '13px', fontFamily: 'Verdana, sans-serif' }}>{index + 1}</td>
+        <td style={{ padding: '8px 8px', width: '44px' }}>
+          {thumbnails[car.chassis_number] ? (
+            <div style={{ width: '36px', height: '28px', overflow: 'hidden', background: colors.surfaceAlt, border: `1px solid ${colors.border}` }}>
+              <img
+                src={thumbnails[car.chassis_number]}
+                alt=""
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                loading="lazy"
+              />
+            </div>
+          ) : (
+            <div style={{ width: '36px', height: '28px', background: colors.surfaceAlt, border: `1px solid ${colors.border}` }} />
+          )}
+        </td>
+        <td style={{ padding: '18px 12px', fontFamily: 'monospace', fontSize: '14px', letterSpacing: '1px', color: colors.textPrimary }}>
+          {car.chassis_number}
+          {ownedChassis.has(car.chassis_number) && (
+            <span style={{ marginLeft: '8px', background: colors.surfaceAlt, color: colors.accentBlue, padding: '2px 8px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', fontFamily: 'Verdana, sans-serif', border: `1px solid ${colors.border}` }}>
+              OWNER
+            </span>
+          )}
+          {car.is_one_off && (
+            <span title="One-Off" style={{ marginLeft: '6px', background: '#F0E8FA', color: '#7A4AB8', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #C8A8E8', fontFamily: 'Verdana, sans-serif' }}>1-OFF</span>
+          )}
+          {car.is_prototype && (
+            <span title="Prototype" style={{ marginLeft: '6px', background: '#FBF3E0', color: '#8A6A1A', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #E8C878', fontFamily: 'Verdana, sans-serif' }}>PROTO</span>
+          )}
+          {car.is_film_car && (
+            <span title="Film Car" style={{ marginLeft: '6px', background: '#E8F0FA', color: '#1A5A8A', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #A8C8E8', fontFamily: 'Verdana, sans-serif' }}>FILM</span>
+          )}
+          {car.is_music_video_car && (
+            <span title="Music Video Car" style={{ marginLeft: '6px', background: '#FAE8F0', color: '#8A1A5A', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #E8A8C8', fontFamily: 'Verdana, sans-serif' }}>MV</span>
+          )}
+        </td>
+        <td style={{ padding: '18px 12px', color: colors.textSecondary, fontFamily: 'Georgia, serif' }}>{car.exterior_color || '—'}</td>
+        <td style={{ padding: '18px 12px', color: colors.textSecondary, fontFamily: 'Georgia, serif' }}>{car.original_market || '—'}</td>
+        <td style={{ padding: '18px 12px' }}>
+          <span style={{ background: st.bg, color: st.color, padding: '4px 12px', fontSize: '10px', letterSpacing: '1px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>
+            {car.status.toUpperCase()}
+          </span>
+        </td>
+        <td style={{ padding: '18px 12px' }}>
+          <Link href={`/ferrari/288-gto/${car.chassis_number}`} style={{ color: colors.accentBlue, fontSize: '12px', textDecoration: 'none', fontFamily: 'Verdana, sans-serif', letterSpacing: '0.5px' }}>
+            View →
+          </Link>
+        </td>
+      </tr>
+      {swipeOpen && (
+        <tr style={{ borderBottom: `1px solid ${colors.borderLight}`, borderLeft: `3px solid ${colors.accent}` }}>
+          <td colSpan={7} style={{ padding: '0', background: colors.surface }}>
+            <div className="vv-swipe-actions" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => { onSave(car.chassis_number); setSwipeOpen(false); }}
+                style={{
+                  background: saved ? colors.accentDark : colors.accent,
+                  color: colors.accentNavy,
+                  padding: '14px 24px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontFamily: 'Verdana, sans-serif',
+                  fontSize: '11px',
+                  letterSpacing: '1px',
+                  textTransform: 'uppercase',
+                  fontWeight: 'bold',
+                }}
+              >
+                {saved ? '✓ Saved' : '♥ Save'}
+              </button>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(`https://www.vinvault.net/ferrari/288-gto/${car.chassis_number}`).catch(() => {});
+                  setSwipeOpen(false);
+                }}
+                style={{
+                  background: '#2A2A2A',
+                  color: '#FFFDF8',
+                  padding: '14px 24px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontFamily: 'Verdana, sans-serif',
+                  fontSize: '11px',
+                  letterSpacing: '1px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Share
+              </button>
+              <a
+                href={`/spot?make=Ferrari&model=288GTO&chassis=${encodeURIComponent(car.chassis_number)}`}
+                style={{
+                  background: colors.accent,
+                  color: colors.accentNavy,
+                  padding: '14px 24px',
+                  textDecoration: 'none',
+                  fontFamily: 'Verdana, sans-serif',
+                  fontSize: '11px',
+                  letterSpacing: '1px',
+                  textTransform: 'uppercase',
+                  fontWeight: 'bold',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                }}
+              >
+                Spot
+              </a>
+              <button
+                onClick={() => setSwipeOpen(false)}
+                style={{
+                  background: colors.surfaceAlt,
+                  color: colors.textMuted,
+                  padding: '14px 16px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontFamily: 'Verdana, sans-serif',
+                  fontSize: '13px',
+                }}
+              >
+                ✕
+              </button>
+            </div>
+          </td>
+        </tr>
+      )}
+    </>
+  );
+}
+
 export default function RegistryClient({ cars, ownedChassis = new Set<string>() }: { cars: Submission[]; ownedChassis?: Set<string> }) {
   const [query, setQuery] = useState('');
   const [thumbnails, setThumbnails] = useState<Record<string, string>>({});
@@ -50,6 +219,18 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
   const [market, setMarket] = useState('');
   const [status, setStatus] = useState('');
   const [flagFilter, setFlagFilter] = useState<FlagFilter>('all');
+  const [savedCars, setSavedCars] = useState<Set<string>>(new Set());
+  const [saveNotice, setSaveNotice] = useState<string | null>(null);
+
+  const handleSave = (chassis: string) => {
+    setSavedCars(prev => {
+      const next = new Set(prev);
+      next.add(chassis);
+      return next;
+    });
+    setSaveNotice(chassis);
+    setTimeout(() => setSaveNotice(null), 2000);
+  };
 
   useEffect(() => {
     fetch('/api/chassis-thumbnails')
@@ -82,6 +263,19 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
 
   return (
     <main style={{ background: colors.bg, color: colors.textPrimary, fontFamily: 'Georgia, serif', minHeight: '100vh' }}>
+      {/* Save notice toast */}
+      {saveNotice && (
+        <div style={{
+          position: 'fixed', bottom: '80px', left: '50%', transform: 'translateX(-50%)',
+          background: colors.accentNavy, color: '#FFFDF8',
+          padding: '12px 24px', fontSize: '12px', letterSpacing: '1px',
+          fontFamily: 'Verdana, sans-serif', zIndex: 200,
+          boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+        }}>
+          ✓ {saveNotice} saved
+        </div>
+      )}
+
       {/* Registry header */}
       <section className="vv-registry-header" style={{ background: colors.surface }}>
         <p style={{ color: colors.accent, letterSpacing: '3px', fontSize: '11px', marginBottom: '16px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>
@@ -249,6 +443,19 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
 
       {/* Registry table */}
       <section className="vv-registry-body" style={{ background: colors.bg }}>
+        {/* Mobile swipe hint — only shown on touch devices */}
+        <p style={{
+          display: 'none',
+          color: colors.textMuted,
+          fontSize: '11px',
+          letterSpacing: '1px',
+          fontFamily: 'Verdana, sans-serif',
+          marginTop: '16px',
+          marginBottom: '4px',
+          textAlign: 'right',
+        }} className="vv-swipe-hint">
+          ← swipe row for actions
+        </p>
         <div className="vv-table-scroll">
           <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '24px', minWidth: '560px' }}>
             <thead>
@@ -277,65 +484,17 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
                     No entries match your filters.
                   </td>
                 </tr>
-              ) : filtered.map((car, i) => {
-                const st = STATUS_STYLE[car.status] ?? STATUS_STYLE.pending;
-                return (
-                  <tr
-                    key={car.id}
-                    style={{ borderBottom: `1px solid ${colors.borderLight}`, transition: 'background 150ms ease' }}
-                    onMouseEnter={e => (e.currentTarget.style.background = colors.surface)}
-                    onMouseLeave={e => (e.currentTarget.style.background = '')}
-                  >
-                    <td style={{ padding: '18px 12px', color: colors.textMuted, fontSize: '13px', fontFamily: 'Verdana, sans-serif' }}>{i + 1}</td>
-                    <td style={{ padding: '8px 8px', width: '44px' }}>
-                      {thumbnails[car.chassis_number] ? (
-                        <div style={{ width: '36px', height: '28px', overflow: 'hidden', background: colors.surfaceAlt, border: `1px solid ${colors.border}` }}>
-                          <img
-                            src={thumbnails[car.chassis_number]}
-                            alt=""
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            loading="lazy"
-                          />
-                        </div>
-                      ) : (
-                        <div style={{ width: '36px', height: '28px', background: colors.surfaceAlt, border: `1px solid ${colors.border}` }} />
-                      )}
-                    </td>
-                    <td style={{ padding: '18px 12px', fontFamily: 'monospace', fontSize: '14px', letterSpacing: '1px', color: colors.textPrimary }}>
-                      {car.chassis_number}
-                      {ownedChassis.has(car.chassis_number) && (
-                        <span style={{ marginLeft: '8px', background: colors.surfaceAlt, color: colors.accentBlue, padding: '2px 8px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', fontFamily: 'Verdana, sans-serif', border: `1px solid ${colors.border}` }}>
-                          OWNER
-                        </span>
-                      )}
-                      {car.is_one_off && (
-                        <span title="One-Off" style={{ marginLeft: '6px', background: '#F0E8FA', color: '#7A4AB8', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #C8A8E8', fontFamily: 'Verdana, sans-serif' }}>1-OFF</span>
-                      )}
-                      {car.is_prototype && (
-                        <span title="Prototype" style={{ marginLeft: '6px', background: '#FBF3E0', color: '#8A6A1A', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #E8C878', fontFamily: 'Verdana, sans-serif' }}>PROTO</span>
-                      )}
-                      {car.is_film_car && (
-                        <span title="Film Car" style={{ marginLeft: '6px', background: '#E8F0FA', color: '#1A5A8A', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #A8C8E8', fontFamily: 'Verdana, sans-serif' }}>FILM</span>
-                      )}
-                      {car.is_music_video_car && (
-                        <span title="Music Video Car" style={{ marginLeft: '6px', background: '#FAE8F0', color: '#8A1A5A', padding: '2px 6px', fontSize: '9px', letterSpacing: '1px', verticalAlign: 'middle', border: '1px solid #E8A8C8', fontFamily: 'Verdana, sans-serif' }}>MV</span>
-                      )}
-                    </td>
-                    <td style={{ padding: '18px 12px', color: colors.textSecondary, fontFamily: 'Georgia, serif' }}>{car.exterior_color || '—'}</td>
-                    <td style={{ padding: '18px 12px', color: colors.textSecondary, fontFamily: 'Georgia, serif' }}>{car.original_market || '—'}</td>
-                    <td style={{ padding: '18px 12px' }}>
-                      <span style={{ background: st.bg, color: st.color, padding: '4px 12px', fontSize: '10px', letterSpacing: '1px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>
-                        {car.status.toUpperCase()}
-                      </span>
-                    </td>
-                    <td style={{ padding: '18px 12px' }}>
-                      <Link href={`/ferrari/288-gto/${car.chassis_number}`} style={{ color: colors.accentBlue, fontSize: '12px', textDecoration: 'none', fontFamily: 'Verdana, sans-serif', letterSpacing: '0.5px' }}>
-                        View →
-                      </Link>
-                    </td>
-                  </tr>
-                );
-              })}
+              ) : filtered.map((car, i) => (
+                <RegistryRow
+                  key={car.id}
+                  car={car}
+                  index={i}
+                  thumbnails={thumbnails}
+                  ownedChassis={ownedChassis}
+                  onSave={handleSave}
+                  saved={savedCars.has(car.chassis_number)}
+                />
+              ))}
             </tbody>
           </table>
         </div>

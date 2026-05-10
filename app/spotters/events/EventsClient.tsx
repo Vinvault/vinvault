@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useState, useMemo } from "react";
+import { colors } from "@/app/components/ui/tokens";
+
 interface SpotterEvent {
   id: string;
   name: string;
@@ -32,14 +34,24 @@ const COUNTRIES = [
 ];
 
 const inputStyle: React.CSSProperties = {
-  background: "#0D1E36", border: "1px solid #1E3A5A",
-  color: "#E2EEF7", padding: "10px 14px", fontSize: "13px",
-  fontFamily: "Verdana, sans-serif", boxSizing: "border-box",
+  background: colors.surface,
+  border: `1px solid ${colors.border}`,
+  color: colors.textPrimary,
+  padding: '10px 14px',
+  fontSize: '13px',
+  fontFamily: 'Georgia, serif',
+  boxSizing: 'border-box',
+  outline: 'none',
 };
 
 const labelStyle: React.CSSProperties = {
-  display: "block", color: "#8BA5B8", fontSize: "11px",
-  letterSpacing: "2px", marginBottom: "8px",
+  display: 'block',
+  color: colors.textMuted,
+  fontSize: '11px',
+  letterSpacing: '2px',
+  marginBottom: '8px',
+  fontFamily: 'Verdana, sans-serif',
+  textTransform: 'uppercase',
 };
 
 function formatDate(d: string) {
@@ -48,41 +60,41 @@ function formatDate(d: string) {
 
 function EventCard({ ev }: { ev: SpotterEvent }) {
   return (
-    <div style={{ background: "#080F1A", padding: "24px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "16px", flexWrap: "wrap" }}>
+    <div style={{ background: colors.surface, padding: '24px', borderLeft: `3px solid ${colors.accent}` }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <h3 style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "6px" }}>{ev.name}</h3>
-          <p style={{ color: "#8BA5B8", fontSize: "13px", marginBottom: "6px" }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '6px' }}>{ev.name}</h3>
+          <p style={{ color: colors.textSecondary, fontSize: '13px', marginBottom: '6px', fontFamily: 'Verdana, sans-serif' }}>
             {ev.town ? `${ev.town}, ` : ""}{ev.location_name}{ev.country ? `, ${ev.country}` : ""}
           </p>
           {ev.expected_makes && (
-            <p style={{ color: "#4A90B8", fontSize: "12px", marginBottom: "6px" }}>
+            <p style={{ color: colors.accentBlue, fontSize: '12px', marginBottom: '6px', fontFamily: 'Verdana, sans-serif' }}>
               {ev.expected_makes}
             </p>
           )}
           {ev.description && (
-            <p style={{ color: "#4A6A8A", fontSize: "12px", lineHeight: "1.6", marginBottom: "8px" }}>{ev.description}</p>
+            <p style={{ color: colors.textMuted, fontSize: '12px', lineHeight: '1.6', marginBottom: '8px' }}>{ev.description}</p>
           )}
-          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center", marginTop: "8px" }}>
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center', marginTop: '8px' }}>
             {ev.host_name && (
-              <span style={{ color: "#8BA5B8", fontSize: "12px" }}>
+              <span style={{ color: colors.textSecondary, fontSize: '12px', fontFamily: 'Verdana, sans-serif' }}>
                 By{" "}
                 {ev.host_url ? (
-                  <a href={ev.host_url} target="_blank" rel="noopener noreferrer" style={{ color: "#4A90B8", textDecoration: "none" }}>{ev.host_name}</a>
+                  <a href={ev.host_url} target="_blank" rel="noopener noreferrer" style={{ color: colors.accentBlue, textDecoration: 'none' }}>{ev.host_name}</a>
                 ) : ev.host_name}
               </span>
             )}
             {ev.event_url && (
               <a href={ev.event_url} target="_blank" rel="noopener noreferrer"
-                style={{ color: "#4A90B8", fontSize: "12px", textDecoration: "none", border: "1px solid #1E3A5A", padding: "3px 10px" }}>
+                style={{ color: colors.accentBlue, fontSize: '12px', textDecoration: 'none', border: `1px solid ${colors.border}`, padding: '3px 10px', fontFamily: 'Verdana, sans-serif' }}>
                 View Event →
               </a>
             )}
           </div>
         </div>
-        <div style={{ textAlign: "right", flexShrink: 0 }}>
-          <div style={{ color: "#4A90B8", fontWeight: "bold", fontSize: "14px" }}>{formatDate(ev.event_date)}</div>
-          {ev.event_time && <div style={{ color: "#4A6A8A", fontSize: "12px", marginTop: "4px" }}>{ev.event_time}</div>}
+        <div style={{ textAlign: 'right', flexShrink: 0 }}>
+          <div style={{ color: colors.accent, fontWeight: 'bold', fontSize: '14px', fontFamily: 'Verdana, sans-serif' }}>{formatDate(ev.event_date)}</div>
+          {ev.event_time && <div style={{ color: colors.textMuted, fontSize: '12px', marginTop: '4px', fontFamily: 'Verdana, sans-serif' }}>{ev.event_time}</div>}
         </div>
       </div>
     </div>
@@ -92,14 +104,12 @@ function EventCard({ ev }: { ev: SpotterEvent }) {
 export default function EventsClient({ upcoming, past }: Props) {
   const allEvents = [...upcoming, ...past];
 
-  // Filter state
   const [search, setSearch] = useState("");
   const [countryFilter, setCountryFilter] = useState("");
   const [townFilter, setTownFilter] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
-  // Form state
   const [showForm, setShowForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -112,7 +122,6 @@ export default function EventsClient({ upcoming, past }: Props) {
 
   const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
 
-  // Derive country list from events data
   const availableCountries = useMemo(() => {
     const s = new Set(allEvents.map(e => e.country).filter(Boolean));
     return Array.from(s).sort();
@@ -184,132 +193,132 @@ export default function EventsClient({ upcoming, past }: Props) {
   );
 
   return (
-    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
+    <main style={{ background: colors.bg, color: colors.textPrimary, fontFamily: 'Georgia, serif', minHeight: '100vh' }}>
       {/* Header */}
-      <section style={{ padding: "60px 40px 48px", borderBottom: "1px solid #1E3A5A" }}>
-        <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>
-          <Link href="/spotters" style={{ color: "#4A6A8A", textDecoration: "none" }}>SPOTTERS</Link>
-          {" / "}EVENTS
+      <section style={{ padding: '60px 40px 48px', borderBottom: `1px solid ${colors.border}`, background: colors.surface }}>
+        <p style={{ color: colors.accent, letterSpacing: '3px', fontSize: '11px', marginBottom: '16px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>
+          <Link href="/spotters" style={{ color: colors.textMuted, textDecoration: 'none' }}>Spotters</Link>
+          {" / "}Events
         </p>
-        <h1 style={{ fontSize: "42px", fontWeight: "bold", marginBottom: "16px" }}>Spotter Events</h1>
-        <p style={{ color: "#8BA5B8", fontSize: "15px", maxWidth: "560px", lineHeight: "1.7" }}>
+        <h1 style={{ fontSize: '42px', fontWeight: 'bold', marginBottom: '16px' }}>Spotter Events</h1>
+        <p style={{ color: colors.textSecondary, fontSize: '15px', maxWidth: '560px', lineHeight: '1.7' }}>
           Cars &amp; Coffee meetups, track days, and rallies where rare cars gather.
           Know of an event? Submit it for the community.
         </p>
       </section>
 
-      <div style={{ maxWidth: "900px", margin: "0 auto", padding: "32px 40px" }}>
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '32px 40px' }}>
 
         {/* Filters */}
-        <div style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "20px 24px", marginBottom: "32px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "12px", marginBottom: "12px" }}>
+        <div style={{ background: colors.surface, border: `1px solid ${colors.border}`, padding: '20px 24px', marginBottom: '32px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '12px', marginBottom: '12px' }}>
             <div>
-              <label style={labelStyle}>SEARCH</label>
+              <label style={labelStyle}>Search</label>
               <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Ferrari, Cars & Coffee…"
-                style={{ ...inputStyle, width: "100%" }} />
+                style={{ ...inputStyle, width: '100%' }} />
             </div>
             <div>
-              <label style={labelStyle}>TOWN / CITY</label>
+              <label style={labelStyle}>Town / City</label>
               <input value={townFilter} onChange={e => setTownFilter(e.target.value)} placeholder="Monaco, Maranello…"
-                style={{ ...inputStyle, width: "100%" }} />
+                style={{ ...inputStyle, width: '100%' }} />
             </div>
             <div>
-              <label style={labelStyle}>COUNTRY</label>
+              <label style={labelStyle}>Country</label>
               <select value={countryFilter} onChange={e => setCountryFilter(e.target.value)}
-                style={{ ...inputStyle, width: "100%", color: countryFilter ? "#E2EEF7" : "#4A6A8A" }}>
+                style={{ ...inputStyle, width: '100%', color: countryFilter ? colors.textPrimary : colors.textMuted }}>
                 <option value="">All countries</option>
                 {availableCountries.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <div>
-              <label style={labelStyle}>FROM DATE</label>
+              <label style={labelStyle}>From Date</label>
               <input type="date" value={fromDate} onChange={e => setFromDate(e.target.value)}
-                style={{ ...inputStyle, width: "100%", colorScheme: "dark" }} />
+                style={{ ...inputStyle, width: '100%' }} />
             </div>
             <div>
-              <label style={labelStyle}>TO DATE</label>
+              <label style={labelStyle}>To Date</label>
               <input type="date" value={toDate} onChange={e => setToDate(e.target.value)}
-                style={{ ...inputStyle, width: "100%", colorScheme: "dark" }} />
+                style={{ ...inputStyle, width: '100%' }} />
             </div>
           </div>
           {hasFilters && (
-            <button onClick={clearFilters} style={{ background: "none", border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "6px 14px", fontSize: "11px", cursor: "pointer", fontFamily: "Verdana, sans-serif", letterSpacing: "1px" }}>
+            <button onClick={clearFilters} style={{ background: 'none', border: `1px solid ${colors.border}`, color: colors.textMuted, padding: '6px 14px', fontSize: '11px', cursor: 'pointer', fontFamily: 'Verdana, sans-serif', letterSpacing: '1px' }}>
               × Clear Filters
             </button>
           )}
         </div>
 
         {/* Upcoming events */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "8px" }}>
-          <h2 style={{ fontSize: "11px", letterSpacing: "3px", color: "#4A90B8" }}>
-            UPCOMING EVENTS {hasFilters ? `(${filteredUpcoming.length} of ${upcoming.length})` : `(${upcoming.length})`}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
+          <h2 style={{ fontSize: '11px', letterSpacing: '3px', color: colors.accent, fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase', fontWeight: 'normal' }}>
+            Upcoming Events {hasFilters ? `(${filteredUpcoming.length} of ${upcoming.length})` : `(${upcoming.length})`}
           </h2>
         </div>
         {filteredUpcoming.length === 0 ? (
-          <div style={{ border: "1px solid #1E3A5A", padding: "48px", textAlign: "center", color: "#4A6A8A", marginBottom: "40px" }}>
+          <div style={{ border: `1px solid ${colors.border}`, padding: '48px', textAlign: 'center', color: colors.textMuted, marginBottom: '40px', fontFamily: 'Verdana, sans-serif', fontSize: '13px' }}>
             {hasFilters ? "No events match your filters." : "No upcoming events yet. Be the first to submit one."}
           </div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "1px", background: "#1E3A5A", marginBottom: "40px" }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: colors.border, marginBottom: '40px' }}>
             {filteredUpcoming.map(ev => <EventCard key={ev.id} ev={ev} />)}
           </div>
         )}
 
         {/* Submit event */}
-        <div style={{ borderTop: "1px solid #1E3A5A", paddingTop: "40px", marginBottom: "40px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-            <h2 style={{ fontSize: "11px", letterSpacing: "3px", color: "#4A90B8" }}>SUBMIT AN EVENT</h2>
+        <div style={{ borderTop: `1px solid ${colors.border}`, paddingTop: '40px', marginBottom: '40px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <h2 style={{ fontSize: '11px', letterSpacing: '3px', color: colors.accent, fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase', fontWeight: 'normal' }}>Submit an Event</h2>
             {!showForm && !submitted && (
-              <button onClick={() => setShowForm(true)} style={{ background: "#4A90B8", color: "#fff", border: "none", padding: "10px 20px", fontSize: "13px", cursor: "pointer", fontFamily: "Verdana, sans-serif", letterSpacing: "1px" }}>
+              <button onClick={() => setShowForm(true)} style={{ background: colors.accentNavy, color: '#FFFDF8', border: 'none', padding: '10px 20px', fontSize: '11px', cursor: 'pointer', fontFamily: 'Verdana, sans-serif', letterSpacing: '1px', textTransform: 'uppercase' }}>
                 + Submit Event
               </button>
             )}
           </div>
 
           {submitted ? (
-            <div style={{ background: "#0A1828", border: "1px solid #4AB87A", padding: "24px", color: "#4AB87A", fontSize: "14px" }}>
+            <div style={{ background: '#E8F4EC', border: `1px solid ${colors.success}`, padding: '24px', color: colors.success, fontSize: '14px', fontFamily: 'Verdana, sans-serif' }}>
               Thank you! We will review your submission within 48 hours.
             </div>
           ) : showForm && (
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-                {fieldInput("EVENT NAME", "name", "Cars & Coffee Monaco", true)}
-                {fieldInput("DATE", "event_date", "", true, "date")}
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                {fieldInput("Event Name", "name", "Cars & Coffee Monaco", true)}
+                {fieldInput("Date", "event_date", "", true, "date")}
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "20px" }}>
-                {fieldInput("TOWN / CITY", "town", "Monaco")}
-                {fieldInput("LOCATION / VENUE", "location_name", "Port Hercule", true)}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px' }}>
+                {fieldInput("Town / City", "town", "Monaco")}
+                {fieldInput("Location / Venue", "location_name", "Port Hercule", true)}
                 <div>
-                  <label style={labelStyle}>COUNTRY *</label>
+                  <label style={labelStyle}>Country *</label>
                   <select value={form.country} onChange={e => set("country", e.target.value)}
-                    style={{ ...inputStyle, width: "100%", color: form.country ? "#E2EEF7" : "#4A6A8A" }}>
+                    style={{ ...inputStyle, width: '100%', color: form.country ? colors.textPrimary : colors.textMuted }}>
                     <option value="">Select country…</option>
                     {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-                {fieldInput("HOST NAME", "host_name", "Monaco Supercar Club", true)}
-                {fieldInput("TIME", "event_time", "09:00 – 12:00")}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                {fieldInput("Host Name", "host_name", "Monaco Supercar Club", true)}
+                {fieldInput("Time", "event_time", "09:00 – 12:00")}
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-                {fieldInput("HOST WEBSITE", "host_url", "https://example.com")}
-                {fieldInput("EVENT PAGE / FACEBOOK / INSTAGRAM", "event_url", "https://facebook.com/event/...")}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                {fieldInput("Host Website", "host_url", "https://example.com")}
+                {fieldInput("Event Page / Facebook / Instagram", "event_url", "https://facebook.com/event/...")}
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-                {fieldInput("EXPECTED MAKES", "expected_makes", "Ferrari, Lamborghini, McLaren")}
-                {fieldInput("YOUR EMAIL", "organizer_email", "organizer@example.com", false, "email")}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                {fieldInput("Expected Makes", "expected_makes", "Ferrari, Lamborghini, McLaren")}
+                {fieldInput("Your Email", "organizer_email", "organizer@example.com", false, "email")}
               </div>
               <div>
-                <label style={labelStyle}>DESCRIPTION</label>
+                <label style={labelStyle}>Description</label>
                 <textarea value={form.description} onChange={e => set("description", e.target.value)} rows={3}
                   placeholder="What's special about this event? What cars are expected?"
-                  style={{ ...inputStyle, width: "100%", resize: "vertical" }} />
+                  style={{ ...inputStyle, width: '100%', resize: 'vertical' }} />
               </div>
-              {error && <p style={{ color: "#E07070", fontSize: "13px" }}>{error}</p>}
+              {error && <p style={{ color: colors.error, fontSize: '13px', fontFamily: 'Verdana, sans-serif' }}>{error}</p>}
               <button type="submit" disabled={submitting}
-                style={{ background: submitting ? "#1E3A5A" : "#4A90B8", color: "#fff", border: "none", padding: "14px 28px", fontSize: "13px", cursor: submitting ? "not-allowed" : "pointer", fontFamily: "Verdana, sans-serif", letterSpacing: "1px", alignSelf: "flex-start" }}>
-                {submitting ? "Submitting…" : "Submit for Review"}
+                style={{ background: submitting ? colors.textMuted : colors.accentNavy, color: '#FFFDF8', border: 'none', padding: '14px 28px', fontSize: '11px', cursor: submitting ? 'not-allowed' : 'pointer', fontFamily: 'Verdana, sans-serif', letterSpacing: '1px', textTransform: 'uppercase', alignSelf: 'flex-start' }}>
+                {submitting ? 'Submitting…' : 'Submit for Review'}
               </button>
             </form>
           )}
@@ -317,17 +326,16 @@ export default function EventsClient({ upcoming, past }: Props) {
 
         {/* Past events */}
         {filteredPast.length > 0 && (
-          <div style={{ borderTop: "1px solid #1E3A5A", paddingTop: "40px" }}>
-            <h2 style={{ fontSize: "11px", letterSpacing: "3px", color: "#4A6A8A", marginBottom: "20px" }}>
-              PAST EVENTS {hasFilters ? `(${filteredPast.length} of ${past.length})` : `(${past.length})`}
+          <div style={{ borderTop: `1px solid ${colors.border}`, paddingTop: '40px' }}>
+            <h2 style={{ fontSize: '11px', letterSpacing: '3px', color: colors.textMuted, marginBottom: '20px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase', fontWeight: 'normal' }}>
+              Past Events {hasFilters ? `(${filteredPast.length} of ${past.length})` : `(${past.length})`}
             </h2>
-            <div style={{ display: "flex", flexDirection: "column", gap: "1px", background: "#1E3A5A" }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: colors.border }}>
               {filteredPast.map(ev => <EventCard key={ev.id} ev={ev} />)}
             </div>
           </div>
         )}
       </div>
-
     </main>
   );
 }
