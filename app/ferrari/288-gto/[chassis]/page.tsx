@@ -1,13 +1,14 @@
 export const dynamic = "force-dynamic";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ShareButton, PrintButton } from "./ChassisActions";
+import { ShareButton, PrintButton, ChassisCardButton } from "./ChassisActions";
 import ChassisComments from "./ChassisComments";
 import ChassisPhotos from "./ChassisPhotos";
 import ClaimButton from "./ClaimButton";
 import WatchButton from "./WatchButton";
 import SightingsSection from "./SightingsSection";
 import RegistryEnrichForm from "./RegistryEnrichForm";
+import OwnershipTimeline from "@/app/components/OwnershipTimeline";
 import { colors } from "@/app/components/ui/tokens";
 
 const BASE = "https://www.vinvault.net";
@@ -221,6 +222,7 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
             <WatchButton chassis={car.chassis_number} />
             <ClaimButton chassis={car.chassis_number} />
             <ShareButton chassis={car.chassis_number} />
+            <ChassisCardButton chassis={car.chassis_number} />
             <PrintButton />
           </div>
         </div>
@@ -310,6 +312,14 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
             )}
           </div>
         )}
+
+        {/* Ownership Timeline */}
+        <div style={{ marginBottom: "32px", borderTop: `1px solid ${colors.border}`, paddingTop: "32px" }}>
+          <OwnershipTimeline
+            chassisNumber={car.chassis_number}
+            productionYear={car.production_date ? parseInt(car.production_date.slice(0, 4)) : 1984}
+          />
+        </div>
 
         {/* Auction History placeholder */}
         <div style={{ marginBottom: "32px" }}>
