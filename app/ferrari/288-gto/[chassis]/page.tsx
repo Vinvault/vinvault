@@ -9,6 +9,7 @@ import WatchButton from "./WatchButton";
 import SightingsSection from "./SightingsSection";
 import RegistryEnrichForm from "./RegistryEnrichForm";
 import OwnershipTimeline from "@/app/components/OwnershipTimeline";
+import ChassisMiniHeader from "./ChassisMiniHeader";
 import { colors } from "@/app/components/ui/tokens";
 
 const BASE = "https://www.vinvault.net";
@@ -174,6 +175,7 @@ export default async function CarPage({ params }: { params: Promise<{ chassis: s
 
   return (
     <main style={{ background: colors.bg, color: colors.textPrimary, fontFamily: "Georgia, serif", minHeight: "100vh" }}>
+      <ChassisMiniHeader chassis={car.chassis_number} color={car.exterior_color} market={car.original_market} />
       {jsonLd && (
         <script
           type="application/ld+json"

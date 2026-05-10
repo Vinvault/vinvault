@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 import { colors } from "@/app/components/ui/tokens";
+import PullToRefresh from "@/app/components/PullToRefresh";
 
 interface Make { id: string | null; name: string; }
 interface Model { id: string; model: string; make: string; }
@@ -414,6 +415,7 @@ export default function SpotForm() {
 
   return (
     <main style={{ background: colors.bg, color: colors.textPrimary, fontFamily: 'Georgia, serif', minHeight: '100vh' }}>
+      <PullToRefresh />
       <div className="vv-form-container">
         <p style={{ color: colors.accent, letterSpacing: '3px', fontSize: '11px', marginBottom: '16px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>Car Spotter</p>
         <h1 style={{ fontSize: '36px', fontWeight: 'bold', marginBottom: '12px' }}>Spot a car</h1>
