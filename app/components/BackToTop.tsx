@@ -21,9 +21,9 @@ export default function BackToTop() {
         bottom: "80px",
         right: "24px",
         zIndex: 900,
-        background: "#0A1828",
-        border: "1px solid #1E3A5A",
-        color: "#4A90B8",
+        background: "#FFFDF8",
+        border: "1px solid #E8E2D8",
+        color: "#C9A84C",
         width: "44px",
         height: "44px",
         display: "flex",
@@ -34,8 +34,8 @@ export default function BackToTop() {
         fontFamily: "Verdana, sans-serif",
         transition: "border-color 0.2s",
       }}
-      onMouseEnter={(e) => (e.currentTarget.style.borderColor = "#4A90B8")}
-      onMouseLeave={(e) => (e.currentTarget.style.borderColor = "#1E3A5A")}
+      onMouseEnter={(e) => (e.currentTarget.style.borderColor = "#C9A84C")}
+      onMouseLeave={(e) => (e.currentTarget.style.borderColor = "#E8E2D8")}
     >
       ↑
     </button>

@@ -22,7 +22,7 @@ export default function NewsletterForm() {
 
   if (status === "success") {
     return (
-      <div style={{ color: "#4AB87A", fontSize: "15px", padding: "16px", border: "1px solid #4AB87A", background: "#0D2A1A" }}>
+      <div style={{ color: "#4AB87A", fontSize: "15px", padding: "16px", border: "1px solid #4AB87A", background: "#E8F4EC" }}>
         ✓ You're subscribed. We'll let you know when new records are added.
       </div>
     );
@@ -38,10 +38,10 @@ export default function NewsletterForm() {
         required
         style={{
           flex: 1,
-          background: "#0D1E36",
-          border: "1px solid #1E3A5A",
+          background: "#F8F6F1",
+          border: "1px solid #E8E2D8",
           borderRight: "none",
-          color: "#E2EEF7",
+          color: "#1A1A1A",
           padding: "12px 16px",
           fontSize: "14px",
           fontFamily: "Verdana, sans-serif",
@@ -53,7 +53,7 @@ export default function NewsletterForm() {
         type="submit"
         disabled={status === "loading"}
         style={{
-          background: status === "loading" ? "#2A4A6A" : "#4A90B8",
+          background: status === "loading" ? "#A88A3A" : "#C9A84C",
           border: "none",
           color: "#fff",
           padding: "12px 24px",

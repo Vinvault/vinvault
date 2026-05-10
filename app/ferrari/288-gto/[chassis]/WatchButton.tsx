@@ -36,9 +36,9 @@ export default function WatchButton({ chassis }: { chassis: string }) {
   return (
     <button onClick={toggle}
       style={{
-        border: `1px solid ${watching ? "#4AB87A" : "#1E3A5A"}`,
-        color: watching ? "#4AB87A" : "#8BA5B8",
-        background: watching ? "#0D2A1A" : "none",
+        border: `1px solid ${watching ? "#4AB87A" : "#E8E2D8"}`,
+        color: watching ? "#4AB87A" : "#6A5A4A",
+        background: watching ? "#E8F4EC" : "none",
         padding: "8px 20px", fontSize: "12px", letterSpacing: "1px",
         cursor: "pointer", fontFamily: "Verdana, sans-serif",
       }}>

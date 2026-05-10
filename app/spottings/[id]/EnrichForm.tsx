@@ -56,12 +56,12 @@ export default function EnrichForm({ sightingId, missingPlate, missingVin, missi
   }
 
   const inp: React.CSSProperties = {
-    flex: 1, background: "#0D1E36", border: "1px solid #1E3A5A",
-    color: "#E2EEF7", padding: "10px 14px", fontSize: "13px",
+    flex: 1, background: "#F8F6F1", border: "1px solid #E8E2D8",
+    color: "#1A1A1A", padding: "10px 14px", fontSize: "13px",
     fontFamily: "Verdana, sans-serif", outline: "none",
   };
   const btn: React.CSSProperties = {
-    background: "#0A1828", border: "1px solid #4A90B8", color: "#4A90B8",
+    background: "#FFFDF8", border: "1px solid #C9A84C", color: "#C9A84C",
     padding: "10px 16px", fontSize: "12px", cursor: "pointer",
     fontFamily: "Verdana, sans-serif", letterSpacing: "1px", flexShrink: 0,
   };
@@ -86,14 +86,14 @@ export default function EnrichForm({ sightingId, missingPlate, missingVin, missi
   if (items.length === 0 && !anyDone) return null;
 
   return (
-    <div style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "24px" }}>
-      <p style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "6px" }}>COMMUNITY ENRICHMENT</p>
-      <p style={{ color: "#8BA5B8", fontSize: "13px", lineHeight: "1.6", marginBottom: "20px" }}>
+    <div style={{ background: "#FFFDF8", border: "1px solid #E8E2D8", padding: "24px" }}>
+      <p style={{ color: "#C9A84C", fontSize: "11px", letterSpacing: "3px", marginBottom: "6px" }}>COMMUNITY ENRICHMENT</p>
+      <p style={{ color: "#6A5A4A", fontSize: "13px", lineHeight: "1.6", marginBottom: "20px" }}>
         Help complete this record and earn points.
       </p>
 
       {anyDone && (
-        <div style={{ background: "#0D2A1A", border: "1px solid #1E5A3A", padding: "12px 16px", marginBottom: "16px" }}>
+        <div style={{ background: "#E8F4EC", border: "1px solid #1E5A3A", padding: "12px 16px", marginBottom: "16px" }}>
           <p style={{ color: "#4AB87A", fontSize: "13px" }}>Thanks for contributing! Points added to your profile.</p>
         </div>
       )}
@@ -101,7 +101,7 @@ export default function EnrichForm({ sightingId, missingPlate, missingVin, missi
       <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
         {items.map(item => (
           <div key={item.key}>
-            <p style={{ color: "#E2EEF7", fontSize: "13px", marginBottom: "8px" }}>
+            <p style={{ color: "#1A1A1A", fontSize: "13px", marginBottom: "8px" }}>
               {item.label} — <span style={{ color: "#4AB87A", fontWeight: "bold" }}>+{item.pts} pts</span>
             </p>
             {errors[item.key] && (

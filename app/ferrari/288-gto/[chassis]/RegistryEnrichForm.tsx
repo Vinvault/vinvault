@@ -63,16 +63,16 @@ export default function RegistryEnrichForm({ chassis, emptyFields }: Props) {
   }
 
   return (
-    <div style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "24px" }}>
-      <p style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "6px" }}>ADD DETAILS — EARN POINTS</p>
-      <p style={{ color: "#8BA5B8", fontSize: "13px", lineHeight: "1.6", marginBottom: "20px" }}>
+    <div style={{ background: "#FFFDF8", border: "1px solid #E8E2D8", padding: "24px" }}>
+      <p style={{ color: "#C9A84C", fontSize: "11px", letterSpacing: "3px", marginBottom: "6px" }}>ADD DETAILS — EARN POINTS</p>
+      <p style={{ color: "#6A5A4A", fontSize: "13px", lineHeight: "1.6", marginBottom: "20px" }}>
         Help complete this chassis record. Each field earns <span style={{ color: "#4AB87A" }}>+20 points</span>.
       </p>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
         {fields.map(field => (
           <div key={field.key}>
-            <p style={{ color: "#E2EEF7", fontSize: "12px", letterSpacing: "1px", marginBottom: "6px" }}>
+            <p style={{ color: "#1A1A1A", fontSize: "12px", letterSpacing: "1px", marginBottom: "6px" }}>
               {field.label.toUpperCase()}
             </p>
             {errors[field.key] && (
@@ -84,7 +84,7 @@ export default function RegistryEnrichForm({ chassis, emptyFields }: Props) {
                 value={inputs[field.key] || ""}
                 onChange={e => setInputs(i => ({ ...i, [field.key]: e.target.value }))}
                 placeholder={field.placeholder}
-                style={{ flex: 1, background: "#0D1E36", border: "1px solid #1E3A5A", color: "#E2EEF7", padding: "10px 14px", fontSize: "13px", fontFamily: "Verdana, sans-serif", outline: "none" }}
+                style={{ flex: 1, background: "#F8F6F1", border: "1px solid #E8E2D8", color: "#1A1A1A", padding: "10px 14px", fontSize: "13px", fontFamily: "Verdana, sans-serif", outline: "none" }}
                 disabled={submitting === field.key}
                 onKeyDown={e => e.key === "Enter" && submit(field.key)}
               />
@@ -92,7 +92,7 @@ export default function RegistryEnrichForm({ chassis, emptyFields }: Props) {
                 type="button"
                 onClick={() => submit(field.key)}
                 disabled={submitting === field.key || !inputs[field.key]?.trim()}
-                style={{ background: "#0A1828", border: "1px solid #4A90B8", color: "#4A90B8", padding: "10px 16px", fontSize: "12px", cursor: "pointer", fontFamily: "Verdana, sans-serif", letterSpacing: "1px", flexShrink: 0, opacity: inputs[field.key]?.trim() ? 1 : 0.5 }}
+                style={{ background: "#FFFDF8", border: "1px solid #C9A84C", color: "#C9A84C", padding: "10px 16px", fontSize: "12px", cursor: "pointer", fontFamily: "Verdana, sans-serif", letterSpacing: "1px", flexShrink: 0, opacity: inputs[field.key]?.trim() ? 1 : 0.5 }}
               >
                 {submitting === field.key ? "..." : "+20"}
               </button>

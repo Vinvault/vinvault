@@ -113,10 +113,10 @@ export default async function SpottingPage({ params }: { params: Promise<{ id: s
 
   if (!s) {
     return (
-      <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <main style={{ background: "#F8F6F1", color: "#1A1A1A", fontFamily: "Verdana, sans-serif", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ textAlign: "center", padding: "60px 20px" }}>
           <h1 style={{ fontSize: "24px", marginBottom: "16px" }}>Spotting not found</h1>
-          <Link href="/spotters" style={{ color: "#4A90B8" }}>Back to Spotters</Link>
+          <Link href="/spotters" style={{ color: "#C9A84C" }}>Back to Spotters</Link>
         </div>
       </main>
     );
@@ -138,11 +138,11 @@ export default async function SpottingPage({ params }: { params: Promise<{ id: s
   const timeStr = date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
 
   return (
-    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
+    <main style={{ background: "#F8F6F1", color: "#1A1A1A", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
       {/* Breadcrumb */}
-      <div className="vv-spotting-breadcrumb" style={{ padding: "16px 40px", borderBottom: "1px solid #1E3A5A" }}>
-        <p style={{ color: "#4A6A8A", fontSize: "12px" }}>
-          <Link href="/spotters" style={{ color: "#4A90B8", textDecoration: "none" }}>Spotters</Link>
+      <div className="vv-spotting-breadcrumb" style={{ padding: "16px 40px", borderBottom: "1px solid #E8E2D8" }}>
+        <p style={{ color: "#9A8A7A", fontSize: "12px" }}>
+          <Link href="/spotters" style={{ color: "#C9A84C", textDecoration: "none" }}>Spotters</Link>
           {" / "}
           <span>{makeName} {modelName}</span>
         </p>
@@ -152,9 +152,9 @@ export default async function SpottingPage({ params }: { params: Promise<{ id: s
 
         {/* Header */}
         <div style={{ marginBottom: "32px" }}>
-          <p style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "8px" }}>SPOTTING RECORD</p>
+          <p style={{ color: "#C9A84C", fontSize: "11px", letterSpacing: "3px", marginBottom: "8px" }}>SPOTTING RECORD</p>
           <h1 style={{ fontSize: "32px", fontWeight: "bold", marginBottom: "8px" }}>{makeName} {modelName}</h1>
-          <p style={{ color: "#8BA5B8", fontSize: "14px" }}>{s.location_name}, {s.country} · {dateStr} at {timeStr}</p>
+          <p style={{ color: "#6A5A4A", fontSize: "14px" }}>{s.location_name}, {s.country} · {dateStr} at {timeStr}</p>
         </div>
 
         {/* Photo gallery */}
@@ -162,12 +162,12 @@ export default async function SpottingPage({ params }: { params: Promise<{ id: s
 
         {/* VIN unknown banner */}
         {missingVin && (
-          <div style={{ background: "#1A1200", border: "1px solid #8A6A00", padding: "16px 20px", marginBottom: "24px", display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
+          <div style={{ background: "#FFFBE8", border: "1px solid #8A6A00", padding: "16px 20px", marginBottom: "24px", display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
             <p style={{ color: "#E0C060", fontSize: "13px", flex: 1, margin: 0 }}>
               VIN not yet identified — look it up and earn 50 points.
             </p>
             <Link href="/vin-lookup"
-              style={{ background: "#2A2000", border: "1px solid #8A6A00", color: "#E0C060", padding: "8px 16px", textDecoration: "none", fontSize: "12px", letterSpacing: "1px", flexShrink: 0 }}>
+              style={{ background: "#FBF3E0", border: "1px solid #8A6A00", color: "#E0C060", padding: "8px 16px", textDecoration: "none", fontSize: "12px", letterSpacing: "1px", flexShrink: 0 }}>
               VIN LOOKUP →
             </Link>
           </div>
@@ -177,7 +177,7 @@ export default async function SpottingPage({ params }: { params: Promise<{ id: s
 
           {/* Left: details */}
           <div>
-            <h2 style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "20px", borderBottom: "1px solid #1E3A5A", paddingBottom: "12px" }}>DETAILS</h2>
+            <h2 style={{ color: "#C9A84C", fontSize: "11px", letterSpacing: "3px", marginBottom: "20px", borderBottom: "1px solid #E8E2D8", paddingBottom: "12px" }}>DETAILS</h2>
 
             <DetailRow label="Car" value={`${makeName} ${modelName}`} />
             <DetailRow label="Spotted" value={`${dateStr}, ${timeStr}`} />
@@ -198,15 +198,15 @@ export default async function SpottingPage({ params }: { params: Promise<{ id: s
             )}
             {s.notes && (
               <div style={{ marginBottom: "16px" }}>
-                <p style={{ color: "#4A6A8A", fontSize: "11px", letterSpacing: "1px", marginBottom: "4px" }}>NOTES</p>
-                <p style={{ color: "#E2EEF7", fontSize: "13px", lineHeight: "1.7" }}>{s.notes}</p>
+                <p style={{ color: "#9A8A7A", fontSize: "11px", letterSpacing: "1px", marginBottom: "4px" }}>NOTES</p>
+                <p style={{ color: "#1A1A1A", fontSize: "13px", lineHeight: "1.7" }}>{s.notes}</p>
               </div>
             )}
 
             {registryChassis && (
               <div style={{ marginTop: "20px" }}>
                 <Link href={`/ferrari/288-gto/${s.chassis_number}`}
-                  style={{ background: "#0A1828", border: "1px solid #4A90B8", color: "#4A90B8", padding: "10px 20px", textDecoration: "none", fontSize: "13px", letterSpacing: "1px", display: "inline-block" }}>
+                  style={{ background: "#FFFDF8", border: "1px solid #C9A84C", color: "#C9A84C", padding: "10px 20px", textDecoration: "none", fontSize: "13px", letterSpacing: "1px", display: "inline-block" }}>
                   VIEW FULL REGISTRY ENTRY →
                 </Link>
               </div>
@@ -215,19 +215,19 @@ export default async function SpottingPage({ params }: { params: Promise<{ id: s
 
           {/* Right: status & enrichment */}
           <div>
-            <h2 style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "20px", borderBottom: "1px solid #1E3A5A", paddingBottom: "12px" }}>STATUS</h2>
+            <h2 style={{ color: "#C9A84C", fontSize: "11px", letterSpacing: "3px", marginBottom: "20px", borderBottom: "1px solid #E8E2D8", paddingBottom: "12px" }}>STATUS</h2>
 
-            <div style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "16px 20px", marginBottom: "24px" }}>
+            <div style={{ background: "#FFFDF8", border: "1px solid #E8E2D8", padding: "16px 20px", marginBottom: "24px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-                <span style={{ color: "#8BA5B8", fontSize: "11px", letterSpacing: "1px" }}>CONFIDENCE</span>
+                <span style={{ color: "#6A5A4A", fontSize: "11px", letterSpacing: "1px" }}>CONFIDENCE</span>
                 <span style={{ fontSize: "18px", fontWeight: "bold", color: s.confidence_score >= 70 ? "#4AB87A" : s.confidence_score >= 40 ? "#B8944A" : "#E07070" }}>
                   {s.confidence_score}/100
                 </span>
               </div>
-              <div style={{ background: "#0D1E36", height: "4px", borderRadius: "2px" }}>
+              <div style={{ background: "#F8F6F1", height: "4px", borderRadius: "2px" }}>
                 <div style={{ height: "4px", borderRadius: "2px", width: `${s.confidence_score}%`, background: s.confidence_score >= 70 ? "#4AB87A" : s.confidence_score >= 40 ? "#B8944A" : "#E07070" }} />
               </div>
-              <p style={{ color: "#4A6A8A", fontSize: "11px", marginTop: "8px" }}>
+              <p style={{ color: "#9A8A7A", fontSize: "11px", marginTop: "8px" }}>
                 {s.status === "approved" ? "Verified — live on map" : s.status === "pending_community" ? "Awaiting community confirmation" : "Under review"}
               </p>
             </div>
@@ -244,11 +244,11 @@ export default async function SpottingPage({ params }: { params: Promise<{ id: s
         </div>
 
         {/* Bottom nav */}
-        <div style={{ marginTop: "48px", paddingTop: "24px", borderTop: "1px solid #1E3A5A", display: "flex", gap: "16px", flexWrap: "wrap" }}>
-          <Link href="/spot" style={{ background: "#4A90B8", color: "#fff", padding: "10px 24px", textDecoration: "none", fontSize: "13px", letterSpacing: "1px" }}>
+        <div style={{ marginTop: "48px", paddingTop: "24px", borderTop: "1px solid #E8E2D8", display: "flex", gap: "16px", flexWrap: "wrap" }}>
+          <Link href="/spot" style={{ background: "#C9A84C", color: "#fff", padding: "10px 24px", textDecoration: "none", fontSize: "13px", letterSpacing: "1px" }}>
             + SUBMIT A SPOTTING
           </Link>
-          <Link href="/spotters" style={{ border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "10px 24px", textDecoration: "none", fontSize: "13px", letterSpacing: "1px" }}>
+          <Link href="/spotters" style={{ border: "1px solid #E8E2D8", color: "#6A5A4A", padding: "10px 24px", textDecoration: "none", fontSize: "13px", letterSpacing: "1px" }}>
             LEADERBOARD
           </Link>
         </div>
@@ -260,13 +260,13 @@ export default async function SpottingPage({ params }: { params: Promise<{ id: s
 function DetailRow({ label, value, href, mono }: { label: string; value: string; href?: string; mono?: boolean }) {
   return (
     <div style={{ marginBottom: "14px" }}>
-      <p style={{ color: "#4A6A8A", fontSize: "11px", letterSpacing: "1px", marginBottom: "2px" }}>{label.toUpperCase()}</p>
+      <p style={{ color: "#9A8A7A", fontSize: "11px", letterSpacing: "1px", marginBottom: "2px" }}>{label.toUpperCase()}</p>
       {href ? (
-        <Link href={href} style={{ color: "#4A90B8", fontSize: "13px", textDecoration: "none", fontFamily: mono ? "monospace" : "inherit" }}>
+        <Link href={href} style={{ color: "#C9A84C", fontSize: "13px", textDecoration: "none", fontFamily: mono ? "monospace" : "inherit" }}>
           {value}
         </Link>
       ) : (
-        <p style={{ color: "#E2EEF7", fontSize: "13px", fontFamily: mono ? "monospace" : "inherit" }}>{value}</p>
+        <p style={{ color: "#1A1A1A", fontSize: "13px", fontFamily: mono ? "monospace" : "inherit" }}>{value}</p>
       )}
     </div>
   );
@@ -276,17 +276,17 @@ function PhotoGallery({ photos, alt }: { photos: string[]; alt: string }) {
   if (photos.length === 1) {
     return (
       <div style={{ marginBottom: "32px" }}>
-        <img src={photos[0]} alt={alt} style={{ width: "100%", maxHeight: "480px", objectFit: "cover", border: "1px solid #1E3A5A" }} />
+        <img src={photos[0]} alt={alt} style={{ width: "100%", maxHeight: "480px", objectFit: "cover", border: "1px solid #E8E2D8" }} />
       </div>
     );
   }
   return (
     <div style={{ marginBottom: "32px" }}>
-      <img src={photos[0]} alt={alt} style={{ width: "100%", maxHeight: "420px", objectFit: "cover", border: "1px solid #1E3A5A", marginBottom: "8px" }} />
+      <img src={photos[0]} alt={alt} style={{ width: "100%", maxHeight: "420px", objectFit: "cover", border: "1px solid #E8E2D8", marginBottom: "8px" }} />
       <div style={{ display: "flex", gap: "8px", overflowX: "auto" }}>
         {photos.slice(1).map((src, i) => (
           <img key={i} src={src} alt={`${alt} ${i + 2}`}
-            style={{ height: "90px", width: "120px", objectFit: "cover", border: "1px solid #1E3A5A", flexShrink: 0 }} />
+            style={{ height: "90px", width: "120px", objectFit: "cover", border: "1px solid #E8E2D8", flexShrink: 0 }} />
         ))}
       </div>
     </div>

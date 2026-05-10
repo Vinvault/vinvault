@@ -1,11 +1,11 @@
 export default function RegistryLoading() {
   return (
-    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
+    <main style={{ background: "#F8F6F1", color: "#1A1A1A", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
       {/* Header skeleton */}
-      <div style={{ background: "#0A1828", borderBottom: "1px solid #1E3A5A", padding: "18px 40px", height: "61px" }} />
+      <div style={{ background: "#FFFDF8", borderBottom: "1px solid #E8E2D8", padding: "18px 40px", height: "61px" }} />
 
       {/* Hero skeleton */}
-      <section style={{ padding: "60px 40px 40px", borderBottom: "1px solid #1E3A5A" }}>
+      <section style={{ padding: "60px 40px 40px", borderBottom: "1px solid #E8E2D8" }}>
         <div className="vv-skeleton" style={{ height: "12px", width: "120px", marginBottom: "16px" }} />
         <div className="vv-skeleton" style={{ height: "40px", width: "320px", marginBottom: "16px" }} />
         <div className="vv-skeleton" style={{ height: "16px", width: "500px", marginBottom: "8px" }} />
@@ -21,7 +21,7 @@ export default function RegistryLoading() {
       </section>
 
       {/* Filter skeleton */}
-      <div style={{ padding: "24px 40px", borderBottom: "1px solid #1E3A5A", display: "flex", gap: "16px" }}>
+      <div style={{ padding: "24px 40px", borderBottom: "1px solid #E8E2D8", display: "flex", gap: "16px" }}>
         <div className="vv-skeleton" style={{ height: "40px", width: "240px" }} />
         <div className="vv-skeleton" style={{ height: "40px", width: "140px" }} />
         <div className="vv-skeleton" style={{ height: "40px", width: "140px" }} />
@@ -30,7 +30,7 @@ export default function RegistryLoading() {
       {/* Table skeleton */}
       <section style={{ padding: "24px 40px 60px" }}>
         {[1, 2, 3, 4, 5].map(i => (
-          <div key={i} style={{ display: "flex", gap: "20px", padding: "18px 0", borderBottom: "1px solid #0D1E36", alignItems: "center" }}>
+          <div key={i} style={{ display: "flex", gap: "20px", padding: "18px 0", borderBottom: "1px solid #F8F6F1", alignItems: "center" }}>
             <div className="vv-skeleton" style={{ height: "16px", width: "24px" }} />
             <div className="vv-skeleton" style={{ height: "16px", width: "200px" }} />
             <div className="vv-skeleton" style={{ height: "16px", width: "120px" }} />

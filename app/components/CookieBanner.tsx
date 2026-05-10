@@ -31,8 +31,8 @@ export default function CookieBanner() {
       left: "0",
       right: "0",
       zIndex: 1000,
-      background: "#0A1828",
-      borderTop: "1px solid #1E3A5A",
+      background: "#FFFDF8",
+      borderTop: "1px solid #E8E2D8",
       padding: "16px 24px",
       display: "flex",
       alignItems: "center",
@@ -41,20 +41,20 @@ export default function CookieBanner() {
       flexWrap: "wrap",
       fontFamily: "Verdana, sans-serif",
     }}>
-      <p style={{ color: "#8BA5B8", fontSize: "13px", lineHeight: "1.6", margin: 0, maxWidth: "680px" }}>
+      <p style={{ color: "#6A5A4A", fontSize: "13px", lineHeight: "1.6", margin: 0, maxWidth: "680px" }}>
         VinVault uses essential cookies for authentication and optional analytics cookies to improve the service.{" "}
-        <Link href="/privacy" style={{ color: "#4A90B8", textDecoration: "none" }}>Privacy Policy</Link>
+        <Link href="/privacy" style={{ color: "#C9A84C", textDecoration: "none" }}>Privacy Policy</Link>
       </p>
       <div style={{ display: "flex", gap: "12px", flexShrink: 0 }}>
         <button
           onClick={decline}
-          style={{ background: "none", border: "1px solid #1E3A5A", color: "#4A6A8A", padding: "8px 20px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
+          style={{ background: "none", border: "1px solid #E8E2D8", color: "#9A8A7A", padding: "8px 20px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
         >
           Decline
         </button>
         <button
           onClick={accept}
-          style={{ background: "#4A90B8", border: "none", color: "#fff", padding: "8px 20px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
+          style={{ background: "#C9A84C", border: "none", color: "#fff", padding: "8px 20px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", fontFamily: "Verdana, sans-serif" }}
         >
           Accept
         </button>

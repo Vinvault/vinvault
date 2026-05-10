@@ -55,15 +55,15 @@ export default function VinLookupMapInner({ services, height = 500 }: Props) {
       });
 
       const popup = L.popup({ maxWidth: 280 }).setContent(`
-        <div style="font-family:Verdana,sans-serif;background:#0A1828;color:#E2EEF7;padding:10px;min-width:200px">
+        <div style="font-family:Verdana,sans-serif;background:#FFFDF8;color:#1A1A1A;padding:10px;min-width:200px">
           <p style="font-size:12px;color:${color};margin:0 0 4px;letter-spacing:1px">${s.country_name.toUpperCase()}</p>
           <p style="font-size:13px;font-weight:bold;margin:0 0 6px">${s.service_name}</p>
-          ${s.description ? `<p style="font-size:11px;color:#8BA5B8;margin:0 0 8px;line-height:1.5">${s.description}</p>` : ""}
+          ${s.description ? `<p style="font-size:11px;color:#6A5A4A;margin:0 0 8px;line-height:1.5">${s.description}</p>` : ""}
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
-            <span style="background:#0D1E36;color:#4A6A8A;padding:2px 8px;font-size:10px">${s.service_type}</span>
-            <span style="background:#0D2A1A;color:#4AB87A;padding:2px 8px;font-size:10px">FREE</span>
+            <span style="background:#F8F6F1;color:#9A8A7A;padding:2px 8px;font-size:10px">${s.service_type}</span>
+            <span style="background:#E8F4EC;color:#4AB87A;padding:2px 8px;font-size:10px">FREE</span>
           </div>
-          <a href="${s.service_url}" target="_blank" rel="noopener noreferrer" style="display:block;background:#4A90B8;color:#fff;padding:6px 12px;text-decoration:none;font-size:11px;text-align:center">
+          <a href="${s.service_url}" target="_blank" rel="noopener noreferrer" style="display:block;background:#C9A84C;color:#fff;padding:6px 12px;text-decoration:none;font-size:11px;text-align:center">
             Visit Service →
           </a>
         </div>
@@ -75,5 +75,5 @@ export default function VinLookupMapInner({ services, height = 500 }: Props) {
     return () => { map.remove(); mapInstanceRef.current = null; };
   }, [services]);
 
-  return <div ref={mapRef} style={{ width: "100%", height: `${height}px`, background: "#0A1828" }} />;
+  return <div ref={mapRef} style={{ width: "100%", height: `${height}px`, background: "#FFFDF8" }} />;
 }

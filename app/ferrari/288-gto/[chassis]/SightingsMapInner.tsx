@@ -23,7 +23,7 @@ function yearColor(spotted_at: string): string {
   const year = new Date(spotted_at).getFullYear();
   const now = new Date().getFullYear();
   const age = now - year;
-  if (age <= 0) return "#4A90B8";
+  if (age <= 0) return "#C9A84C";
   if (age <= 1) return "#2A70A8";
   if (age <= 2) return "#1A5088";
   if (age <= 4) return "#1A3A68";
@@ -70,12 +70,12 @@ export default function SightingsMapInner({ sightings, height = 400 }: Props) {
       const dateStr = new Date(s.spotted_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
       const spotterShort = s.spotter_email?.split("@")[0] || "Anonymous";
       const popup = LeafletModule.popup({ maxWidth: 260 }).setContent(`
-        <div style="font-family:Verdana,sans-serif;background:#0A1828;color:#E2EEF7;padding:8px;min-width:200px">
-          ${s.photo_url ? `<img src="${s.photo_url}" style="width:100%;height:120px;object-fit:cover;margin-bottom:8px;border:1px solid #1E3A5A" alt="sighting photo" />` : ""}
-          <p style="font-size:12px;color:#4A90B8;margin:0 0 4px">${dateStr}</p>
+        <div style="font-family:Verdana,sans-serif;background:#FFFDF8;color:#1A1A1A;padding:8px;min-width:200px">
+          ${s.photo_url ? `<img src="${s.photo_url}" style="width:100%;height:120px;object-fit:cover;margin-bottom:8px;border:1px solid #E8E2D8" alt="sighting photo" />` : ""}
+          <p style="font-size:12px;color:#C9A84C;margin:0 0 4px">${dateStr}</p>
           <p style="font-size:13px;font-weight:bold;margin:0 0 4px">${s.location_name}, ${s.country}</p>
-          <p style="font-size:11px;color:#8BA5B8;margin:0">by ${spotterShort}</p>
-          ${s.notes ? `<p style="font-size:12px;color:#8BA5B8;margin:6px 0 0;border-top:1px solid #1E3A5A;padding-top:6px">${s.notes}</p>` : ""}
+          <p style="font-size:11px;color:#6A5A4A;margin:0">by ${spotterShort}</p>
+          ${s.notes ? `<p style="font-size:12px;color:#6A5A4A;margin:6px 0 0;border-top:1px solid #E8E2D8;padding-top:6px">${s.notes}</p>` : ""}
         </div>
       `);
 
@@ -96,5 +96,5 @@ export default function SightingsMapInner({ sightings, height = 400 }: Props) {
     };
   }, [sightings]);
 
-  return <div ref={mapRef} style={{ width: "100%", height: `${height}px`, background: "#0A1828" }} />;
+  return <div ref={mapRef} style={{ width: "100%", height: `${height}px`, background: "#FFFDF8" }} />;
 }

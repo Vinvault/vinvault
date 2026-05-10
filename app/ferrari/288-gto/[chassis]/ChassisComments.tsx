@@ -58,7 +58,7 @@ export default function ChassisComments({ chassis }: { chassis: string }) {
 
   return (
     <div style={{ marginBottom: "32px" }}>
-      <h2 style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px", marginBottom: "20px" }}>DISCUSSION</h2>
+      <h2 style={{ color: "#C9A84C", fontSize: "11px", letterSpacing: "3px", marginBottom: "20px" }}>DISCUSSION</h2>
 
       {userEmail ? (
         <form onSubmit={submit} style={{ marginBottom: "24px" }}>
@@ -68,38 +68,38 @@ export default function ChassisComments({ chassis }: { chassis: string }) {
             placeholder="Share what you know about this chassis…"
             maxLength={2000}
             rows={3}
-            style={{ width: "100%", background: "#0D1E36", border: "1px solid #1E3A5A", color: "#E2EEF7", padding: "12px 16px", fontSize: "14px", fontFamily: "Verdana, sans-serif", boxSizing: "border-box", resize: "vertical" }}
+            style={{ width: "100%", background: "#F8F6F1", border: "1px solid #E8E2D8", color: "#1A1A1A", padding: "12px 16px", fontSize: "14px", fontFamily: "Verdana, sans-serif", boxSizing: "border-box", resize: "vertical" }}
           />
           {error && <p style={{ color: "#E07070", fontSize: "13px", marginTop: "6px" }}>{error}</p>}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "8px" }}>
-            <span style={{ color: "#4A6A8A", fontSize: "12px" }}>{body.length}/2000</span>
+            <span style={{ color: "#9A8A7A", fontSize: "12px" }}>{body.length}/2000</span>
             <button type="submit" disabled={submitting || !body.trim()}
-              style={{ background: submitting ? "#2A4A6A" : "#4A90B8", color: "#fff", border: "none", padding: "10px 24px", fontSize: "13px", cursor: submitting ? "not-allowed" : "pointer", fontFamily: "Verdana, sans-serif", letterSpacing: "1px" }}>
+              style={{ background: submitting ? "#A88A3A" : "#C9A84C", color: "#fff", border: "none", padding: "10px 24px", fontSize: "13px", cursor: submitting ? "not-allowed" : "pointer", fontFamily: "Verdana, sans-serif", letterSpacing: "1px" }}>
               {submitting ? "POSTING…" : "POST COMMENT"}
             </button>
           </div>
         </form>
       ) : (
-        <p style={{ color: "#4A6A8A", fontSize: "14px", marginBottom: "24px", background: "#0A1828", padding: "16px 20px", border: "1px solid #1E3A5A" }}>
-          <a href="/login" style={{ color: "#4A90B8", textDecoration: "none" }}>Sign in</a> to leave a comment.
+        <p style={{ color: "#9A8A7A", fontSize: "14px", marginBottom: "24px", background: "#FFFDF8", padding: "16px 20px", border: "1px solid #E8E2D8" }}>
+          <a href="/login" style={{ color: "#C9A84C", textDecoration: "none" }}>Sign in</a> to leave a comment.
         </p>
       )}
 
       {loading ? (
-        <div style={{ color: "#4A6A8A", fontSize: "14px" }}>Loading comments…</div>
+        <div style={{ color: "#9A8A7A", fontSize: "14px" }}>Loading comments…</div>
       ) : comments.length === 0 ? (
-        <p style={{ color: "#4A6A8A", fontSize: "14px" }}>No comments yet. Be the first to share what you know.</p>
+        <p style={{ color: "#9A8A7A", fontSize: "14px" }}>No comments yet. Be the first to share what you know.</p>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           {comments.map(c => (
-            <div key={c.id} style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "16px 20px" }}>
+            <div key={c.id} style={{ background: "#FFFDF8", border: "1px solid #E8E2D8", padding: "16px 20px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px", flexWrap: "wrap", gap: "8px" }}>
-                <span style={{ color: "#4A90B8", fontSize: "12px" }}>{maskEmail(c.user_email)}</span>
-                <span style={{ color: "#4A6A8A", fontSize: "12px" }}>
+                <span style={{ color: "#C9A84C", fontSize: "12px" }}>{maskEmail(c.user_email)}</span>
+                <span style={{ color: "#9A8A7A", fontSize: "12px" }}>
                   {new Date(c.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                 </span>
               </div>
-              <p style={{ color: "#E2EEF7", fontSize: "14px", lineHeight: "1.7", margin: 0, whiteSpace: "pre-wrap" }}>{c.body}</p>
+              <p style={{ color: "#1A1A1A", fontSize: "14px", lineHeight: "1.7", margin: 0, whiteSpace: "pre-wrap" }}>{c.body}</p>
             </div>
           ))}
         </div>

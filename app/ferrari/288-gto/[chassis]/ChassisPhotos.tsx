@@ -51,9 +51,9 @@ export default function ChassisPhotos({ chassis }: { chassis: string }) {
   return (
     <div style={{ marginBottom: "32px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-        <h2 style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "3px" }}>PHOTOS</h2>
+        <h2 style={{ color: "#C9A84C", fontSize: "11px", letterSpacing: "3px" }}>PHOTOS</h2>
         {userEmail && (
-          <label style={{ background: "#0A1828", border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "6px 16px", fontSize: "12px", cursor: "pointer", letterSpacing: "1px" }}>
+          <label style={{ background: "#FFFDF8", border: "1px solid #E8E2D8", color: "#6A5A4A", padding: "6px 16px", fontSize: "12px", cursor: "pointer", letterSpacing: "1px" }}>
             {uploading ? "UPLOADING…" : "+ ADD PHOTO"}
             <input ref={inputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={upload} disabled={uploading} style={{ display: "none" }} />
           </label>
@@ -63,13 +63,13 @@ export default function ChassisPhotos({ chassis }: { chassis: string }) {
       {error && <p style={{ color: "#E07070", fontSize: "13px", marginBottom: "12px" }}>{error}</p>}
 
       {photos.length === 0 ? (
-        <p style={{ color: "#4A6A8A", fontSize: "14px", background: "#0A1828", padding: "24px", border: "1px solid #1E3A5A", textAlign: "center" }}>
+        <p style={{ color: "#9A8A7A", fontSize: "14px", background: "#FFFDF8", padding: "24px", border: "1px solid #E8E2D8", textAlign: "center" }}>
           No photos yet.{userEmail ? " Upload the first one." : " Sign in to upload photos."}
         </p>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "12px" }}>
           {photos.map(p => (
-            <div key={p.name} style={{ aspectRatio: "4/3", background: "#0A1828", border: "1px solid #1E3A5A", overflow: "hidden", cursor: "pointer" }}
+            <div key={p.name} style={{ aspectRatio: "4/3", background: "#FFFDF8", border: "1px solid #E8E2D8", overflow: "hidden", cursor: "pointer" }}
               onClick={() => setLightbox(p.url)}>
               <img src={p.url} alt={`Chassis ${chassis}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} loading="lazy" />
             </div>

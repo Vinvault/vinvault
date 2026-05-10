@@ -49,7 +49,7 @@ export default function GlobalMapInner({ sightings, height = 480 }: Props) {
       if (!lat && !lng) return;
 
       const icon = L.divIcon({
-        html: `<div style="width:10px;height:10px;background:#4A90B8;border:2px solid #8EC8F0;border-radius:50%;box-shadow:0 0 4px #4A90B8"></div>`,
+        html: `<div style="width:10px;height:10px;background:#C9A84C;border:2px solid #8EC8F0;border-radius:50%;box-shadow:0 0 4px #C9A84C"></div>`,
         className: "",
         iconSize: [10, 10],
         iconAnchor: [5, 5],
@@ -60,11 +60,11 @@ export default function GlobalMapInner({ sightings, height = 480 }: Props) {
 
       L.marker([lat, lng], { icon }).bindPopup(
         L.popup({ maxWidth: 260 }).setContent(`
-          <div style="font-family:Verdana,sans-serif;background:#0A1828;color:#E2EEF7;padding:8px;min-width:180px">
-            ${s.photo_url ? `<img src="${s.photo_url}" style="width:100%;height:100px;object-fit:cover;margin-bottom:8px;border:1px solid #1E3A5A" />` : ""}
-            <p style="font-size:11px;color:#4A90B8;margin:0 0 2px">Chassis: ${s.chassis_number}</p>
+          <div style="font-family:Verdana,sans-serif;background:#FFFDF8;color:#1A1A1A;padding:8px;min-width:180px">
+            ${s.photo_url ? `<img src="${s.photo_url}" style="width:100%;height:100px;object-fit:cover;margin-bottom:8px;border:1px solid #E8E2D8" />` : ""}
+            <p style="font-size:11px;color:#C9A84C;margin:0 0 2px">Chassis: ${s.chassis_number}</p>
             <p style="font-size:12px;font-weight:bold;margin:0 0 2px">${s.location_name}, ${s.country}</p>
-            <p style="font-size:11px;color:#8BA5B8;margin:0">${dateStr} · by ${spotterShort}</p>
+            <p style="font-size:11px;color:#6A5A4A;margin:0">${dateStr} · by ${spotterShort}</p>
           </div>
         `)
       ).addTo(map);
@@ -73,5 +73,5 @@ export default function GlobalMapInner({ sightings, height = 480 }: Props) {
     return () => { map.remove(); mapInstanceRef.current = null; };
   }, [sightings]);
 
-  return <div ref={mapRef} style={{ width: "100%", height: `${height}px`, background: "#0A1828" }} />;
+  return <div ref={mapRef} style={{ width: "100%", height: `${height}px`, background: "#FFFDF8" }} />;
 }

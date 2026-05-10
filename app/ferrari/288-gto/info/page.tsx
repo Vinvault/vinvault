@@ -36,43 +36,43 @@ const SPECS = [
 
 export default function Ferrari288GTOInfoPage() {
   return (
-    <main style={{ background: "#080F1A", color: "#E2EEF7", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
+    <main style={{ background: "#F8F6F1", color: "#1A1A1A", fontFamily: "Verdana, sans-serif", minHeight: "100vh" }}>
       {/* Breadcrumb */}
-      <div style={{ padding: "14px 40px", background: "#0A1828", borderBottom: "1px solid #1E3A5A", fontSize: "12px", color: "#4A6A8A" }}>
-        <Link href="/" style={{ color: "#4A6A8A", textDecoration: "none" }}>Home</Link>
+      <div style={{ padding: "14px 40px", background: "#FFFDF8", borderBottom: "1px solid #E8E2D8", fontSize: "12px", color: "#9A8A7A" }}>
+        <Link href="/" style={{ color: "#9A8A7A", textDecoration: "none" }}>Home</Link>
         {" / "}
-        <Link href="/ferrari/288-gto" style={{ color: "#4A6A8A", textDecoration: "none" }}>Ferrari 288 GTO</Link>
+        <Link href="/ferrari/288-gto" style={{ color: "#9A8A7A", textDecoration: "none" }}>Ferrari 288 GTO</Link>
         {" / "}
-        <span style={{ color: "#8BA5B8" }}>Model Info</span>
+        <span style={{ color: "#6A5A4A" }}>Model Info</span>
       </div>
 
       <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "48px 40px" }}>
-        <p style={{ color: "#4A90B8", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>FERRARI · 1984–1985</p>
+        <p style={{ color: "#C9A84C", letterSpacing: "3px", fontSize: "11px", marginBottom: "16px" }}>FERRARI · 1984–1985</p>
         <h1 style={{ fontSize: "clamp(28px, 6vw, 44px)", fontWeight: "bold", marginBottom: "16px" }}>Ferrari 288 GTO</h1>
-        <p style={{ color: "#8BA5B8", fontSize: "17px", lineHeight: "1.8", marginBottom: "48px", maxWidth: "680px" }}>
+        <p style={{ color: "#6A5A4A", fontSize: "17px", lineHeight: "1.8", marginBottom: "48px", maxWidth: "680px" }}>
           The Ferrari 288 GTO was a homologation special built to compete in the FIA Group B racing category — a class so extreme it was cancelled before the car ever raced. The result was one of the most significant and coveted Ferraris ever built.
         </p>
 
         {/* Value */}
-        <div style={{ background: "#0A1828", border: "1px solid #4A90B8", padding: "20px 28px", marginBottom: "48px", display: "flex", gap: "40px", flexWrap: "wrap" }}>
+        <div style={{ background: "#FFFDF8", border: "1px solid #C9A84C", padding: "20px 28px", marginBottom: "48px", display: "flex", gap: "40px", flexWrap: "wrap" }}>
           <div>
-            <p style={{ color: "#4A6A8A", fontSize: "11px", letterSpacing: "2px", marginBottom: "4px" }}>CURRENT MARKET VALUE</p>
-            <p style={{ fontSize: "22px", fontWeight: "bold", color: "#4A90B8" }}>€2.5M – €4.0M</p>
+            <p style={{ color: "#9A8A7A", fontSize: "11px", letterSpacing: "2px", marginBottom: "4px" }}>CURRENT MARKET VALUE</p>
+            <p style={{ fontSize: "22px", fontWeight: "bold", color: "#C9A84C" }}>€2.5M – €4.0M</p>
           </div>
           <div>
-            <p style={{ color: "#4A6A8A", fontSize: "11px", letterSpacing: "2px", marginBottom: "4px" }}>PRODUCTION</p>
+            <p style={{ color: "#9A8A7A", fontSize: "11px", letterSpacing: "2px", marginBottom: "4px" }}>PRODUCTION</p>
             <p style={{ fontSize: "22px", fontWeight: "bold" }}>272 units</p>
           </div>
           <div>
-            <p style={{ color: "#4A6A8A", fontSize: "11px", letterSpacing: "2px", marginBottom: "4px" }}>SIGNIFICANCE</p>
-            <p style={{ fontSize: "14px", color: "#8BA5B8", paddingTop: "4px" }}>Group B homologation special</p>
+            <p style={{ color: "#9A8A7A", fontSize: "11px", letterSpacing: "2px", marginBottom: "4px" }}>SIGNIFICANCE</p>
+            <p style={{ fontSize: "14px", color: "#6A5A4A", paddingTop: "4px" }}>Group B homologation special</p>
           </div>
         </div>
 
         {/* History */}
         <div style={{ marginBottom: "48px" }}>
-          <h2 style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "20px", borderTop: "1px solid #1E3A5A", paddingTop: "32px" }}>History & Significance</h2>
-          <div style={{ color: "#8BA5B8", fontSize: "15px", lineHeight: "1.9", display: "flex", flexDirection: "column", gap: "16px" }}>
+          <h2 style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "20px", borderTop: "1px solid #E8E2D8", paddingTop: "32px" }}>History & Significance</h2>
+          <div style={{ color: "#6A5A4A", fontSize: "15px", lineHeight: "1.9", display: "flex", flexDirection: "column", gap: "16px" }}>
             <p>
               In the early 1980s, Ferrari's race engineers designed the 288 GTO around one goal: homologation for FIA Group B, which required manufacturers to produce at least 200 road-legal examples. Ferrari exceeded this, building 272.
             </p>
@@ -93,11 +93,11 @@ export default function Ferrari288GTOInfoPage() {
 
         {/* Specs */}
         <div style={{ marginBottom: "48px" }}>
-          <h2 style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "24px", borderTop: "1px solid #1E3A5A", paddingTop: "32px" }}>Technical Specifications</h2>
+          <h2 style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "24px", borderTop: "1px solid #E8E2D8", paddingTop: "32px" }}>Technical Specifications</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "0" }}>
             {SPECS.map(s => (
-              <div key={s.label} style={{ display: "flex", justifyContent: "space-between", padding: "12px 0", borderBottom: "1px solid #0D1E36", gap: "12px" }}>
-                <span style={{ color: "#8BA5B8", fontSize: "14px" }}>{s.label}</span>
+              <div key={s.label} style={{ display: "flex", justifyContent: "space-between", padding: "12px 0", borderBottom: "1px solid #F8F6F1", gap: "12px" }}>
+                <span style={{ color: "#6A5A4A", fontSize: "14px" }}>{s.label}</span>
                 <span style={{ fontSize: "14px", textAlign: "right", fontWeight: "bold" }}>{s.value}</span>
               </div>
             ))}
@@ -105,16 +105,16 @@ export default function Ferrari288GTOInfoPage() {
         </div>
 
         {/* Registry CTA */}
-        <div style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "28px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
+        <div style={{ background: "#FFFDF8", border: "1px solid #E8E2D8", padding: "28px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
           <div>
-            <p style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "2px", marginBottom: "8px" }}>WORLD REGISTRY</p>
-            <p style={{ color: "#8BA5B8", fontSize: "14px" }}>Browse every documented 288 GTO chassis, or submit a car to help complete the record.</p>
+            <p style={{ color: "#C9A84C", fontSize: "11px", letterSpacing: "2px", marginBottom: "8px" }}>WORLD REGISTRY</p>
+            <p style={{ color: "#6A5A4A", fontSize: "14px" }}>Browse every documented 288 GTO chassis, or submit a car to help complete the record.</p>
           </div>
           <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-            <Link href="/ferrari/288-gto" style={{ background: "#4A90B8", color: "#fff", padding: "12px 24px", textDecoration: "none", fontSize: "13px", letterSpacing: "2px" }}>
+            <Link href="/ferrari/288-gto" style={{ background: "#C9A84C", color: "#fff", padding: "12px 24px", textDecoration: "none", fontSize: "13px", letterSpacing: "2px" }}>
               VIEW REGISTRY
             </Link>
-            <Link href="/submit" style={{ border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "12px 24px", textDecoration: "none", fontSize: "13px" }}>
+            <Link href="/submit" style={{ border: "1px solid #E8E2D8", color: "#6A5A4A", padding: "12px 24px", textDecoration: "none", fontSize: "13px" }}>
               Submit a Car
             </Link>
           </div>
