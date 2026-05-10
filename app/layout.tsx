@@ -70,6 +70,7 @@ export default function RootLayout({
       className="h-full antialiased"
     >
       <head>
+        <style>{`html,body{background:#F8F6F1;}`}</style>
         <GoogleAnalytics />
       </head>
       <body className="min-h-full flex flex-col" style={{ fontFamily: 'Georgia, serif', background: 'var(--color-bg)', color: 'var(--color-text-primary)' }}>

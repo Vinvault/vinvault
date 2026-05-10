@@ -178,7 +178,7 @@ export default function VinLookupClient({ services }: Props) {
                     </td>
                     <td style={{ padding: '14px 12px' }}>
                       <a href={s.service_url} target="_blank" rel="noopener noreferrer"
-                        style={{ color: colors.accentBlue, fontSize: '12px', textDecoration: 'none', border: `1px solid ${colors.border}`, padding: '5px 12px', whiteSpace: 'nowrap', fontFamily: 'Verdana, sans-serif' }}>
+                        style={{ color: colors.accent, fontSize: '12px', textDecoration: 'none', border: `1px solid ${colors.accent}`, padding: '5px 12px', whiteSpace: 'nowrap', fontFamily: 'Verdana, sans-serif' }}>
                         Visit →
                       </a>
                     </td>

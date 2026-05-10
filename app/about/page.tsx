@@ -12,14 +12,19 @@ export default function AboutPage() {
     <main style={{ background: colors.bg, color: colors.textPrimary, fontFamily: 'Georgia, serif', minHeight: '100vh' }}>
       <Breadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "About" }]} />
 
+      <section style={{ background: colors.surface, borderBottom: `1px solid ${colors.border}`, padding: '48px 40px' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <p style={{ color: colors.accent, letterSpacing: '3px', fontSize: '11px', marginBottom: '16px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>About VinVault</p>
+          <h1 style={{ fontSize: '40px', fontWeight: 'bold', marginBottom: '16px', lineHeight: '1.1', fontFamily: 'Georgia, serif' }}>
+            The Definitive Record of Rare Automobiles
+          </h1>
+          <p style={{ color: colors.textSecondary, fontSize: '17px', lineHeight: '1.8', margin: 0 }}>
+            VinVault is a community-powered registry dedicated to documenting the complete chassis history of the world's most significant, rare, and collectible automobiles.
+          </p>
+        </div>
+      </section>
+
       <div className="vv-page-container">
-        <p style={{ color: colors.accent, letterSpacing: '3px', fontSize: '11px', marginBottom: '16px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>About</p>
-        <h1 style={{ fontSize: '40px', fontWeight: 'bold', marginBottom: '16px', lineHeight: '1.1' }}>
-          What is VinVault?
-        </h1>
-        <p style={{ color: colors.textSecondary, fontSize: '17px', lineHeight: '1.8', marginBottom: '48px', maxWidth: '640px' }}>
-          VinVault is a community-powered registry dedicated to documenting the complete chassis history of the world's most significant, rare, and collectible automobiles.
-        </p>
 
         <div style={{ borderTop: `1px solid ${colors.border}`, paddingTop: '48px', marginBottom: '48px' }}>
           <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>Why we built this</h2>
@@ -125,6 +130,16 @@ export default function AboutPage() {
           <p style={{ color: colors.textMuted, fontSize: '13px', marginTop: '20px', fontStyle: 'italic' }}>
             More registries — Lamborghini Miura, Ferrari F40, Porsche 959 — are planned and coming soon.
           </p>
+        </div>
+
+        <div style={{ borderTop: `1px solid ${colors.border}`, paddingTop: '48px', marginBottom: '48px' }}>
+          <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>Contact</h2>
+          <p style={{ color: colors.textSecondary, fontSize: '15px', lineHeight: '1.8', marginBottom: '20px' }}>
+            For questions, corrections, or partnership enquiries, reach out directly. We read every message.
+          </p>
+          <a href="mailto:contact@vinvault.net" style={{ color: colors.accent, fontSize: '16px', textDecoration: 'none', fontFamily: 'Verdana, sans-serif', letterSpacing: '1px' }}>
+            contact@vinvault.net
+          </a>
         </div>
       </div>
     </main>

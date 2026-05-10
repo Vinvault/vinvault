@@ -116,12 +116,18 @@ export default function FAQPage() {
   return (
     <main style={{ background: colors.bg, color: colors.textPrimary, fontFamily: 'Georgia, serif', minHeight: '100vh' }}>
       <Breadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "FAQ" }]} />
+
+      <section style={{ background: colors.surface, borderBottom: `1px solid ${colors.border}`, padding: '48px 40px' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+          <p style={{ color: colors.accent, letterSpacing: '3px', fontSize: '11px', marginBottom: '16px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>Frequently Asked Questions</p>
+          <h1 style={{ fontSize: '40px', fontWeight: 'bold', marginBottom: '16px', fontFamily: 'Georgia, serif' }}>Everything You Need to Know</h1>
+          <p style={{ color: colors.textSecondary, fontSize: '16px', lineHeight: '1.7', margin: 0 }}>
+            Everything you need to know about how VinVault works.
+          </p>
+        </div>
+      </section>
+
       <div className="vv-page-container" style={{ maxWidth: '900px' }}>
-        <p style={{ color: colors.accent, letterSpacing: '3px', fontSize: '11px', marginBottom: '16px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>Help</p>
-        <h1 style={{ fontSize: '36px', fontWeight: 'bold', marginBottom: '16px' }}>Frequently Asked Questions</h1>
-        <p style={{ color: colors.textSecondary, fontSize: '16px', lineHeight: '1.7', marginBottom: '48px' }}>
-          Everything you need to know about how VinVault works.
-        </p>
 
         {FAQS.map((section) => (
           <div key={section.category} style={{ marginBottom: '56px' }}>

@@ -21,11 +21,16 @@ export default function TermsPage() {
   return (
     <main style={{ background: colors.bg, color: colors.textPrimary, fontFamily: 'Georgia, serif', minHeight: '100vh' }}>
       <Breadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "Terms of Service" }]} />
-      <div className="vv-page-container">
-        <p style={{ color: colors.accent, letterSpacing: '3px', fontSize: '11px', marginBottom: '16px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>Legal</p>
-        <h1 style={{ fontSize: '36px', fontWeight: 'bold', marginBottom: '8px' }}>Terms of Service</h1>
-        <p style={{ color: colors.textMuted, fontSize: '13px', marginBottom: '48px', fontFamily: 'Verdana, sans-serif' }}>Last updated: 3 May 2026</p>
 
+      <section style={{ background: colors.surface, borderBottom: `1px solid ${colors.border}`, padding: '48px 40px' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <p style={{ color: colors.accent, letterSpacing: '3px', fontSize: '11px', marginBottom: '16px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>Terms of Service</p>
+          <h1 style={{ fontSize: '40px', fontWeight: 'bold', marginBottom: '12px', fontFamily: 'Georgia, serif' }}>Terms &amp; Conditions</h1>
+          <p style={{ color: colors.accent, fontSize: '12px', fontFamily: 'Verdana, sans-serif', margin: 0 }}>Last updated: 3 May 2026</p>
+        </div>
+      </section>
+
+      <div className="vv-page-container">
         <p style={{ color: colors.textSecondary, fontSize: '15px', lineHeight: '1.8', marginBottom: '36px' }}>
           By accessing or using VinVault ("the Service"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.
         </p>

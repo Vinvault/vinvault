@@ -21,11 +21,16 @@ export default function PrivacyPage() {
   return (
     <main style={{ background: colors.bg, color: colors.textPrimary, fontFamily: 'Georgia, serif', minHeight: '100vh' }}>
       <Breadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "Privacy Policy" }]} />
-      <div className="vv-page-container">
-        <p style={{ color: colors.accent, letterSpacing: '3px', fontSize: '11px', marginBottom: '16px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>Legal</p>
-        <h1 style={{ fontSize: '36px', fontWeight: 'bold', marginBottom: '8px' }}>Privacy Policy</h1>
-        <p style={{ color: colors.textMuted, fontSize: '13px', marginBottom: '48px', fontFamily: 'Verdana, sans-serif' }}>Last updated: 3 May 2026 · Applies to users in the EU and worldwide</p>
 
+      <section style={{ background: colors.surface, borderBottom: `1px solid ${colors.border}`, padding: '48px 40px' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <p style={{ color: colors.accent, letterSpacing: '3px', fontSize: '11px', marginBottom: '16px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>Privacy Policy</p>
+          <h1 style={{ fontSize: '40px', fontWeight: 'bold', marginBottom: '12px', fontFamily: 'Georgia, serif' }}>How We Handle Your Data</h1>
+          <p style={{ color: colors.accent, fontSize: '12px', fontFamily: 'Verdana, sans-serif', margin: 0 }}>Last updated: 3 May 2026 · Applies to users in the EU and worldwide</p>
+        </div>
+      </section>
+
+      <div className="vv-page-container">
         <p style={{ color: colors.textSecondary, fontSize: '15px', lineHeight: '1.8', marginBottom: '36px' }}>
           VinVault ("we", "us", "our") is committed to protecting your personal data. This Privacy Policy explains how we collect, use, store, and protect information about you when you use VinVault (the "Service") at vinvault.net. It complies with the EU General Data Protection Regulation (GDPR) and applicable UK data protection law.
         </p>

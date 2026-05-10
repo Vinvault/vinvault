@@ -29,13 +29,14 @@
 }
 
 body {
-  background: var(--color-bg);
+  background-color: #F8F6F1;
   color: var(--color-text-primary);
   font-family: Georgia, serif;
 }
 
 html {
   scroll-behavior: smooth;
+  background-color: #F8F6F1;
 }
 
 /* ── Skeleton loading animation ── */

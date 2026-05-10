@@ -178,12 +178,18 @@ export default function SubmitForm({ prefillChassis }: { prefillChassis?: string
   return (
     <main style={{ background: colors.bg, color: colors.textPrimary, fontFamily: 'Georgia, serif', minHeight: '100vh' }}>
       <Breadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "Ferrari 288 GTO", href: "/ferrari/288-gto" }, { label: "Submit a Car" }]} />
+
+      <section style={{ background: colors.surface, borderBottom: `1px solid ${colors.border}`, padding: '48px 40px' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <p style={{ color: colors.accent, letterSpacing: '3px', fontSize: '11px', marginBottom: '16px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>Submit a Car</p>
+          <h1 style={{ fontSize: '40px', fontWeight: 'bold', marginBottom: '16px', fontFamily: 'Georgia, serif' }}>Add a Car to the Registry</h1>
+          <p style={{ color: colors.textSecondary, lineHeight: '1.7', margin: 0 }}>
+            Help us complete the registry. Fill in as much detail as you know — every field helps. All submissions are reviewed by community validators before being published.
+          </p>
+        </div>
+      </section>
+
       <div className="vv-form-container">
-        <p style={{ color: colors.accent, letterSpacing: '3px', fontSize: '11px', marginBottom: '16px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>Ferrari 288 GTO · World Registry</p>
-        <h1 style={{ fontSize: '36px', fontWeight: 'bold', marginBottom: '16px' }}>Submit a Car</h1>
-        <p style={{ color: colors.textSecondary, lineHeight: '1.7', marginBottom: '48px' }}>
-          Help us complete the registry. Fill in as much detail as you know — every field helps. All submissions are reviewed by community validators before being published.
-        </p>
         {error && (
           <div style={{ background: '#FAE8E8', border: `1px solid ${colors.error}`, color: colors.error, padding: '12px 16px', fontSize: '13px', marginBottom: '24px', fontFamily: 'Verdana, sans-serif' }}>
             {error}
