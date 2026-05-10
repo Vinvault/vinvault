@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState, useMemo, useEffect, useRef } from "react";
 import { SkeletonRow } from "@/app/components/ui/Skeleton";
 import { colors } from "@/app/components/ui/tokens";
+import PullToRefresh from "@/app/components/PullToRefresh";
 
 const TOTAL_PRODUCED = 272;
 
@@ -263,6 +264,7 @@ export default function RegistryClient({ cars, ownedChassis = new Set<string>() 
 
   return (
     <main style={{ background: colors.bg, color: colors.textPrimary, fontFamily: 'Georgia, serif', minHeight: '100vh' }}>
+      <PullToRefresh />
       {/* Save notice toast */}
       {saveNotice && (
         <div style={{

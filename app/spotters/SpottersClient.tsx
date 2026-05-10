@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
 import type { PageData, Sighting, SpotterProfile } from "./page";
 import { colors } from "@/app/components/ui/tokens";
+import PullToRefresh from "@/app/components/PullToRefresh";
 
 function timeAgo(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
@@ -85,6 +86,7 @@ export default function SpottersClient({ data }: { data: PageData }) {
 
   return (
     <main style={{ background: colors.bg, color: colors.textPrimary, fontFamily: 'Georgia, serif', minHeight: '100vh' }}>
+      <PullToRefresh />
 
       {/* Hero */}
       <section style={{ padding: '72px 40px 56px', borderBottom: `1px solid ${colors.border}`, textAlign: 'center', background: colors.surface }}>
