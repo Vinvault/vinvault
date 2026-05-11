@@ -257,10 +257,6 @@ export async function POST(req: NextRequest) {
         status: "approved",
         submitter_email: "seed@vinvault.net",
         source: "VinVault Seed Data",
-        is_one_off: false,
-        is_prototype: false,
-        is_film_car: false,
-        is_music_video_car: false,
       }),
     });
     if (!subR.ok) {
