@@ -186,6 +186,10 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
   const [modelMsg, setModelMsg] = useState("");
   const [modelSuggestions, setModelSuggestions] = useState<ModelSuggestion[]>([]);
   const [suggestionResults, setSuggestionResults] = useState<Record<string, string>>({});
+  const [editingMakeId, setEditingMakeId] = useState<string | null>(null);
+  const [editingMake, setEditingMake] = useState<Partial<Make>>({});
+  const [editingModelId, setEditingModelId] = useState<string | null>(null);
+  const [editingModel, setEditingModel] = useState<Partial<Model>>({});
   // submodels
   const [submodels, setSubmodels] = useState<Submodel[]>([]);
   const [submodelModelFilter, setSubmodelModelFilter] = useState("");
@@ -299,6 +303,29 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
     const res = await fetch("/api/admin/models", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...newModel, full_model_name, production_start_year: parseInt(newModel.production_start_year) || 2020 }) });
     if (res.ok) { setModelMsg(`✓ "${full_model_name}" added`); setNewModel({ make: "", model: "", production_start_year: "", body_style: "coupe" }); fetch("/api/admin/models?limit=300").then(r => r.ok ? r.json() : []).then(setModels); }
     else setModelMsg("Error");
+  }
+  async function updateMake(id: string) {
+    const slug = (editingMake.name || "").toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+    const res = await fetch("/api/admin/makes", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, ...editingMake, slug }) });
+    if (res.ok) { setEditingMakeId(null); setMakeMsg("✓ Updated"); fetch("/api/admin/makes").then(r => r.ok ? r.json() : []).then(setMakes); }
+  }
+  async function deleteMake(m: Make) {
+    const modelCount = models.filter(mo => mo.make === m.name).length;
+    if (!confirm(`Delete "${m.name}"? This will affect ${modelCount} model(s). This cannot be undone.`)) return;
+    await fetch("/api/admin/makes", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: m.id }) });
+    setMakeMsg(`✓ Deleted "${m.name}"`);
+    fetch("/api/admin/makes").then(r => r.ok ? r.json() : []).then(setMakes);
+  }
+  async function updateModel(id: string) {
+    const full_model_name = `${editingModel.make || ""} ${editingModel.model || ""}`.trim();
+    const res = await fetch("/api/admin/models", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, ...editingModel, full_model_name }) });
+    if (res.ok) { setEditingModelId(null); setModelMsg("✓ Updated"); fetch("/api/admin/models?limit=300").then(r => r.ok ? r.json() : []).then(setModels); }
+  }
+  async function deleteModel(m: Model) {
+    if (!confirm(`Delete "${m.full_model_name}"? This cannot be undone.`)) return;
+    await fetch("/api/admin/models", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: m.id }) });
+    setModelMsg(`✓ Deleted "${m.full_model_name}"`);
+    fetch("/api/admin/models?limit=300").then(r => r.ok ? r.json() : []).then(setModels);
   }
 
   // ── user helpers ─────────────────────────────────────────────────────────────
@@ -687,14 +714,29 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
                 <table style={tbl}>
                   <thead><tr>{["NAME","SLUG","COUNTRY","FOUNDED","MODELS",""].map(h2 => <th key={h2} style={th}>{h2}</th>)}</tr></thead>
                   <tbody>
-                    {makes.map(m => (
+                    {makes.map(m => editingMakeId === m.id ? (
+                      <tr key={m.id} style={{ borderBottom: "1px solid #0D1E36", background: "#0A1E30" }}>
+                        <td style={td}><input value={editingMake.name ?? m.name} onChange={e => setEditingMake(p => ({ ...p, name: e.target.value }))} style={{ ...inpSm, width: "140px" }} /></td>
+                        <td style={{ ...td, color: "#4A6A8A", fontFamily: "monospace", fontSize: "11px" }}>{(editingMake.name || m.name).toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")}</td>
+                        <td style={td}><input value={editingMake.country ?? m.country ?? ""} onChange={e => setEditingMake(p => ({ ...p, country: e.target.value }))} style={{ ...inpSm, width: "100px" }} /></td>
+                        <td style={td}><input value={String(editingMake.founded_year ?? m.founded_year ?? "")} onChange={e => setEditingMake(p => ({ ...p, founded_year: Number(e.target.value) }))} style={{ ...inpSm, width: "60px" }} /></td>
+                        <td style={{ ...td, color: "#4A90B8" }}>{models.filter(mo => mo.make === m.name).length}</td>
+                        <td style={{ ...td, display: "flex", gap: "6px" }}>
+                          <button onClick={() => updateMake(m.id)} style={{ background: "#0D2A1A", color: "#4AB87A", border: "1px solid #4AB87A", padding: "4px 10px", fontSize: "11px", cursor: "pointer", fontFamily: F }}>Save</button>
+                          <button onClick={() => setEditingMakeId(null)} style={{ background: "none", color: "#4A6A8A", border: "1px solid #1E3A5A", padding: "4px 10px", fontSize: "11px", cursor: "pointer", fontFamily: F }}>Cancel</button>
+                        </td>
+                      </tr>
+                    ) : (
                       <tr key={m.id} style={{ borderBottom: "1px solid #0D1E36" }}>
                         <td style={{ ...td, fontWeight: "bold" }}>{m.name}</td>
                         <td style={{ ...td, color: "#4A6A8A", fontFamily: "monospace" }}>{m.slug}</td>
                         <td style={{ ...td, color: "#8BA5B8" }}>{m.country || "—"}</td>
                         <td style={{ ...td, color: "#8BA5B8" }}>{m.founded_year || "—"}</td>
                         <td style={{ ...td, color: "#4A90B8" }}>{models.filter(mo => mo.make === m.name).length}</td>
-                        <td style={td}></td>
+                        <td style={{ ...td, display: "flex", gap: "6px" }}>
+                          <button onClick={() => { setEditingMakeId(m.id); setEditingMake({ name: m.name, country: m.country, founded_year: m.founded_year }); }} style={{ background: "#0A1828", color: "#4A90B8", border: "1px solid #1E3A5A", padding: "4px 10px", fontSize: "11px", cursor: "pointer", fontFamily: F }}>Edit</button>
+                          <button onClick={() => deleteMake(m)} style={{ background: "#2A0D0D", color: "#E07070", border: "1px solid #8A2A2A", padding: "4px 10px", fontSize: "11px", cursor: "pointer", fontFamily: F }}>Delete</button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -725,13 +767,27 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
                 <table style={tbl}>
                   <thead><tr>{["MAKE","MODEL","YEARS","BODY",""].map(h2 => <th key={h2} style={th}>{h2}</th>)}</tr></thead>
                   <tbody>
-                    {models.filter(m => !modelMakeFilter || m.make === modelMakeFilter).slice(0, 100).map(m => (
+                    {models.filter(m => !modelMakeFilter || m.make === modelMakeFilter).slice(0, 100).map(m => editingModelId === m.id ? (
+                      <tr key={m.id} style={{ borderBottom: "1px solid #0D1E36", background: "#0A1E30" }}>
+                        <td style={td}><select value={editingModel.make ?? m.make} onChange={e => setEditingModel(p => ({ ...p, make: e.target.value }))} style={{ ...inpSm, width: "130px" }}>{makes.map(mk => <option key={mk.id} value={mk.name}>{mk.name}</option>)}</select></td>
+                        <td style={td}><input value={editingModel.model ?? m.model} onChange={e => setEditingModel(p => ({ ...p, model: e.target.value }))} style={{ ...inpSm, width: "130px" }} /></td>
+                        <td style={td}><input value={String(editingModel.production_start_year ?? m.production_start_year ?? "")} onChange={e => setEditingModel(p => ({ ...p, production_start_year: Number(e.target.value) }))} style={{ ...inpSm, width: "60px" }} /></td>
+                        <td style={td}><select value={editingModel.body_style ?? m.body_style ?? "coupe"} onChange={e => setEditingModel(p => ({ ...p, body_style: e.target.value }))} style={inpSm}>{["coupe","convertible","roadster","sedan","suv","hatchback","wagon"].map(b => <option key={b} value={b}>{b}</option>)}</select></td>
+                        <td style={{ ...td, display: "flex", gap: "6px" }}>
+                          <button onClick={() => updateModel(m.id)} style={{ background: "#0D2A1A", color: "#4AB87A", border: "1px solid #4AB87A", padding: "4px 10px", fontSize: "11px", cursor: "pointer", fontFamily: F }}>Save</button>
+                          <button onClick={() => setEditingModelId(null)} style={{ background: "none", color: "#4A6A8A", border: "1px solid #1E3A5A", padding: "4px 10px", fontSize: "11px", cursor: "pointer", fontFamily: F }}>Cancel</button>
+                        </td>
+                      </tr>
+                    ) : (
                       <tr key={m.id} style={{ borderBottom: "1px solid #0D1E36" }}>
                         <td style={{ ...td, color: "#4A90B8", fontSize: "11px" }}>{m.make}</td>
                         <td style={{ ...td, fontWeight: "bold" }}>{m.model}</td>
                         <td style={{ ...td, color: "#8BA5B8" }}>{m.production_start_year}{m.production_end_year ? `–${m.production_end_year}` : "–"}</td>
                         <td style={{ ...td, color: "#8BA5B8" }}>{m.body_style || "—"}</td>
-                        <td style={td}></td>
+                        <td style={{ ...td, display: "flex", gap: "6px" }}>
+                          <button onClick={() => { setEditingModelId(m.id); setEditingModel({ make: m.make, model: m.model, production_start_year: m.production_start_year, body_style: m.body_style }); }} style={{ background: "#0A1828", color: "#4A90B8", border: "1px solid #1E3A5A", padding: "4px 10px", fontSize: "11px", cursor: "pointer", fontFamily: F }}>Edit</button>
+                          <button onClick={() => deleteModel(m)} style={{ background: "#2A0D0D", color: "#E07070", border: "1px solid #8A2A2A", padding: "4px 10px", fontSize: "11px", cursor: "pointer", fontFamily: F }}>Delete</button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>

@@ -3,11 +3,11 @@ import { colors } from "@/app/components/ui/tokens";
 
 export const metadata: Metadata = {
   title: "VinVault Status",
-  description: "Internal build status and feature tracking for VinVault v0.1.9.",
+  description: "Internal build status and feature tracking for VinVault v0.2.0.",
   robots: { index: false, follow: false },
 };
 
-const VERSION = "v0.1.9";
+const VERSION = "v0.2.0";
 const LAST_UPDATED = "2026-05-11";
 
 type StatusType = "green" | "yellow" | "red";
@@ -59,7 +59,7 @@ const GROUPS: StatusGroup[] = [
       { label: "Spotters hub", status: "green", note: "/spotters" },
       { label: "Spotter profiles", status: "green", note: "/spotters/[username]" },
       { label: "Spotter events", status: "green", note: "/spotters/events" },
-      { label: "Submit a spotting", status: "yellow", note: "/spot · Photo bucket fix needed" },
+      { label: "Submit a spotting", status: "green", note: "/spot · AI-first flow, Nominatim location, mobile fixes" },
       { label: "Points system", status: "green" },
       { label: "Leaderboard", status: "green", note: "/leaderboard" },
       { label: "5 test spotter accounts", status: "green" },
@@ -98,7 +98,7 @@ const GROUPS: StatusGroup[] = [
       { label: "Permission matrix page", status: "green" },
       { label: "Points administration", status: "green" },
       { label: "Audit log", status: "green" },
-      { label: "Brand/model management", status: "green" },
+      { label: "Brand/model management", status: "green", note: "Inline edit/delete" },
       { label: "Subscription plans setup", status: "yellow", note: "No Stripe yet" },
       { label: "Forum category auto-create", status: "green" },
     ],
