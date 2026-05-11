@@ -1,164 +1,213 @@
 import type { Metadata } from "next";
+import { colors } from "@/app/components/ui/tokens";
 
 export const metadata: Metadata = {
   title: "VinVault Status",
-  description: "Internal build status and feature tracking for VinVault v0.1.8.",
+  description: "Internal build status and feature tracking for VinVault v0.1.9.",
   robots: { index: false, follow: false },
 };
 
-const VERSION = "v0.1.8";
+const VERSION = "v0.1.9";
+const LAST_UPDATED = "2026-05-11";
 
-type StatusDot = "green" | "amber" | "red";
+type StatusType = "green" | "yellow" | "red";
 
-interface Feature {
-  name: string;
-  status: StatusDot;
-  url: string;
-  notes?: string;
+interface StatusRow {
+  label: string;
+  status: StatusType;
+  note?: string;
 }
 
-const FEATURES: Feature[] = [
-  { name: "Homepage redesign", status: "green", url: "/", notes: "Warm white theme" },
-  { name: "Ferrari 288 GTO Registry", status: "green", url: "/ferrari/288-gto", notes: "Live data" },
-  { name: "Individual chassis pages", status: "green", url: "/ferrari/288-gto/[chassis]" },
-  { name: "Submit a car form", status: "green", url: "/submit" },
-  { name: "Admin panel", status: "green", url: "/admin" },
-  { name: "User login/register", status: "green", url: "/login" },
-  { name: "Car ownership claiming", status: "green", url: "/profile" },
-  { name: "Image upload", status: "green", url: "/submit" },
-  { name: "Mobile responsive", status: "amber", url: "all", notes: "Bottom nav done, some pages still dark" },
-  { name: "SSL certificate", status: "green", url: "www.vinvault.net" },
-  { name: "Custom 404 page", status: "green", url: "/wrongurl" },
-  { name: "Case-insensitive URLs", status: "green", url: "middleware" },
-  { name: "About page", status: "amber", url: "/about", notes: "Color fix in progress" },
-  { name: "FAQ page", status: "amber", url: "/faq", notes: "Color fix in progress" },
-  { name: "Terms page", status: "amber", url: "/terms", notes: "Color fix in progress" },
-  { name: "Privacy page", status: "amber", url: "/privacy", notes: "Color fix in progress" },
-  { name: "Email notifications", status: "green", url: "/api/", notes: "Brevo SMTP" },
-  { name: "Forum integration", status: "green", url: "forum.vinvault.net" },
-  { name: "Auto-deploy pipeline", status: "green", url: "GitHub → Coolify" },
-  { name: "Spotters hub", status: "green", url: "/spotters" },
-  { name: "Spotter profiles", status: "green", url: "/spotters/[username]" },
-  { name: "Spotter events", status: "green", url: "/spotters/events" },
-  { name: "Submit a spotting", status: "amber", url: "/spot", notes: "Bucket fix needed" },
-  { name: "VIN Lookup directory", status: "green", url: "/vin-lookup" },
-  { name: "Leaderboard", status: "green", url: "/leaderboard" },
-  { name: "Points system", status: "green", url: "/api/points" },
-  { name: "Makes & models database", status: "green", url: "admin" },
-  { name: "Discourse forum", status: "green", url: "forum.vinvault.net" },
-  { name: "Sticky header", status: "green", url: "all pages" },
-  { name: "Mobile bottom nav", status: "green", url: "mobile" },
-  { name: "Skeleton loading", status: "amber", url: "registry" },
-  { name: "Card hover states", status: "green", url: "registry" },
-  { name: "Homepage live ticker", status: "amber", url: "/" },
-  { name: "Chassis ownership timeline", status: "red", url: "/ferrari/288-gto/[chassis]" },
-  { name: "Chassis card generator", status: "red", url: "/api/chassis-card" },
-  { name: "Swipe gestures", status: "red", url: "mobile registry" },
-  { name: "Pull to refresh", status: "red", url: "mobile" },
-  { name: "Ghost car alert", status: "amber", url: "/" },
-  { name: "SEO meta tags", status: "green", url: "all" },
-  { name: "Sitemap", status: "green", url: "/sitemap.xml" },
-  { name: "Google Search Console", status: "green", url: "verified" },
-  { name: "Admin user management", status: "green", url: "/admin" },
-  { name: "Admin roles system", status: "green", url: "/admin" },
-  { name: "Admin audit log", status: "green", url: "/admin" },
-  { name: "Subscription plans", status: "amber", url: "/admin", notes: "No Stripe yet" },
-  { name: "Warm white theme", status: "amber", url: "all", notes: "Fix in progress v0.1.8" },
+interface StatusGroup {
+  title: string;
+  rows: StatusRow[];
+}
+
+const GROUPS: StatusGroup[] = [
+  {
+    title: "Infrastructure",
+    rows: [
+      { label: "Server (Hetzner CX33)", status: "green", note: "46.225.232.69" },
+      { label: "Supabase (self-hosted)", status: "green", note: "http://10.0.4.2:8000" },
+      { label: "Discourse Forum", status: "green", note: "forum.vinvault.net" },
+      { label: "Coolify Dashboard", status: "green", note: "coolify.vinvault.net" },
+      { label: "Auto-deploy (GitHub→Coolify)", status: "green" },
+      { label: "SSL Certificate", status: "green", note: "www.vinvault.net" },
+      { label: "Email (Brevo SMTP)", status: "green" },
+    ],
+  },
+  {
+    title: "Core Registry",
+    rows: [
+      { label: "Homepage", status: "green", note: "/" },
+      { label: "Ferrari 288 GTO Registry", status: "green", note: "/ferrari/288-gto" },
+      { label: "Individual chassis pages", status: "green", note: "/ferrari/288-gto/[chassis]" },
+      { label: "Submit a car form", status: "green", note: "/submit" },
+      { label: "Admin panel", status: "green", note: "/admin" },
+      { label: "Admin login protection", status: "green" },
+      { label: "User registration/login", status: "green", note: "/login" },
+      { label: "Car ownership claiming", status: "green" },
+      { label: "Image upload", status: "green" },
+      { label: "Case-insensitive URLs", status: "green" },
+      { label: "Custom 404 page", status: "green" },
+      { label: "Makes & models database", status: "green", note: "100+ makes loaded" },
+    ],
+  },
+  {
+    title: "Spotter Community",
+    rows: [
+      { label: "Spotters hub", status: "green", note: "/spotters" },
+      { label: "Spotter profiles", status: "green", note: "/spotters/[username]" },
+      { label: "Spotter events", status: "green", note: "/spotters/events" },
+      { label: "Submit a spotting", status: "yellow", note: "/spot · Photo bucket fix needed" },
+      { label: "Points system", status: "green" },
+      { label: "Leaderboard", status: "green", note: "/leaderboard" },
+      { label: "5 test spotter accounts", status: "green" },
+    ],
+  },
+  {
+    title: "VIN Lookup",
+    rows: [
+      { label: "VIN Lookup directory", status: "green", note: "/vin-lookup" },
+      { label: "15 countries loaded", status: "green" },
+      { label: "Community submission form", status: "green" },
+    ],
+  },
+  {
+    title: "My Garage",
+    rows: [
+      { label: "My Garage tab on profile", status: "green", note: "/profile" },
+      { label: "Add/edit garage cars", status: "green", note: "/garage/add" },
+      { label: "Car photos upload", status: "green" },
+      { label: "Car documents upload", status: "green" },
+      { label: "For sale listings", status: "green", note: "/garage/[id]/sell" },
+      { label: "Public for sale page", status: "green", note: "/for-sale" },
+      { label: "Listing carousel", status: "green" },
+      { label: "30-day expiry + renewal", status: "green" },
+      { label: "Instagram card generator", status: "green" },
+      { label: "CarVertical/Carfax links", status: "green" },
+      { label: "Special make request", status: "green" },
+      { label: "Previously sold section", status: "green" },
+    ],
+  },
+  {
+    title: "Admin System",
+    rows: [
+      { label: "User management", status: "green" },
+      { label: "Role system (9 roles)", status: "green" },
+      { label: "Permission matrix page", status: "green" },
+      { label: "Points administration", status: "green" },
+      { label: "Audit log", status: "green" },
+      { label: "Brand/model management", status: "green" },
+      { label: "Subscription plans setup", status: "yellow", note: "No Stripe yet" },
+      { label: "Forum category auto-create", status: "green" },
+    ],
+  },
+  {
+    title: "UI/UX",
+    rows: [
+      { label: "Warm white + gold theme", status: "yellow", note: "Some pages still fixing" },
+      { label: "Sticky transforming header", status: "green" },
+      { label: "Mobile bottom navigation", status: "green" },
+      { label: "Skeleton loading", status: "yellow", note: "Partial" },
+      { label: "Card hover states", status: "green" },
+      { label: "Homepage live ticker", status: "yellow" },
+      { label: "Chassis ownership timeline", status: "red", note: "Not built" },
+      { label: "Chassis card generator", status: "red", note: "Not built" },
+      { label: "Swipe gestures", status: "red", note: "Not built" },
+      { label: "Pull to refresh", status: "red", note: "Not built" },
+    ],
+  },
+  {
+    title: "Content Pages",
+    rows: [
+      { label: "About", status: "yellow", note: "Color fix in progress" },
+      { label: "FAQ", status: "yellow", note: "Color fix in progress" },
+      { label: "Terms", status: "yellow", note: "Color fix in progress" },
+      { label: "Privacy", status: "yellow", note: "Color fix in progress" },
+    ],
+  },
+  {
+    title: "SEO",
+    rows: [
+      { label: "Meta tags", status: "green" },
+      { label: "Sitemap.xml", status: "green" },
+      { label: "Robots.txt", status: "green" },
+      { label: "Google Search Console", status: "green", note: "Verified" },
+    ],
+  },
 ];
 
-const DOT: Record<StatusDot, { emoji: string; color: string; label: string; bg: string }> = {
-  green: { emoji: "🟢", color: "#2A7A4A", label: "Complete", bg: "#E8F4EC" },
-  amber: { emoji: "🟡", color: "#A88A3A", label: "Partial", bg: "#FBF3E0" },
-  red:   { emoji: "🔴", color: "#8A2A2A", label: "Missing", bg: "#F4E8E8" },
-};
-
-const green = FEATURES.filter(f => f.status === "green").length;
-const amber = FEATURES.filter(f => f.status === "amber").length;
-const red   = FEATURES.filter(f => f.status === "red").length;
+const EMOJI: Record<StatusType, string> = { green: "🟢", yellow: "🟡", red: "🔴" };
+const ROW_BG: Record<StatusType, string> = { green: "#FFFDF8", yellow: "#FFFEF0", red: "#FFF8F8" };
 
 export default function StatusPage() {
+  const allRows = GROUPS.flatMap(g => g.rows);
+  const greenCount = allRows.filter(r => r.status === "green").length;
+  const total = allRows.length;
+  const pct = Math.round((greenCount / total) * 100);
+
   return (
-    <div style={{ background: '#F8F6F1', minHeight: '100vh', color: '#1A1A1A', fontFamily: 'Georgia, serif' }}>
+    <main style={{ background: colors.bg, minHeight: "100vh", color: colors.textPrimary, fontFamily: "Georgia, serif" }}>
+      <div className="vv-page-container" style={{ maxWidth: "860px" }}>
+        {/* Header */}
+        <div style={{ marginBottom: "48px" }}>
+          <p style={{ color: colors.accent, letterSpacing: "4px", fontSize: "11px", marginBottom: "12px", fontFamily: "Verdana, sans-serif", textTransform: "uppercase" }}>Internal Reference</p>
+          <div style={{ display: "flex", alignItems: "baseline", gap: "16px", flexWrap: "wrap", marginBottom: "8px" }}>
+            <h1 style={{ fontSize: "32px", fontWeight: "bold", fontFamily: "Georgia, serif", margin: 0 }}>VinVault Build Status</h1>
+            <span style={{ background: "#FBF3E0", color: colors.accent, border: `1px solid ${colors.accent}40`, padding: "4px 14px", fontSize: "13px", fontFamily: "Verdana, sans-serif", letterSpacing: "1px" }}>{VERSION}</span>
+          </div>
+          <p style={{ color: colors.textMuted, fontFamily: "Verdana, sans-serif", fontSize: "12px" }}>Last updated: {LAST_UPDATED} · Internal development reference page</p>
 
-      {/* Hero */}
-      <section style={{ background: '#FFFDF8', borderBottom: '1px solid #E8E2D8', padding: '48px 32px' }}>
-        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-          <p style={{ fontFamily: 'Verdana, sans-serif', fontSize: '11px', letterSpacing: '4px', color: '#9A8A7A', textTransform: 'uppercase', marginBottom: '12px' }}>INTERNAL</p>
-          <h1 style={{ fontFamily: 'Georgia, serif', fontSize: '36px', fontWeight: 'bold', color: '#1A1A1A', marginBottom: '12px' }}>VinVault Build Status</h1>
-          <p style={{ fontFamily: 'Verdana, sans-serif', fontSize: '13px', color: '#C9A84C', margin: 0, letterSpacing: '1px' }}>
-            Version: <strong>{VERSION}</strong>
-          </p>
-        </div>
-      </section>
-
-      {/* Summary */}
-      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '32px 32px 0' }}>
-        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '32px' }}>
-          {([
-            { dot: "green" as StatusDot, count: green },
-            { dot: "amber" as StatusDot, count: amber },
-            { dot: "red"   as StatusDot, count: red },
-          ]).map(({ dot, count }) => (
-            <div key={dot} style={{ background: DOT[dot].bg, border: `1px solid ${DOT[dot].color}40`, padding: '16px 24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '20px' }}>{DOT[dot].emoji}</span>
-              <div>
-                <div style={{ fontFamily: 'Georgia, serif', fontSize: '24px', fontWeight: 'bold', color: DOT[dot].color }}>{count}</div>
-                <div style={{ fontFamily: 'Verdana, sans-serif', fontSize: '10px', color: '#9A8A7A', textTransform: 'uppercase', letterSpacing: '2px' }}>{DOT[dot].label}</div>
-              </div>
+          {/* Progress bar */}
+          <div style={{ marginTop: "24px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+              <span style={{ fontFamily: "Verdana, sans-serif", fontSize: "12px", color: colors.textSecondary }}>{greenCount} of {total} features complete ({pct}%)</span>
             </div>
-          ))}
-          <div style={{ background: '#FFFDF8', border: '1px solid #E8E2D8', padding: '16px 24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div>
-              <div style={{ fontFamily: 'Georgia, serif', fontSize: '24px', fontWeight: 'bold', color: '#1A1A1A' }}>{FEATURES.length}</div>
-              <div style={{ fontFamily: 'Verdana, sans-serif', fontSize: '10px', color: '#9A8A7A', textTransform: 'uppercase', letterSpacing: '2px' }}>Total Features</div>
+            <div style={{ background: colors.border, height: "8px", width: "100%" }}>
+              <div style={{ background: colors.accent, height: "8px", width: `${pct}%` }} />
             </div>
           </div>
         </div>
 
-        {/* Table */}
-        <div style={{ overflowX: 'auto', marginBottom: '64px' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>
-            <thead>
-              <tr style={{ background: '#1A1A1A' }}>
-                <th style={{ padding: '14px 16px', textAlign: 'left', fontFamily: 'Verdana, sans-serif', fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: '#FFFDF8', fontWeight: 'normal' }}>Feature</th>
-                <th style={{ padding: '14px 16px', textAlign: 'left', fontFamily: 'Verdana, sans-serif', fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: '#FFFDF8', fontWeight: 'normal', width: '100px' }}>Status</th>
-                <th style={{ padding: '14px 16px', textAlign: 'left', fontFamily: 'Verdana, sans-serif', fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: '#FFFDF8', fontWeight: 'normal', width: '180px' }}>URL</th>
-                <th style={{ padding: '14px 16px', textAlign: 'left', fontFamily: 'Verdana, sans-serif', fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: '#FFFDF8', fontWeight: 'normal' }}>Notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              {FEATURES.map((f, i) => (
-                <tr
-                  key={f.name}
-                  style={{
-                    background: i % 2 === 0 ? '#FFFDF8' : '#F8F6F1',
-                    borderBottom: '1px solid #E8E2D8',
-                  }}
-                >
-                  <td style={{ padding: '12px 16px', fontFamily: 'Georgia, serif', fontSize: '14px', color: '#1A1A1A' }}>{f.name}</td>
-                  <td style={{ padding: '12px 16px' }}>
-                    <span style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      background: DOT[f.status].bg,
-                      color: DOT[f.status].color,
-                      padding: '3px 10px',
-                      fontSize: '11px',
-                      fontFamily: 'Verdana, sans-serif',
-                      border: `1px solid ${DOT[f.status].color}40`,
-                    }}>
-                      {DOT[f.status].emoji} {DOT[f.status].label}
-                    </span>
-                  </td>
-                  <td style={{ padding: '12px 16px', fontFamily: 'monospace', fontSize: '12px', color: '#6A5A4A' }}>{f.url}</td>
-                  <td style={{ padding: '12px 16px', fontFamily: 'Georgia, serif', fontSize: '13px', color: '#9A8A7A', fontStyle: f.notes ? 'normal' : 'italic' }}>{f.notes || '—'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {/* Status groups */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "40px" }}>
+          {GROUPS.map(group => (
+            <section key={group.title}>
+              <p style={{ color: colors.accent, letterSpacing: "3px", fontSize: "11px", marginBottom: "12px", fontFamily: "Verdana, sans-serif", textTransform: "uppercase" }}>{group.title}</p>
+              <div style={{ border: `1px solid ${colors.border}`, overflow: "hidden" }}>
+                {group.rows.map((row, i) => (
+                  <div key={row.label} style={{
+                    display: "flex", alignItems: "center", gap: "16px",
+                    padding: "10px 16px",
+                    background: ROW_BG[row.status],
+                    borderTop: i > 0 ? `1px solid ${colors.border}` : "none",
+                  }}>
+                    <span style={{ fontSize: "16px", flexShrink: 0 }}>{EMOJI[row.status]}</span>
+                    <span style={{ fontFamily: "Verdana, sans-serif", fontSize: "13px", color: colors.textPrimary, flex: 1 }}>{row.label}</span>
+                    {row.note && <span style={{ fontFamily: "Verdana, sans-serif", fontSize: "11px", color: colors.textMuted }}>{row.note}</span>}
+                  </div>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+
+        {/* Legend */}
+        <div style={{ marginTop: "48px", padding: "20px 24px", background: colors.surface, border: `1px solid ${colors.border}` }}>
+          <p style={{ color: colors.accent, letterSpacing: "3px", fontSize: "11px", marginBottom: "16px", fontFamily: "Verdana, sans-serif", textTransform: "uppercase" }}>Legend</p>
+          <div style={{ display: "flex", gap: "32px", flexWrap: "wrap" }}>
+            {(["green", "yellow", "red"] as StatusType[]).map(s => (
+              <div key={s} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <span style={{ fontSize: "16px" }}>{EMOJI[s]}</span>
+                <span style={{ fontFamily: "Verdana, sans-serif", fontSize: "12px", color: colors.textSecondary }}>
+                  {s === "green" ? "Complete" : s === "yellow" ? "Partial / In Progress" : "Not yet built"}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

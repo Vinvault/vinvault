@@ -9,6 +9,7 @@ import { colors } from "./ui/tokens";
 const NAV = [
   { href: "/ferrari/288-gto", label: "Registry" },
   { href: "/spotters", label: "Spotters" },
+  { href: "/for-sale", label: "For Sale" },
   { href: "/faq", label: "FAQ" },
   { href: "/about", label: "About" },
 ];

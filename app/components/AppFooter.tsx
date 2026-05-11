@@ -4,6 +4,7 @@ import { colors } from "./ui/tokens";
 const FOOTER_LINKS = [
   { href: "/ferrari/288-gto", label: "Registry" },
   { href: "/spotters", label: "Spotters" },
+  { href: "/for-sale", label: "For Sale" },
   { href: "/vin-lookup", label: "VIN Lookup" },
   { href: "/about", label: "About" },
   { href: "/faq", label: "FAQ" },
