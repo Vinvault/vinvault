@@ -253,7 +253,7 @@ export default function SpotForm() {
     ).slice(0, 10);
     if (valid.length < arr.length) setError("Some photos were skipped (max 10 MB each, JPEG/PNG/WebP only).");
     else setError("");
-    const compressed = await Promise.all(valid.map(compressImage));
+    const compressed = await Promise.all(valid.map(f => compressImage(f)));
     setPhotos(compressed);
     Promise.all(compressed.map(f => new Promise<string>(resolve => {
       const r = new FileReader(); r.onload = ev => resolve(ev.target?.result as string); r.readAsDataURL(f);
@@ -263,7 +263,7 @@ export default function SpotForm() {
   const addPhotos = async (files: FileList | null) => {
     const arr = Array.from(files || []);
     const valid = arr.filter(f => f.size <= 10 * 1024 * 1024 && ["image/jpeg","image/png","image/webp"].includes(f.type));
-    const compressed = await Promise.all(valid.map(compressImage));
+    const compressed = await Promise.all(valid.map(f => compressImage(f)));
     const combined = [...photos, ...compressed].slice(0, 10);
     setPhotos(combined);
     Promise.all(combined.map(f => new Promise<string>(resolve => {
