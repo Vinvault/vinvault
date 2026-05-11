@@ -80,6 +80,7 @@ export async function POST(request: NextRequest) {
   let makeId = sanitize(body.make_id);
   const makeName = sanitize(body.make_name);
   const modelId = sanitize(body.model_id);
+  const modelName = sanitize(body.model_name);
 
   // If no UUID for make, find or create it by name
   if (!makeId && makeName) {
@@ -123,11 +124,14 @@ export async function POST(request: NextRequest) {
   const numberplate = sanitize(body.numberplate || body.numberplate_seen);
   const notes = sanitize(body.notes);
 
-  if ((!makeId && !makeName) || !modelId) {
-    return NextResponse.json({ error: "Brand and model are required" }, { status: 400 });
+  if (!makeId && !makeName) {
+    return NextResponse.json({ error: "Brand is required" }, { status: 400 });
   }
-  if (!locationName || !country) {
-    return NextResponse.json({ error: "Location and country are required" }, { status: 400 });
+  if (!modelId && !modelName) {
+    return NextResponse.json({ error: "Model is required" }, { status: 400 });
+  }
+  if (!locationName) {
+    return NextResponse.json({ error: "Location is required" }, { status: 400 });
   }
   if (photoUrls.length === 0) {
     return NextResponse.json({ error: "At least one photo is required" }, { status: 400 });
@@ -194,7 +198,7 @@ export async function POST(request: NextRequest) {
 
   const row: Record<string, unknown> = {
     make_id: makeId,
-    model_id: modelId,
+    model_id: modelId || null,
     chassis_number: chassis || null,
     spotter_email: spotterEmail || "anonymous",
     spotter_username: spotterUsername || null,

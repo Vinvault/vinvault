@@ -21,15 +21,6 @@ const MAKES_FALLBACK = [
   "Tesla","Toyota","TVR","Ultima","Volkswagen","Volvo","W Motors","Wiesmann","Zenvo",
 ];
 
-const COUNTRIES = [
-  "Argentina","Australia","Austria","Belgium","Brazil","Canada","Chile","China","Colombia",
-  "Czech Republic","Denmark","Finland","France","Germany","Greece","Hong Kong","Hungary",
-  "India","Indonesia","Ireland","Israel","Italy","Japan","Malaysia","Mexico","Monaco",
-  "Netherlands","New Zealand","Norway","Poland","Portugal","Saudi Arabia","Singapore",
-  "South Africa","South Korea","Spain","Sweden","Switzerland","Taiwan","Thailand",
-  "United Arab Emirates","United Kingdom","United States","Uruguay","Other"
-];
-
 const countryCoords: Record<string, { lat: number; lng: number }> = {
   "France": { lat: 46.23, lng: 2.21 }, "Germany": { lat: 51.17, lng: 10.45 },
   "Italy": { lat: 41.87, lng: 12.57 }, "United Kingdom": { lat: 55.38, lng: -3.44 },
@@ -335,7 +326,6 @@ export default function SpotForm() {
     if (!modelQuery.trim()) { setError("Please enter a model name."); return; }
     if (photos.length === 0) { setError("At least one photo is required."); return; }
     if (!locationText.trim()) { setError("Location is required."); return; }
-    if (!form.country) { setError("Country is required."); return; }
 
     setLoading(true); setUploading(true);
     let photoUrls: string[] = [];
@@ -604,7 +594,6 @@ export default function SpotForm() {
                       type="text"
                       value={modelQuery}
                       onChange={e => { setModelQuery(e.target.value); setSelectedModelId(null); setModelOpen(true); }}
-                      onFocus={() => setModelOpen(true)}
                       placeholder={modelsLoading ? "Loading models…" : selectedMake ? "Type model name…" : "e.g. 488, Agera, 911"}
                       autoComplete="off"
                       style={inp}
@@ -613,7 +602,8 @@ export default function SpotForm() {
                       <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: colors.surface, border: `1px solid ${colors.border}`, zIndex: 9999, maxHeight: "220px", overflowY: "auto", boxShadow: "0 4px 16px rgba(0,0,0,0.15)" }}>
                         {filteredModels.map(m => (
                           <div key={m.id}
-                            onPointerDown={e => { e.preventDefault(); selectModel(m); }}
+                            onMouseDown={e => e.preventDefault()}
+                            onClick={() => selectModel(m)}
                             style={{ padding: "10px 16px", cursor: "pointer", fontSize: "13px", fontFamily: "Georgia, serif" }}
                             onPointerEnter={e => (e.currentTarget.style.background = colors.surfaceAlt)}
                             onPointerLeave={e => (e.currentTarget.style.background = "transparent")}
@@ -659,7 +649,8 @@ export default function SpotForm() {
                       <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: colors.surface, border: `1px solid ${colors.border}`, zIndex: 9999, maxHeight: "200px", overflowY: "auto", boxShadow: "0 4px 16px rgba(0,0,0,0.15)" }}>
                         {locationSuggestions.map((s, i) => (
                           <div key={i}
-                            onPointerDown={e => { e.preventDefault(); selectLocation(s); }}
+                            onMouseDown={e => e.preventDefault()}
+                            onClick={() => selectLocation(s)}
                             style={{ padding: "10px 16px", cursor: "pointer", fontSize: "13px", fontFamily: "Verdana, sans-serif" }}
                             onPointerEnter={e => (e.currentTarget.style.background = colors.surfaceAlt)}
                             onPointerLeave={e => (e.currentTarget.style.background = "transparent")}
@@ -677,14 +668,6 @@ export default function SpotForm() {
                 </div>
                 {gpsStatus === "ok" && <p style={{ color: colors.success, fontSize: "11px", marginTop: "6px", fontFamily: "Verdana, sans-serif" }}>GPS location detected</p>}
                 {gpsStatus === "denied" && <p style={{ ...hint, marginTop: "6px" }}>GPS unavailable — enter location manually.</p>}
-              </div>
-
-              <div style={{ marginBottom: "32px" }}>
-                <label style={lbl}>Country *</label>
-                <select value={form.country} onChange={e => setForm(f => ({ ...f, country: e.target.value }))} required style={{ ...inp, color: form.country ? colors.textPrimary : colors.textMuted }}>
-                  <option value="">Select country…</option>
-                  {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
               </div>
 
               {/* ── EARN MORE POINTS ── */}

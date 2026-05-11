@@ -228,6 +228,7 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
   // settings
   const [migrateMsg, setMigrateMsg] = useState("");
   const [storageMsg, setStorageMsg] = useState("");
+  const [seedMsg, setSeedMsg] = useState("");
 
   // ── data loading ────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -1036,9 +1037,11 @@ export default function AdminClient({ submissions, claims }: { submissions: Subm
               <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "24px" }}>
                 <button onClick={async () => { setStorageMsg("…"); const r = await fetch("/api/admin/init-storage", { method: "POST" }); setStorageMsg(r.ok ? "✓ Storage OK" : "Error"); }} style={{ background: "#0A1828", border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "10px 20px", fontSize: "12px", cursor: "pointer", fontFamily: F }}>Init Storage Bucket</button>
                 <button onClick={async () => { setMigrateMsg("…"); const r = await fetch("/api/admin/migrate", { method: "POST" }); const d = await r.json(); setMigrateMsg(d.allOk ? "✓ Migrations OK" : "Migrations complete (some may already exist)"); }} style={{ background: "#0A1828", border: "1px solid #1E3A5A", color: "#8BA5B8", padding: "10px 20px", fontSize: "12px", cursor: "pointer", fontFamily: F }}>Run DB Migrations</button>
+                <button onClick={async () => { setSeedMsg("Seeding Ferrari data…"); const r = await fetch("/api/admin/seed-ferrari", { method: "POST" }); const d = await r.json(); setSeedMsg(d.ok ? `✓ Done: ${d.results?.length} operations` : `Completed with errors — see console`); console.log("Seed result:", d); }} style={{ background: "#0A1828", border: "1px solid #B8944A", color: "#B8944A", padding: "10px 20px", fontSize: "12px", cursor: "pointer", fontFamily: F }}>Seed Ferrari Test Data</button>
               </div>
               {storageMsg && <p style={{ color: "#4AB87A", fontSize: "12px", marginBottom: "8px" }}>{storageMsg}</p>}
-              {migrateMsg && <p style={{ color: "#4AB87A", fontSize: "12px" }}>{migrateMsg}</p>}
+              {migrateMsg && <p style={{ color: "#4AB87A", fontSize: "12px", marginBottom: "8px" }}>{migrateMsg}</p>}
+              {seedMsg && <p style={{ color: "#B8944A", fontSize: "12px" }}>{seedMsg}</p>}
               <div style={{ background: "#0A1828", border: "1px solid #1E3A5A", padding: "20px 24px", marginTop: "24px" }}>
                 <p style={{ color: "#4A90B8", fontSize: "11px", letterSpacing: "2px", marginBottom: "12px" }}>CLAIMS PENDING</p>
                 <table style={tbl}>
