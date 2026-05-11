@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+*, *::before, *::after { box-sizing: border-box; }
+
 :root {
   --color-bg: #F8F6F1;
   --color-surface: #FFFDF8;
@@ -28,16 +30,19 @@
   --space-3xl: 64px;
 }
 
+html {
+  scroll-behavior: smooth;
+  background-color: #F8F6F1 !important;
+}
+
 body {
-  background-color: #F8F6F1;
-  color: var(--color-text-primary);
+  background-color: #F8F6F1 !important;
+  color: #1A1A1A !important;
   font-family: Georgia, serif;
 }
 
-html {
-  scroll-behavior: smooth;
-  background-color: #F8F6F1;
-}
+a { color: #1A3A5A; text-decoration: none; }
+a:hover { color: #C9A84C; }
 
 /* ── Skeleton loading animation ── */
 @keyframes shimmer {
@@ -325,6 +330,8 @@ details[open] > summary span:last-child::before { content: "−"; }
 }
 
 @media (max-width: 768px) {
+  body { background-color: #F8F6F1 !important; }
+
   .vv-header {
     padding: 0 16px;
     height: 52px !important;

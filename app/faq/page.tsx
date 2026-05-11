@@ -1,7 +1,5 @@
 import Link from "next/link";
-import Breadcrumb from "@/app/components/Breadcrumb";
 import type { Metadata } from "next";
-import { colors } from "@/app/components/ui/tokens";
 
 export const metadata: Metadata = {
   title: "FAQ",
@@ -114,44 +112,43 @@ const FAQS = [
 
 export default function FAQPage() {
   return (
-    <main style={{ background: colors.bg, color: colors.textPrimary, fontFamily: 'Georgia, serif', minHeight: '100vh' }}>
-      <Breadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "FAQ" }]} />
+    <div style={{ background: '#F8F6F1', minHeight: '100vh', color: '#1A1A1A', fontFamily: 'Georgia, serif' }}>
 
-      <section style={{ background: colors.surface, borderBottom: `1px solid ${colors.border}`, padding: '48px 40px' }}>
+      {/* Hero */}
+      <section style={{ background: '#FFFDF8', borderBottom: '1px solid #E8E2D8', padding: '48px 32px' }}>
         <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-          <p style={{ color: colors.accent, letterSpacing: '3px', fontSize: '11px', marginBottom: '16px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>Frequently Asked Questions</p>
-          <h1 style={{ fontSize: '40px', fontWeight: 'bold', marginBottom: '16px', fontFamily: 'Georgia, serif' }}>Everything You Need to Know</h1>
-          <p style={{ color: colors.textSecondary, fontSize: '16px', lineHeight: '1.7', margin: 0 }}>
+          <p style={{ fontFamily: 'Verdana, sans-serif', fontSize: '11px', letterSpacing: '4px', color: '#9A8A7A', textTransform: 'uppercase', marginBottom: '12px' }}>HELP</p>
+          <h1 style={{ fontFamily: 'Georgia, serif', fontSize: '36px', fontWeight: 'bold', color: '#1A1A1A', marginBottom: '16px' }}>Frequently Asked Questions</h1>
+          <p style={{ fontFamily: 'Georgia, serif', fontSize: '16px', color: '#6A5A4A', lineHeight: '1.8', margin: 0 }}>
             Everything you need to know about how VinVault works.
           </p>
         </div>
       </section>
 
-      <div className="vv-page-container" style={{ maxWidth: '900px' }}>
+      {/* Content */}
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
 
         {FAQS.map((section) => (
           <div key={section.category} style={{ marginBottom: '56px' }}>
-            <p style={{ color: colors.accent, letterSpacing: '3px', fontSize: '11px', marginBottom: '24px', borderBottom: `1px solid ${colors.border}`, paddingBottom: '12px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>
+            <p style={{ fontFamily: 'Verdana, sans-serif', fontSize: '9px', color: '#9A8A7A', textTransform: 'uppercase', letterSpacing: '3px', borderBottom: '1px solid #E8E2D8', paddingBottom: '12px', marginBottom: '24px' }}>
               {section.category}
             </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+            <div>
               {section.items.map((item, i) => (
-                <details key={i} style={{ borderBottom: `1px solid ${colors.border}` }}>
+                <details key={i} style={{ background: '#FFFDF8', border: '1px solid #E8E2D8', borderLeft: '3px solid #C9A84C', marginBottom: '8px' }}>
                   <summary style={{
-                    padding: '20px 0',
+                    padding: '20px 20px',
                     cursor: 'pointer',
-                    fontSize: '16px',
-                    fontWeight: 'bold',
                     listStyle: 'none',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     gap: '16px',
                   }}>
-                    <span>{item.q}</span>
-                    <span style={{ color: colors.accent, fontSize: '20px', flexShrink: 0 }}>+</span>
+                    <span style={{ fontFamily: 'Georgia, serif', fontSize: '16px', fontWeight: 'bold', color: '#1A1A1A' }}>{item.q}</span>
+                    <span style={{ color: '#C9A84C', fontSize: '20px', flexShrink: 0 }}>+</span>
                   </summary>
-                  <p style={{ color: colors.textSecondary, fontSize: '15px', lineHeight: '1.8', paddingBottom: '20px', paddingRight: '32px' }}>
+                  <p style={{ fontFamily: 'Georgia, serif', fontSize: '15px', color: '#6A5A4A', lineHeight: '1.9', padding: '0 20px 20px 20px', margin: 0 }}>
                     {item.a}
                   </p>
                 </details>
@@ -160,21 +157,21 @@ export default function FAQPage() {
           </div>
         ))}
 
-        <div style={{ background: colors.surface, border: `1px solid ${colors.border}`, borderLeft: `3px solid ${colors.accent}`, padding: '28px', marginTop: '40px' }}>
-          <p style={{ color: colors.accent, fontSize: '11px', letterSpacing: '2px', marginBottom: '12px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>Still have questions?</p>
-          <p style={{ color: colors.textSecondary, fontSize: '15px', lineHeight: '1.7', marginBottom: '20px' }}>
+        <div style={{ background: '#FFFDF8', border: '1px solid #E8E2D8', borderLeft: '3px solid #C9A84C', padding: '28px', marginTop: '40px' }}>
+          <p style={{ fontFamily: 'Verdana, sans-serif', fontSize: '9px', color: '#9A8A7A', textTransform: 'uppercase', letterSpacing: '3px', marginBottom: '12px' }}>Still have questions?</p>
+          <p style={{ fontFamily: 'Georgia, serif', fontSize: '15px', color: '#6A5A4A', lineHeight: '1.9', marginBottom: '20px' }}>
             Can't find what you're looking for? Submit your car and include your question in the provenance field — our team reviews every submission and will get back to you.
           </p>
           <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-            <Link href="/submit" style={{ background: colors.accentNavy, color: '#FFFDF8', padding: '12px 28px', textDecoration: 'none', fontSize: '13px', letterSpacing: '2px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>
+            <Link href="/submit" style={{ background: '#1A1A1A', color: '#FFFDF8', padding: '12px 28px', textDecoration: 'none', fontSize: '13px', letterSpacing: '2px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>
               Submit a Car
             </Link>
-            <Link href="/about" style={{ border: `1px solid ${colors.border}`, color: colors.textSecondary, padding: '12px 28px', textDecoration: 'none', fontSize: '13px', letterSpacing: '2px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>
+            <Link href="/about" style={{ border: '1px solid #E8E2D8', color: '#6A5A4A', padding: '12px 28px', textDecoration: 'none', fontSize: '13px', letterSpacing: '2px', fontFamily: 'Verdana, sans-serif', textTransform: 'uppercase' }}>
               About VinVault
             </Link>
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
